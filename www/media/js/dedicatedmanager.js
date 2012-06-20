@@ -14,7 +14,14 @@ var updateFormattingPreview = function(that)
 }
 
 $(document).bind('pageinit', function() {
-
+	// Form reset fix
+	$('form').bind('reset', function() {
+		setTimeout(function() {
+			$('input:checkbox, input:radio').checkboxradio('refresh');
+			$('select[data-role="slider"]').slider('refresh');
+		}, 1);
+	});
+	
 	/*
 	 * Formating preview
 	 */
@@ -32,6 +39,63 @@ $(document).bind('pageinit', function() {
 		else {
 			$('#field-internet').trigger('collapse');
 		}
+	});
+	
+	$('#nextLadderMode').change(function () {
+		if($(this).val() == '1') {
+			$('#ladderServerLimitMin').textinput('enable');
+			$('#ladderServerLimitMax').textinput('enable');
+		}
+		else {
+			$('#ladderServerLimitMin').textinput('disable');
+			$('#ladderServerLimitMax').textinput('disable');
+		}
+	});
+	$('#nextLadderMode').trigger('change');
+	
+	$('#useProxy').change(function () {
+		if($(this).val() == '1') {
+			$('#proxyLogin').textinput('enable');
+			$('#proxyPassword').textinput('enable');
+		}
+		else {
+			$('#proxyLogin').textinput('disable');
+			$('#proxyPassword').textinput('disable');
+		}
+	});
+	$('#useProxy').trigger('change');
+	
+	$('#roundsUseNewRules').change(function() {
+		if($(this).val() == '1') {
+			$('#roundsPointsLimit').parent().hide();
+			$('#roundsPointsLimitNewRules').parent().show();
+		}
+		else {
+			$('#roundsPointsLimitNewRules').parent().hide();
+			$('#roundsPointsLimit').parent().show();
+		}
+	});
+	$('#roundsUseNewRules').trigger('change');
+	
+	$('#teamUseNewRules').change(function() {
+		if($(this).val() == '1') {
+			$('#teamPointsLimit').parent().hide();
+			$('#teamPointsLimitNewRules').parent().show();
+		}
+		else {
+			$('#teamPointsLimitNewRules').parent().hide();
+			$('#teamPointsLimit').parent().show();
+		}
+	});
+	$('#teamUseNewRules').trigger('change');
+	
+	$('form').bind('reset', function() {
+		setTimeout(function() {
+			$('#nextLadderMode').trigger('change');
+			$('#useProxy').trigger('change');
+			$('#roundsUseNewRules').trigger('change');
+			$('#teamUseNewRules').trigger('change');
+		}, 1);
 	});
 
 	$('.alert-bar a').click(function() {
@@ -59,7 +123,6 @@ $(document).bind('pageinit', function() {
 		
 		self.closest('form').bind('reset', function() {
 			order = defaultOrder.slice(0);
-			setTimeout(function() { self.closest('.sortable-container').find('input:checkbox').checkboxradio('refresh'); }, 1);
 		});
 	});
 

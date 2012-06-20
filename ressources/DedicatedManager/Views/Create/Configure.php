@@ -221,7 +221,7 @@ $r = ManiaLib\Application\Request::getInstance();
 				</ul>
 			</fieldset>
 			<fieldset id="fiels-internet" data-role="collapsible" data-theme="b">
-				<legend><?= _('Advanced network settings') ?></legend>
+				<legend><?= _('Advanced Network Settings') ?></legend>
 				<ul data-role="listview">
 					<li data-role="fieldcontain">
 						<label for="forceip">

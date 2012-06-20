@@ -104,7 +104,6 @@ class Home extends \ManiaLib\Application\Controller
 		$servers = $service->getLives();
 		$this->response->servers = $servers;
 	}
-
 }
 
 ?>

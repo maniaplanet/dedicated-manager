@@ -56,7 +56,7 @@ $r = ManiaLib\Application\Request::getInstance();
 								<strong><?= _('Chat time (in seconds)'); ?></strong><br/>
 								<i><?= _('Set the time of the podium, set 0 to disable the podium.') ?></i>
 							</label>
-							<input type="text" name="config[chatTime]" id="chatTime" value="<?= $matchSettings->chatTime / 1000; ?>"/>
+							<input type="text" name="matchSettings[chatTime]" id="chatTime" value="<?= $matchSettings->chatTime / 1000; ?>"/>
 						</li>
 						<li data-role="fieldcontain">
 							<label for="finishTimeout">
@@ -66,20 +66,16 @@ $r = ManiaLib\Application\Request::getInstance();
 									_('Set 0 to disable, 1 to use an automatic time, or higher to set a time in milliseconds.')
 										?></i>
 							</label>
-							<input type="text" name="config[finishTimeout]" id="finishTimeout" value="<?= $matchSettings->finishTimeout ?>"/>
+							<input type="text" name="matchSettings[finishTimeout]" id="finishTimeout" value="<?= $matchSettings->finishTimeout ?>"/>
 						</li>
 						<li data-role="fieldcontain">
 							<label for="disableRespawn">
 								<strong><?= _('Disable respawn'); ?></strong><br/>
 								<i><?= _('If you disable respawn, players will be disqualified when pressing the respawn key.') ?></i>
 							</label>
-							<select id="disableRespawn" name="config[disableRespawn]" data-role="slider">
-								<option value="0"  <?=
-								(!$matchSettings->disableRespawn ? 'selected="selected"' : '')
-										?>><?= _('No') ?></option>
-								<option value="1"  <?=
-									($matchSettings->disableRespawn ? 'selected="selected"' : '')
-										?>><?= _('Yes') ?></option>
+							<select id="disableRespawn" name="matchSettings[disableRespawn]" data-role="slider">
+								<option value="0"  <?= !$matchSettings->disableRespawn ? 'selected="selected"' : '' ?>><?= _('No') ?></option>
+								<option value="1"  <?= $matchSettings->disableRespawn ? 'selected="selected"' : '' ?>><?= _('Yes') ?></option>
 							</select>
 						</li>
 						<li data-role="fieldcontain">
@@ -87,14 +83,14 @@ $r = ManiaLib\Application\Request::getInstance();
 								<strong><?= _('Force show all opponents'); ?></strong><br/>
 								<i><?= _('Set to 0 to allow players to hide opponents, 1 to force them to see all other players. Any other values will represent the number of players displayed') ?></i>
 							</label>
-							<input type="text" name="config[forceShowAllOpponents]" id="forceShowAllOpponents" value="<?= $matchSettings->forceShowAllOpponents ?>"/>
+							<input type="text" name="matchSettings[forceShowAllOpponents]" id="forceShowAllOpponents" value="<?= $matchSettings->forceShowAllOpponents ?>"/>
 						</li>
 						<li data-role="fieldcontain">
 							<label for="allWarmUpDuration">
 								<strong><?= _('Warm up duration (except for Cup mode)'); ?></strong><br/>
 								<i><?= _("0 will disable warm-up, otherwise it's the number of rounds (in rounds/team mode), or the number of times the gold medal time (other modes).") ?></i>
 							</label>
-							<input type="text" name="config[allWarmUpDuration]" id="allWarmUpDuration" value="<?= $matchSettings->allWarmUpDuration; ?>"/>
+							<input type="text" name="matchSettings[allWarmUpDuration]" id="allWarmUpDuration" value="<?= $matchSettings->allWarmUpDuration; ?>"/>
 						</li>
 					</ul>
 				</fieldset>
@@ -110,10 +106,8 @@ $r = ManiaLib\Application\Request::getInstance();
 								<select name="matchSettings[scriptName]" id="scriptName" data-native-menu="false">
 									<option><?= _('Select one...') ?></option>
 									<?php foreach($scripts as $script): ?>
-										<option value="<?= $script ?>" <?=
-							($matchSettings->scriptName == $script ? 'selected="selected"' : '')
-										?>><?= $script ?></option>
-											<?php endforeach; ?>
+										<option value="<?= $script ?>" <?= $matchSettings->scriptName == $script ? 'selected="selected"' : '' ?>><?= $script ?></option>
+									<?php endforeach; ?>
 								</select>
 							</li>
 						</ul>
@@ -127,30 +121,31 @@ $r = ManiaLib\Application\Request::getInstance();
 								<strong><?= _('Points limit'); ?></strong><br/>
 								<i><?= _('Limit of points required to win the match.') ?></i>
 							</label>
-							<input type="text" name="config[roundsPointsLimit]" id="roundsPointsLimit" value="<?= $matchSettings->roundsPointsLimit; ?>"/>
+							<input type="text" name="matchSettings[roundsPointsLimit]" id="roundsPointsLimit" value="<?= $matchSettings->roundsPointsLimit; ?>"/>
+						</li>
+						<li data-role="fieldcontain">
+							<label for="roundsPointsLimitNewRules">
+								<strong><?= _('Points limit with new rules'); ?></strong><br/>
+								<i><?= _('Limit of points required to win the match.') ?></i>
+							</label>
+							<input type="text" name="matchSettings[roundsPointsLimitNewRules]" id="roundsPointsLimitNewRules" value="<?= $matchSettings->roundsPointsLimitNewRules; ?>"/>
 						</li>
 						<li data-role="fieldcontain">
 							<label for="roundsForcedLaps">
 								<strong><?= _('Forced laps'); ?></strong><br/>
 								<i><?= _('Force the number of lap for multilaps maps.') ?></i>
 							</label>
-							<input type="text" name="config[roundsForcedLaps]" id="roundsForcedLaps" value="<?= $matchSettings->roundsForcedLaps; ?>"/>
+							<input type="text" name="matchSettings[roundsForcedLaps]" id="roundsForcedLaps" value="<?= $matchSettings->roundsForcedLaps; ?>"/>
 						</li>
 						<li data-role="fieldcontain">
 							<label for="roundsUseNewRules">
-								<strong><?= _('Use new rules'); ?></strong>
+								<strong><?= _('Use new rules'); ?></strong><br/>
+								<i><?= _('With new rules, only the first win a single point.') ?></i>
 							</label>
-							<select id="roundsUseNewRules" name="config[roundsUseNewRules]" data-role="slider">
+							<select id="roundsUseNewRules" name="matchSettings[roundsUseNewRules]" data-role="slider">
 								<option value="0" <?= !$matchSettings->roundsUseNewRules ? 'selected="selected"' : '' ?>><?= _('No') ?></option>
-								<option value="1"  <?= $matchSettings->roundsUseNewRules ? 'selected="selected"' : '' ?>><?= _('Yes') ?></option>
+								<option value="1" <?= $matchSettings->roundsUseNewRules ? 'selected="selected"' : '' ?>><?= _('Yes') ?></option>
 							</select>
-						</li>
-						<li data-role="fieldcontain">
-							<label for="roundsPointsLimitNewRules">
-								<strong><?= _('Points limit with New Rules'); ?></strong><br/>
-								<i><?= _('Limit of points required to win the match if new Rules are enabled.') ?></i>
-							</label>
-							<input type="text" name="config[roundsPointsLimitNewRules]" id="roundsPointsLimitNewRules" value="<?= $matchSettings->roundsPointsLimitNewRules; ?>"/>
 						</li>
 					</ul>
 				</fieldset>
@@ -162,14 +157,14 @@ $r = ManiaLib\Application\Request::getInstance();
 								<strong><?= _('Time limit in seconds'); ?></strong><br/>
 								<i><?= _('Map duration.') ?></i>
 							</label>
-							<input type="text" name="config[timeAttackLimit]" id="timeAttackLimit" value="<?= $matchSettings->timeAttackLimit / 1000; ?>"/>
+							<input type="text" name="matchSettings[timeAttackLimit]" id="timeAttackLimit" value="<?= $matchSettings->timeAttackLimit / 1000; ?>"/>
 						</li>
 						<li data-role="fieldcontain">
 							<label for="timeAttackSynchStartPeriod">
 								<strong><?= _('Synchronisation period at start in seconds'); ?></strong><br/>
 								<i><?= _('Time of player synchronisation at the beginning of the map.') ?></i>
 							</label>
-							<input type="text" name="config[timeAttackSynchStartPeriod]" id="timeAttackSynchStartPeriod" value="<?= $matchSettings->timeAttackSynchStartPeriod / 1000; ?>"/>
+							<input type="text" name="matchSettings[timeAttackSynchStartPeriod]" id="timeAttackSynchStartPeriod" value="<?= $matchSettings->timeAttackSynchStartPeriod / 1000; ?>"/>
 						</li>
 					</ul>
 				</fieldset>
@@ -181,28 +176,30 @@ $r = ManiaLib\Application\Request::getInstance();
 								<strong><?= _('Points limit'); ?></strong><br/>
 								<i><?= _('Limit of points required to win the match.') ?></i>
 							</label>
-							<input type="text" name="config[teamPointsLimit]" id="teamPointsLimit" value="<?= $matchSettings->teamPointsLimit; ?>"/>
+							<input type="text" name="matchSettings[teamPointsLimit]" id="teamPointsLimit" value="<?= $matchSettings->teamPointsLimit; ?>"/>
+						</li>
+						<li data-role="fieldcontain">
+							<label for="teamPointsLimitNewRules">
+								<strong><?= _('Points limit with new rules'); ?></strong><br/>
+								<i><?= _('Limit of points required to win the match.') ?></i>
+							</label>
+							<input type="text" name="matchSettings[teamPointsLimitNewRules]" id="teamPointsLimitNewRules" value="<?= $matchSettings->teamPointsLimitNewRules; ?>"/>
 						</li>
 						<li data-role="fieldcontain">
 							<label for="teamMaxPoints">
 								<strong><?= _('Max points'); ?></strong><br/>
 								<i><?= _('Maximum points that a team can win.') ?></i>
 							</label>
-							<input type="text" name="config[teamMaxPoints]" id="teamMaxPoints" value="<?= $matchSettings->teamMaxPoints; ?>"/>
+							<input type="text" name="matchSettings[teamMaxPoints]" id="teamMaxPoints" value="<?= $matchSettings->teamMaxPoints; ?>"/>
 						</li>
 						<li data-role="fieldcontain">
-							<label for="teamUseNewRules"><strong><?= _('Use new rules'); ?></strong></label>
-							<select id="teamUseNewRules" name="config[teamUseNewRules]" data-role="slider">
-								<option value="0"  <?= !$matchSettings->teamUseNewRules ? 'selected="selected"' : '' ?>><?= _('No') ?></option>
-								<option value="1"  <?= $matchSettings->teamUseNewRules ? 'selected="selected"' : '' ?>><?= _('Yes') ?></option>
-							</select>
-						</li>
-						<li data-role="fieldcontain">
-							<label for="teamPointsLimitNewRules">
-								<strong><?= _('Points limit with New Rules'); ?></strong><br/>
-								<i><?= _('Limit of points required to win the match if new Rules are enabled.') ?></i>
+							<label for="teamUseNewRules">
+								<strong><?= _('Use new rules'); ?></strong><br/>
 							</label>
-							<input type="text" name="config[teamPointsLimitNewRules]" id="teamPointsLimitNewRules" value="<?= $matchSettings->teamPointsLimitNewRules; ?>"/>
+							<select id="teamUseNewRules" name="matchSettings[teamUseNewRules]" data-role="slider">
+								<option value="0" <?= !$matchSettings->teamUseNewRules ? 'selected="selected"' : '' ?>><?= _('No') ?></option>
+								<option value="1" <?= $matchSettings->teamUseNewRules ? 'selected="selected"' : '' ?>><?= _('Yes') ?></option>
+							</select>
 						</li>
 					</ul>
 				</fieldset>
@@ -214,14 +211,14 @@ $r = ManiaLib\Application\Request::getInstance();
 								<strong><?= _('Laps number'); ?></strong><br/>
 								<i><?= _('Number of laps to do before finnishing the race.').' '._("If set to 0, the number laps of the map is used.") ?></i>
 							</label>
-							<input type="text" name="config[lapsNbLaps]" id="lapsNbLaps" value="<?= $matchSettings->lapsNbLaps; ?>"/>
+							<input type="text" name="matchSettings[lapsNbLaps]" id="lapsNbLaps" value="<?= $matchSettings->lapsNbLaps; ?>"/>
 						</li>
 						<li data-role="fieldcontain">
 							<label for="lapsTimeLimit">
 								<strong><?= _('Time limit in seconds'); ?></strong><br/>
 								<i><?= _('Time allowed for player to do this number of laps.') ?></i>
 							</label>
-							<input type="text" name="config[lapsTimeLimit]" id="lapsTimeLimit" value="<?= $matchSettings->lapsTimeLimit / 1000; ?>"/>
+							<input type="text" name="matchSettings[lapsTimeLimit]" id="lapsTimeLimit" value="<?= $matchSettings->lapsTimeLimit / 1000; ?>"/>
 						</li>
 					</ul>
 				</fieldset>
@@ -233,28 +230,28 @@ $r = ManiaLib\Application\Request::getInstance();
 								<strong><?= _('Points limit'); ?></strong><br/>
 								<i><?= _('Number of point to earn before reaching the finalist status.') ?></i>
 							</label>
-							<input type="text" name="config[cupPointsLimit]" id="cupPointsLimit" value="<?= $matchSettings->cupPointsLimit; ?>"/>
+							<input type="text" name="matchSettings[cupPointsLimit]" id="cupPointsLimit" value="<?= $matchSettings->cupPointsLimit; ?>"/>
 						</li>
 						<li data-role="fieldcontain">
 							<label for="cupRoundsPerMap">
 								<strong><?= _('Rounds per map'); ?></strong><br/>
 								<i><?= _('Number of rounds played per map.') ?></i>
 							</label>
-							<input type="text" name="config[cupRoundsPerMap]" id="cupRoundsPerMap" value="<?= $matchSettings->cupRoundsPerMap; ?>"/>
+							<input type="text" name="matchSettings[cupRoundsPerMap]" id="cupRoundsPerMap" value="<?= $matchSettings->cupRoundsPerMap; ?>"/>
 						</li>
 						<li data-role="fieldcontain">
 							<label for="cupNbWinners">
 								<strong><?= _('Number of winner'); ?></strong><br/>
 								<i><?= _('Number of player who has to win before the match is complete.') ?></i>
 							</label>
-							<input type="text" name="config[cupNbWinners]" id="cupNbWinners" value="<?= $matchSettings->cupNbWinners; ?>"/>
+							<input type="text" name="matchSettings[cupNbWinners]" id="cupNbWinners" value="<?= $matchSettings->cupNbWinners; ?>"/>
 						</li>
 						<li data-role="fieldcontain">
 							<label for="cupWarmUpDuration">
 								<strong><?= _('Warm up duration'); ?></strong><br/>
 								<i><?= _('Number of warm up round to play on each map.') ?></i>
 							</label>
-							<input type="text" name="config[cupWarmUpDuration]" id="cupWarmUpDuration" value="<?= $matchSettings->cupWarmUpDuration; ?>"/>
+							<input type="text" name="matchSettings[cupWarmUpDuration]" id="cupWarmUpDuration" value="<?= $matchSettings->cupWarmUpDuration; ?>"/>
 						</li>
 					</ul>
 				</fieldset>

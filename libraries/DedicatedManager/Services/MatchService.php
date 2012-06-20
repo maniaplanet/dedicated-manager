@@ -363,7 +363,7 @@ class MatchService
 		$gameInfos->forceShowAllOpponents = (int) $playlist->gameinfos->forceshowallopponents;
 		$gameInfos->scriptName = (string) $playlist->gameinfos->script_name;
 		$gameInfos->roundsPointsLimit = (int) $playlist->gameinfos->rounds_pointslimit;
-		$gameInfos->roundsUseNewRules = (int) $playlist->gameinfos->rounds_usenew_rules;
+		$gameInfos->roundsUseNewRules = (int) $playlist->gameinfos->rounds_usenewrules;
 		$gameInfos->roundsForcedLaps = (int) $playlist->gameinfos->rounds_forcedlaps;
 		$gameInfos->roundsPointsLimitNewRules = (int) $playlist->gameinfos->rounds_pointslimitnewrules;
 		$gameInfos->teamPointsLimit = (int) $playlist->gameinfos->team_pointslimit;
