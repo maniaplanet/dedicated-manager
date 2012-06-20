@@ -91,6 +91,7 @@ $(document).bind('pageinit', function() {
 	
 	$('form').bind('reset', function() {
 		setTimeout(function() {
+			$('#isOnline').trigger('change');
 			$('#nextLadderMode').trigger('change');
 			$('#useProxy').trigger('change');
 			$('#roundsUseNewRules').trigger('change');

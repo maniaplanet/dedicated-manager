@@ -184,11 +184,19 @@ class Create extends \ManiaLib\Application\Controller
 				}, $maps);
 		$this->request->set('selected', $selected);
 
-		if($matchSettingsObj->gameMode == \ManiaLive\DedicatedApi\Structures\GameInfos::GAMEMODE_SCRIPT && $matchSettingsObj->scriptName == '')
+		if($matchSettingsObj->gameMode === null)
+		{
+			$this->session->set('error', _('You have to select a game mode'));
+		}
+		else if($matchSettingsObj->gameMode == \ManiaLive\DedicatedApi\Structures\GameInfos::GAMEMODE_SCRIPT && $matchSettingsObj->scriptName == '')
+		{
+			$this->session->set('error', _('You have to select a script to play in script mode'));
+		}
+		
+		if($this->session->get('error'))
 		{
 			$this->request->set('matchFile', $this->session->get('matchFile'));
-			$this->request->set('error', _('You have to select a script to play in script mode'));
-			$this->request->redirectArgList('../match-settings', 'title', 'matchFile');
+			$this->request->redirectArgList('../match-settings', 'matchFile');
 		}
 		$this->request->redirectArgList('../select-maps', 'selected');
 	}
@@ -283,6 +291,11 @@ class Create extends \ManiaLib\Application\Controller
 
 		$this->response->configFile = \ManiaLib\Utils\Formatting::stripStyles($configFile);
 		$this->response->matchFile = \ManiaLib\Utils\Formatting::stripStyles($matchFile);
+		
+		$header = \DedicatedManager\Helpers\Header::getInstance();
+		$header->rightText = _('Back to map selection');
+		$header->rightIcon = 'back';
+		$header->rightLink = $this->request->createLinkArgList('../select-maps');
 	}
 
 	function startServer($configFile, $matchFile)

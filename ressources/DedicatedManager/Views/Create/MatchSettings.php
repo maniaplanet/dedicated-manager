@@ -27,8 +27,7 @@ $r = ManiaLib\Application\Request::getInstance();
 								<strong><?= _('Game mode'); ?></strong><br/>
 								<i><?= _('Select the game mode you want to play.') ?></i>
 							</label>
-							<select name="matchSettings[gameMode]" id="gameMode" data-native-menu="false">
-								<option><?= _('Select one...') ?></option>
+							<select name="matchSettings[gameMode]" id="gameMode" required="required" data-native-menu="false">
 								<?php if(count($scripts)): ?>
 									<option value="<?= GameInfos::GAMEMODE_SCRIPT ?>" <?=
 										($matchSettings->gameMode == GameInfos::GAMEMODE_SCRIPT ? 'selected="selected"' : '')

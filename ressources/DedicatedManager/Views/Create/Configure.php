@@ -24,12 +24,12 @@ $r = ManiaLib\Application\Request::getInstance();
 						</label>
 						<select id="title" required="required" name="system[title]" data-native-menu="false">
 							<optgroup label="<?= _('Official titles') ?>">
-								<option value="TMCanyon" <?= $serverOptions->title == 'TMCanyon' ? 'selected="selected"' : '' ?>>TrackMania Canyon</option>
-								<option value="SMStorm" <?= $serverOptions->title == 'SMStorm' ? 'selected="selected"' : '' ?>>ShootMania Storm</option>
+								<option value="TMCanyon" <?= $system->title == 'TMCanyon' ? 'selected="selected"' : '' ?>>TrackMania Canyon</option>
+								<option value="SMStorm" <?= $system->title == 'SMStorm' ? 'selected="selected"' : '' ?>>ShootMania Storm</option>
 							</optgroup>
 							<optgroup label="<?= _('Custom titles') ?>">
-								<option value="SMStormElite@nadeolabs" <?= $serverOptions->title == 'SMStormElite@nadeolabs' ? 'selected="selected"' : '' ?>>ShootMania Storm Elite</option>
-								<option value="SMStormJoust@nadeolabs" <?= $serverOptions->title == 'SMStormJoust@nadeolabs' ? 'selected="selected"' : '' ?>>ShootMania Storm Joust</option>
+								<option value="SMStormElite@nadeolabs" <?= $system->title == 'SMStormElite@nadeolabs' ? 'selected="selected"' : '' ?>>ShootMania Storm Elite</option>
+								<option value="SMStormJoust@nadeolabs" <?= $system->title == 'SMStormJoust@nadeolabs' ? 'selected="selected"' : '' ?>>ShootMania Storm Joust</option>
 							</optgroup>
 						</select>
 					</li>
@@ -75,7 +75,7 @@ $r = ManiaLib\Application\Request::getInstance();
 							<strong><?= _('Password'); ?></strong><br/>
 							<i><?= _('Password if you want to limit access to players.') ?></i>
 						</label>
-						<input type="text" name="config[password]" id="password" value="<?= $serverOptions->password; ?>"/>
+						<input type="password" name="config[password]" id="password" value="<?= $serverOptions->password; ?>"/>
 					</li>
 					<li data-role="fieldcontain">
 						<label for="maxSpectators">
@@ -279,7 +279,7 @@ $r = ManiaLib\Application\Request::getInstance();
 		<h1><?= _('Server configuration') ?></h1>
     </div>
     <div data-role="content">
-		<form name="load_config_form" action="<?= $r->createLinkArgList('../configure') ?>#content" method="get" title="<?= _('Load existing configuration') ?>">
+		<form name="load_config_form" action="#" method="get" title="<?= _('Load existing configuration') ?>">
 			<label for="configFile"><?= _('Select the configuration file you want to load') ?></label>
 			<select id="configFile" name="configFile" size="5" data-native-menu="false">
 			<?php foreach($configList as $config): ?>
