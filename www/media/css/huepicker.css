@@ -1,0 +1,89 @@
+.ui-huepicker {
+	display: inline-table;
+	table-layout: fixed;
+	width: 95%;
+}
+@media all and (min-width: 450px){
+	.ui-huepicker {
+		width: 60%;
+	}
+}
+.ui-huepicker .huepicker-arrow-btn-container {
+	display: table-cell;
+	vertical-align: middle;
+	width: 36px;
+}
+.ui-huepicker .huepicker-masks-container {
+	float: left;
+	position: relative;
+	width: 100%;
+	height: 20px;
+}
+.ui-huepicker .huepicker-masks-container .huepicker-selector {
+	position: absolute;
+	left: 0px;
+	top: 5px;
+	width: 26px;
+	height: 26px;
+	border: 1px solid black;
+	box-shadow: inset -1px -1px 4px 0px rgba(0, 0, 0, 0.3),
+		inset 1px 1px 4px 0px rgba(255, 255, 255, 0.3);
+	cursor: pointer;
+}
+
+.ui-huepicker .huepicker-masks-container .hue-gradient {
+	position: absolute;
+	margin: 8px 13px;
+	width: 100%;
+	height: 20px;
+	border: 1px solid #333;
+    background: #f00; /* Old browsers */
+    background: -webkit-gradient(linear, left top, right top,
+        color-stop(  0%          ,#f00),
+        color-stop( 16.666666667%,#ff0),
+        color-stop( 33.333333333%,#0f0),
+        color-stop( 50%          ,#0ff),
+        color-stop( 66.666666667%,#00f),
+        color-stop( 83.333333333%,#f0f),
+        color-stop(100%          ,#f00)); /* Chrome,Safari4+ */
+    background: -moz-linear-gradient(left,
+        #f00   0%, 
+        #ff0  16.666666667%,
+        #0f0  33.333333333%,
+        #0ff  50%,
+        #00f  66.666666667%,
+        #f0f  83.333333333%,
+        #f00 100%);
+    background: -webkit-linear-gradient(left,
+        #f00   0%, 
+        #ff0  16.666666667%,
+        #0f0  33.333333333%,
+        #0ff  50%,
+        #00f  66.666666667%,
+        #f0f  83.333333333%,
+        #f00 100%);
+    background: -o-linear-gradient(left,
+        #f00   0%, 
+        #ff0  16.666666667%,
+        #0f0  33.333333333%,
+        #0ff  50%,
+        #00f  66.666666667%,
+        #f0f  83.333333333%,
+        #f00 100%);
+    background: -ms-linear-gradient(left,
+        #f00   0%, 
+        #ff0  16.666666667%,
+        #0f0  33.333333333%,
+        #0ff  50%,
+        #00f  66.666666667%,
+        #f0f  83.333333333%,
+        #f00 100%);
+    background: linear-gradient(left,
+        #f00   0%, 
+        #ff0  16.666666667%,
+        #0f0  33.333333333%,
+        #0ff  50%,
+        #00f  66.666666667%,
+        #f0f  83.333333333%,
+        #f00 100%);
+}
