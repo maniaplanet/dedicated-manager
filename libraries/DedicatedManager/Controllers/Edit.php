@@ -674,7 +674,7 @@ class Edit extends \ManiaLib\Application\Controller implements \ManiaLib\Applica
 	/**
 	 * @redirect
 	 */
-	function sendMessage($message, $receiver = null)
+	function sendMessage($message,$receiver = null)
 	{
 		try
 		{
@@ -682,7 +682,7 @@ class Edit extends \ManiaLib\Application\Controller implements \ManiaLib\Applica
 			{
 				$receiver = null;
 			}
-			$this->connection->chatSend($message, null);
+			$this->connection->chatSend($message, $receiver);
 			$this->session->set('success', _('Your message has been send'));
 		}
 		catch(\Exception $e)
