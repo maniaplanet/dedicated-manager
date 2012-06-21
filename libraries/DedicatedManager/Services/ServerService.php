@@ -270,14 +270,43 @@ class ServerService extends AbstractService
 		$isWindows = stripos(PHP_OS, 'WIN') === 0;
 		if($isWindows)
 				$startCommand = 'START /D "'.$config->dedicatedPath.'" ManiaPlanetServer.exe';
-		else $startCommand = 'cd "'.$config->dedicatedPath.'"; ./ManiaPlanetServer';
-		$startCommand .= sprintf(' /dedicated_cfg=%s /game_settings=%s',
-				escapeshellarg($configFile.'.txt'),
-				escapeshellarg('MatchSettings/'.$matchFile.'.txt'));
-		if($isLan) $startCommand .= ' /lan';
-		if(!$isWindows) $startCommand .= ' &';
+		else
+			$startCommand = 'cd "'.$config->dedicatedPath.'"; ./ManiaPlanetServer';
+		$startCommand .= sprintf(' /dedicated_cfg=%s /game_settings=%s', escapeshellarg($configFile.'.txt'), escapeshellarg('MatchSettings/'.$matchFile.'.txt'));
+		if($isLan)
+			$startCommand .= ' /lan';
+		if(!$isWindows)
+			$startCommand .= ' &';
 
-		$procHandle = proc_open($startCommand, array(), $pipes, $config->dedicatedPath);
+		$this->doStart($startCommand);
+	}
+	
+	function startRelay($configFile, $toJoin, $isLan)
+	{
+		$config = \DedicatedManager\Config::getInstance();
+
+		// Starting dedicated
+		$isWindows = stripos(PHP_OS, 'WIN') === 0;
+		if($isWindows)
+				$startCommand = 'START /D "'.$config->dedicatedPath.'" ManiaPlanetServer.exe';
+		else
+			$startCommand = 'cd "'.$config->dedicatedPath.'"; ./ManiaPlanetServer';
+		$startCommand .= sprintf(' /dedicated_cfg=%s /join=%s', escapeshellarg($configFile.'.txt'), escapeshellarg($toJoin));
+		if($isLan)
+			$startCommand .= ' /lan';
+		if(!$isWindows)
+			$startCommand .= ' &';
+
+		$this->doStart($startCommand);
+	}
+	
+	function doStart($commandLine)
+	{
+		$config = \DedicatedManager\Config::getInstance();
+
+		// Starting dedicated
+		$isWindows = stripos(PHP_OS, 'WIN') === 0;
+		$procHandle = proc_open($commandLine, array(), $pipes, $config->dedicatedPath);
 		proc_close($procHandle);
 
 		// Getting its PID
@@ -354,9 +383,11 @@ class ServerService extends AbstractService
 		$isWindows = stripos(PHP_OS, 'WIN') === 0;
 		if($isWindows)
 				$startCommand = 'START php.exe "'.$config->manialivePath.'bootstrapper.php"';
-		else $startCommand = 'cd "'.$config->manialivePath.'"; php bootstrapper.php';
+		else
+			$startCommand = 'cd "'.$config->manialivePath.'"; php bootstrapper.php';
 		$startCommand .= sprintf(' --rpcport=%d', $port);
-		if(!$isWindows) $startCommand .= ' < /dev/null > logs/runtime.'.$dedicatedPid.'.log 2>&1 &';
+		if(!$isWindows)
+			$startCommand .= ' < /dev/null > logs/runtime.'.$dedicatedPid.'.log 2>&1 &';
 
 		sleep(5);
 
