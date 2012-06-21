@@ -92,6 +92,16 @@ $r = ManiaLib\Application\Request::getInstance();
 						<input type="text" name="config[passwordForSpectator]" id="passwordForSpectator" value="<?= $serverOptions->passwordForSpectator; ?>"/>
 					</li>
 					<li data-role="fieldcontain">
+						<label for="spectatorRelay">
+							<strong><?= _('Allow Spectator Relay'); ?></strong><br/>
+							<i><?= _('Allow relay server to connect as spectator on your server') ?></i>
+						</label>
+						<select id="spectatorRelay" name="system[allowSpectatorRelays]" data-role="slider">
+							<option value="0" <?= !$system->allowSpectatorRelays ? 'selected="selected"' : '' ?>><?= _('No') ?></option>
+							<option value="1" <?= $system->allowSpectatorRelays ? 'selected="selected"' : '' ?>><?= _('Yes') ?></option>
+						</select>
+					</li>
+					<li data-role="fieldcontain">
 						<label for="hideServer">
 							<strong><?= _('Hide server'); ?></strong><br/>
 							<i><?= _('If "yes" is selected the server will not be visible in the server list.') ?></i>

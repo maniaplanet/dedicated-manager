@@ -13,7 +13,7 @@ class SystemConfig extends AbstractObject
 {
 	public $connectionUploadrate = 2000;
 	public $connectionDownloadrate = 8920;
-	public $allowSpectatorRelays = true;
+	public $allowSpectatorRelays = false;
 	public $p2pCacheSize = 600;
 	public $forceIpAddress;
 	public $serverPort = 2350;

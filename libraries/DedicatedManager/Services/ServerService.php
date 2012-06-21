@@ -103,8 +103,8 @@ class ServerService extends AbstractService
 		$config->nextMaxPlayers = (int) $configObj->server_options->max_players;
 		$config->nextMaxSpectators = (int) $configObj->server_options->max_spectators;
 		$config->hideServer = (int) $configObj->server_options->hide_server;
-		$config->isP2PUpload = $configObj->server_options->enable_p2p_upload == 'True';
-		$config->isP2PDownload = $configObj->server_options->enable_p2p_download == 'True';
+		$config->isP2PUpload = $this->toBool($configObj->server_options->enable_p2p_upload);
+		$config->isP2PDownload = $this->toBool($configObj->server_options->enable_p2p_download);
 		$config->nextLadderMode = (string) $configObj->server_options->ladder_mode;
 		$config->nextLadderMode = ($config->nextLadderMode == 1 || $config->nextLadderMode == 'forced'
 							? 1 : 0);
@@ -114,7 +114,7 @@ class ServerService extends AbstractService
 		$config->callVoteRatio = (double) $configObj->server_options->callvote_ratio;
 		$config->allowMapDownload = $configObj->server_options->allow_map_download == 'True';
 		$config->autoSaveReplays = $configObj->server_options->autosave_replays == 'True';
-		$config->autoSaveValidationReplays = $configObj->server_options->autosave_validation_replays == 'True';
+		$config->autoSaveValidationReplays = $this->toBool($configObj->server_options->autosave_validation_replays);
 		$config->refereePassword = (string) $configObj->server_options->referee_password;
 		$config->refereeMode = (string) $configObj->server_options->referee_validation_mode;
 		$config->nextUseChangingValidationSeed = $configObj->server_options->use_changing_validation_seed == 'True';
@@ -137,7 +137,7 @@ class ServerService extends AbstractService
 		$system->blacklistFilename = (string) $configObj->system_config->blacklist_filename;
 		$system->title = (string) $configObj->system_config->title;
 		$system->minimumClientBuild = (string) $configObj->system_config->minimum_client_build;
-		$system->disableCoherenceChecks = $configObj->system_config->disable_coherence_checks == 'True';
+		$system->disableCoherenceChecks = $this->toBool($configObj->system_config->disable_coherence_checks);
 		$system->useProxy = $configObj->system_config->use_proxy == 'True';
 		$system->proxyLogin = (string) $configObj->system_config->proxy_login;
 		$system->proxyPassword = (string) $configObj->system_config->proxyPassword;
@@ -226,7 +226,7 @@ class ServerService extends AbstractService
 		$systemConfig->addChild('connection_uploadrate', $system->connectionUploadrate);
 		$systemConfig->addChild('connection_downloadrate', $system->connectionDownloadrate);
 
-		$systemConfig->addChild('allow_spectator_relays', $system->allowSpectatorRelays);
+		$systemConfig->addChild('allow_spectator_relays', ($system->allowSpectatorRelays ? 'True' : 'False'));
 
 		$systemConfig->addChild('p2p_cache_size', $system->p2pCacheSize);
 
@@ -362,6 +362,11 @@ class ServerService extends AbstractService
 
 		$procHandle = proc_open($startCommand, array(), $pipes);
 		proc_close($procHandle);
+	}
+	
+	protected function toBool($val)
+	{
+		return (strcasecmp($val, 'true') == 0 || $val == 1);
 	}
 
 }
