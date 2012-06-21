@@ -15,13 +15,13 @@
 			<?= _('Next map:') ?>&nbsp;<?= ManiaLib\Utils\StyleParser::toHtml($nextMap->name) ?>&nbsp;(<?= $nextMap->author ?>)
 		</div>
 	</div>
-	<div data-role="navbar" data-iconpos="left">
-		<ul>
-			<li><a href="<?= htmlentities($r->createLinkArgList('../stop', 'hostname', 'port'), ENT_QUOTES, 'UTF-8') ?>" data-role="button" data-icon="delete" data-ajax="false"><?= _('Close the server') ?></a></li>
-			<li><a href="<?= htmlentities($r->createLinkArgList('../restart', 'hostname', 'port'), ENT_QUOTES, 'UTF-8') ?>" data-role="button" data-icon="refresh" data-ajax="false"><?= _('Restart map') ?></a></li>
-			<li><a href="<?= htmlentities($r->createLinkArgList('../next', 'hostname', 'port'), ENT_QUOTES, 'UTF-8') ?>" data-role="button" data-icon="forward" data-ajax="false"><?= _('Next map') ?></a></li>
-			<li><a href="maniaplanet://#join=<?= $hostname ?>:<?= $port ?>" data-role="button" data-icon="arrow-r" data-ajax="false"><?= _('Join server') ?></a></li>
-		</ul>
-	</div>
+</div>
+<div data-role="navbar" data-iconpos="left">
+	<ul>
+		<li><a href="<?= htmlentities($r->createLinkArgList('../stop', 'hostname', 'port'), ENT_QUOTES, 'UTF-8') ?>" data-theme="b" data-role="button" data-icon="delete" data-ajax="false"><?= _('Close the server') ?></a></li>
+		<li><a href="<?= htmlentities($r->createLinkArgList('../restart', 'hostname', 'port'), ENT_QUOTES, 'UTF-8') ?>" data-theme="b" data-role="button" data-icon="refresh" data-ajax="false"><?= _('Restart map') ?></a></li>
+		<li><a href="<?= htmlentities($r->createLinkArgList('../next', 'hostname', 'port'), ENT_QUOTES, 'UTF-8') ?>" data-theme="b" data-role="button" data-icon="forward" data-ajax="false"><?= _('Next map') ?></a></li>
+		<li><a href="maniaplanet://#join=<?= $hostname ?>:<?= $port ?>" data-theme="b" data-role="button" data-icon="arrow-r" data-ajax="false"><?= _('Join server') ?></a></li>
+	</ul>
 </div>
 <?= DedicatedManager\Helpers\Box\Box::detect() ?>

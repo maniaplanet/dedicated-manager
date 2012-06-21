@@ -5,47 +5,50 @@ $r = ManiaLib\Application\Request::getInstance();
 <div data-role="page">
 	<?php require __DIR__.'/Header.php'; ?>
 	<div data-role="content">
-		<form method="get" action="<?= $r->createLinkArgList('../unblacklist') ?>" data-ajax="false">
-			<input type="hidden" name="port" value="<?= $port ?>"/>
-			<input type="hidden" name="hostname" value="<?= $hostname ?>"/>
-			<ul data-role="listview" data-inset="true">
-				<li data-role="list-divider">
-					<?= _('Current black list') ?>
-				</li>
-				<li data-role="fieldcontain">
-					<fieldset data-role="controlgroup">
-						<legend><?= _('Blacklisted players') ?></legend>
-						<?php if(count($blackListedPlayers)): ?>
-							<?php foreach($blackListedPlayers as $player): ?>
-								<label for="<?= $player->login ?>"><?= $player->login ?></label>
-								<input type="checkbox" name="players[]" id="<?= $player->login ?>" value="<?= $player->login ?>" />
-							<?php endforeach; ?>
-						<?php else: ?>
-							<strong><?= _('There is no blacklisted player.') ?></strong>
-						<?php endif; ?>
-					</fieldset>
-				</li>
-				<li data-role="fieldcontain">
-					<div class="ui-grid-d">
-						<div class="ui-block-a">
-							<a href="#add" data-role="button" data-icon="plus" data-rel="dialog" data-transition="pop"><?= _('Add a player') ?></a>
+		<div class="content-primary">
+			<form method="get" action="<?= $r->createLinkArgList('../unblacklist') ?>" data-ajax="false">
+				<input type="hidden" name="port" value="<?= $port ?>"/>
+				<input type="hidden" name="hostname" value="<?= $hostname ?>"/>
+				<ul data-role="listview" data-inset="true">
+					<li data-role="list-divider">
+						<?= _('Current black list') ?>
+					</li>
+					<li data-role="fieldcontain">
+						<fieldset data-role="controlgroup">
+							<legend><?= _('Blacklisted players') ?></legend>
+							<?php if(count($blackListedPlayers)): ?>
+								<?php foreach($blackListedPlayers as $player): ?>
+									<label for="<?= $player->login ?>"><?= $player->login ?></label>
+									<input type="checkbox" name="players[]" id="<?= $player->login ?>" value="<?= $player->login ?>" />
+								<?php endforeach; ?>
+							<?php else: ?>
+								<strong><?= _('There is no blacklisted player.') ?></strong>
+							<?php endif; ?>
+						</fieldset>
+					</li>
+					<li data-role="fieldcontain">
+						<div class="ui-grid-d">
+							<div class="ui-block-a">
+								<a href="#add" data-role="button" data-icon="plus" data-rel="dialog" data-transition="pop"><?= _('Add a player') ?></a>
+							</div>
+							<div class="ui-block-b">
+								<input type="submit" value="<?= _('Remove from list') ?>" data-icon="minus" <?= count($blackListedPlayers) ? '' : 'disabled="disabled"' ?>/>
+							</div>
+							<div class="ui-block-c">
+								<a href="<?= htmlentities($r->createLinkArgList('../clean-blacklist', 'hostname', 'port'), ENT_QUOTES, 'UTF-8') ?>" data-role="button" data-icon="delete" data-ajax="false"><?= _('Clean blacklist') ?></a>
+							</div>
+							<div class="ui-block-d">
+								<a href="#load" data-role="button" data-icon="gear" data-rel="dialog" data-transition="pop"><?= _('Load a black list') ?></a>
+							</div>
+							<div class="ui-block-e">
+								<a href="#save" data-role="button" data-icon="check" data-rel="dialog" data-transition="pop"><?= _('Save a save list') ?></a>
+							</div>
 						</div>
-						<div class="ui-block-b">
-							<input type="submit" value="<?= _('Remove from list') ?>" data-icon="minus" <?= count($blackListedPlayers) ? '' : 'disabled="disabled"' ?>/>
-						</div>
-						<div class="ui-block-c">
-							<a href="<?= htmlentities($r->createLinkArgList('../clean-blacklist', 'hostname', 'port'), ENT_QUOTES, 'UTF-8') ?>" data-role="button" data-icon="delete" data-ajax="false"><?= _('Clean blacklist') ?></a>
-						</div>
-						<div class="ui-block-d">
-							<a href="#load" data-role="button" data-icon="gear" data-rel="dialog" data-transition="pop"><?= _('Load a black list') ?></a>
-						</div>
-						<div class="ui-block-e">
-							<a href="#save" data-role="button" data-icon="check" data-rel="dialog" data-transition="pop"><?= _('Save a save list') ?></a>
-						</div>
-					</div>
-				</li>
-			</ul>
-		</form>
+					</li>
+				</ul>
+			</form>
+		</div>
+		<?php require __DIR__.'/Navigation.php'; ?>
 	</div>
 </div>
 <div data-role="dialog" id="load">

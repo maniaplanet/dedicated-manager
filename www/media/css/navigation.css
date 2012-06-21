@@ -1,0 +1,102 @@
+/* 
+    Document   : navigation.css
+    Created on : 21 juin 2012, 15:37:54
+    Author     : NewboO
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+.content-secondary .ui-collapsible {
+	padding: 0 15px 10px;
+}
+
+.content-secondary .ui-collapsible-content {
+	padding: 0;
+	background: none;
+	border-bottom: none;
+}
+
+.content-secondary .ui-listview {
+	margin: 0;
+}
+
+.content-secondary {
+	border-right: 0;
+	border-left: 0;
+	margin: 10px -15px 0;
+	border-top: 1px solid #CCC;
+}
+
+@media all and (min-width: 650px) {
+	.ui-content {
+		padding: 0;
+	}
+	
+	.content-secondary {
+		text-align: left;
+		float: left;
+		width: 35%;
+		margin: 0;
+		padding: 0;
+		border-top: none;
+	}
+	
+	.content-secondary .ui-collapsible {
+		margin: 0;
+		padding: 0;
+	}
+	
+	.content-secondary .ui-collapsible-content {
+		border: none;
+	}
+	
+	.content-primary {
+		width: 61%;
+		float: right;
+		padding: 15px 2% 0 2%;
+		margin: 0;
+	}
+	
+	.content-primary ul:first-child {
+		margin-top: 0;
+	}
+	
+	.content-secondary .ui-collapsible-heading {
+		display: none;
+	}
+	
+	.content-secondary .ui-collapsible-contain {
+		margin:0;
+	}
+	
+	.content-secondary .ui-collapsible-content {
+		display: block;
+		margin: 0;
+		padding: 0;
+	}
+	
+	.content-secondary .ui-li-divider {
+		padding-top: 1em;
+		padding-bottom: 1em;
+	}
+}
+
+@media all and (min-width: 750px){
+	.content-secondary {
+		width: 30%;
+	}
+	
+	.content-primary {
+		width: 66%;
+	}
+}
+
+@media all and (min-width: 1200px){
+	.content-secondary {
+		width: 20%;
+	}
+	
+	.content-primary {
+		width: 76%;
+	}
+}

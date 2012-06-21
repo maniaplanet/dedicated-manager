@@ -4,7 +4,7 @@
 	<?= DedicatedManager\Helpers\Box\Box::detect() ?>
 	<div data-role="content">
 		<a href="<?= $appURL.'/create/configure/' ?>" data-ajax="false" data-role="button" data-icon="plus"><?= _('Start a new server') ?></a>
-		<a href="<?= $appURL.'/manage/' ?>" data-ajax="false" data-role="button" data-icon="gear"><?= _('manage your config files') ?></a>
+		<a href="<?= $appURL.'/manage/' ?>" data-ajax="false" data-role="button" data-icon="gear"><?= _('Manage your config files') ?></a>
 		<?php if($servers): ?>
 			<p><?= _('Edit a server') ?></p>
 			<ul data-role="listview" data-filter="true" data-inset="true">

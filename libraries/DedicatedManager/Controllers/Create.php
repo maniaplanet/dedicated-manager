@@ -52,6 +52,7 @@ class Create extends \ManiaLib\Application\Controller
 		}
 		$account = $this->session->get('account', $account);
 		$config = $this->session->get('serverOptions', $config);
+		$system = $this->session->get('systemConfig', $system);
 		$this->session->set('configFile', $configFile);
 		$this->response->configList = $configList;
 		$this->response->serverOptions = $config;

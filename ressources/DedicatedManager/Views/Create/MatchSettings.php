@@ -6,12 +6,13 @@ $r = ManiaLib\Application\Request::getInstance();
 <div data-role="page">
 	<?= DedicatedManager\Helpers\Header::save() ?>
     <div class="ui-bar ui-bar-b">
-		<h2><?= _('Step 2 on 4'); ?></h2><br/>
+		<h2><?= sprintf(_('Step %d on %d'), 2, 4) ?></h2><br/>
 		<h3><?= _('Choose your game mode and its rules.') ?></h3>
     </div>
 	<?= DedicatedManager\Helpers\Box\Box::detect() ?>
     <div data-role="content">
-		<p><?= _('If you want to load an <strong>existing match settings</strong> click on the link: ') ?> <a id="loadConfigLink" href="#dialog" data-rel="dialog"><?= _('load match settings'); ?></a></p>
+		<p><?= _('If you want to load an <strong>existing match settings</strong> click on the link: ') ?>
+			<a id="loadConfigLink" href="#dialog" data-rel="dialog"><?= _('load match settings'); ?></a></p>
 		<form action="<?= $r->createLinkArgList('../save-match-settings') ?>" method="get" data-ajax="false">
 			<?php if($maps): ?>
 				<?php foreach($maps as $map): ?>
@@ -291,8 +292,7 @@ $r = ManiaLib\Application\Request::getInstance();
 		<h1><?= _('Load MatchSettings') ?></h1>
     </div>
     <div data-role="content">
-		<form name="load_config_form" action="#" method="get">
-			<input type="hidden" name="title" value="<?= $title ?>"/>
+		<form name="load_config_form" action="<?= $r->createLinkArgList('.') ?>" data-ajax="false" method="get" title="<?= _('Load existing settings') ?>">
 			<label for="matchFile"><?= _('A match settings contains game mode setups and a map selection') ?></label>
 			<select id="matchFile" name="matchFile" size="5" data-native-menu="false">
 			<?php foreach($files as $file): ?>

@@ -5,14 +5,14 @@ $r = ManiaLib\Application\Request::getInstance();
 <div data-role="page" id="content">
 	<?= DedicatedManager\Helpers\Header::save() ?>
     <div class="ui-bar ui-bar-b">
-		<h2><?= _('Step 1 on 4'); ?></h2><br/>
+		<h2><?= sprintf(_('Step %d on %d'), 1, 4) ?></h2><br/>
 		<h3><?= _('General configuration of your server') ?></h3><br/>
 		<?= _('During the whole process, feel free to leave default values.') ?>
     </div>
 	<?= DedicatedManager\Helpers\Box\Box::detect(); ?>
     <div data-role="content">
 		<p><?= _('If you want to load an <strong>existing server configuration</strong> click on the link: ') ?>
-			<a href="#dialog" data-rel="dialog" data-transition="slidedown"><?= _('load server config'); ?></a></p>
+			<a href="#dialog" data-rel="dialog"><?= _('load server config'); ?></a></p>
 		<form name="config" action="<?= $r->createLinkArgList('../save-server-config') ?>" method="get" data-ajax="false">
 			<fieldset data-role="collapsible" data-collapsed="false" data-theme="b">
 				<legend><?= _('Basic Server Configuration') ?></legend>
@@ -61,8 +61,8 @@ $r = ManiaLib\Application\Request::getInstance();
 							<i><?= _('If the box "yes" is selected your server will be accessible to every one.') ?></i>
 						</label>
 						<select id="isOnline" name="isOnline" data-role="slider">
-							<option value="0" <? !$account ? 'selected="selected"' : '' ?>><?= _('No') ?></option>
-							<option value="1" ><?= _('Yes') ?></option>
+							<option value="0" <?= !$account->login ? 'selected="selected"' : '' ?>><?= _('No') ?></option>
+							<option value="1" <?= $account->login ? 'selected="selected"' : '' ?>><?= _('Yes') ?></option>
 						</select>
 					</li>
 				</ul>
@@ -75,7 +75,7 @@ $r = ManiaLib\Application\Request::getInstance();
 							<strong><?= _('Password'); ?></strong><br/>
 							<i><?= _('Password if you want to limit access to players.') ?></i>
 						</label>
-						<input type="password" name="config[password]" id="password" value="<?= $serverOptions->password; ?>"/>
+						<input type="text" name="config[password]" id="password" value="<?= $serverOptions->password; ?>"/>
 					</li>
 					<li data-role="fieldcontain">
 						<label for="maxSpectators">
@@ -177,7 +177,7 @@ $r = ManiaLib\Application\Request::getInstance();
 					</li>
 				</ul>
 			</fieldset>
-			<fieldset id="field-internet" data-role="collapsible" <?=($account->login ? 'data-collapsed="false"' : '')?> data-theme="b">
+			<fieldset id="field-internet" data-role="collapsible" <?= $account->login ? 'data-collapsed="false"' : '' ?> data-theme="b">
 				<legend><?= _('Internet Server Configuration') ?></legend>
 				<ul data-role="listview">
 					<li data-role="fieldcontain">
@@ -195,7 +195,7 @@ $r = ManiaLib\Application\Request::getInstance();
 							<strong><?= _('Dedicated server account password'); ?></strong><br/>
 							<i><?= _("Enter the dedicated server's password.") ?></i>
 						</label>
-						<input type="text" name="account[password]" id="masterPassword" value="<?= $account->password; ?>"/>
+						<input type="password" name="account[password]" id="masterPassword" value="<?= $account->password; ?>"/>
 					</li>
 					<li data-role="fieldcontain">
 						<label for="masterValidationKey">
@@ -289,7 +289,7 @@ $r = ManiaLib\Application\Request::getInstance();
 		<h1><?= _('Server configuration') ?></h1>
     </div>
     <div data-role="content">
-		<form name="load_config_form" action="#" method="get" title="<?= _('Load existing configuration') ?>">
+		<form name="load_config_form" action="<?= $r->createLinkArgList('.') ?>" data-ajax="false" method="get" title="<?= _('Load existing configuration') ?>">
 			<label for="configFile"><?= _('Select the configuration file you want to load') ?></label>
 			<select id="configFile" name="configFile" size="5" data-native-menu="false">
 			<?php foreach($configList as $config): ?>
