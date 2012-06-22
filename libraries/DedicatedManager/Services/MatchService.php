@@ -397,7 +397,7 @@ class MatchService
 
 		$gameSettings = $playlist->addChild('gameinfos');
 		$gameSettings->addChild('game_mode', $gameInfos->gameMode);
-		$gameSettings->addChild('chat_Time', $gameInfos->chatTime);
+		$gameSettings->addChild('chat_time', $gameInfos->chatTime);
 		$gameSettings->addChild('finishtimeout', $gameInfos->finishTimeout);
 		$gameSettings->addChild('allwarmupduration', $gameInfos->allWarmUpDuration);
 		$gameSettings->addChild('disablerespawn', $gameInfos->disableRespawn);
@@ -407,7 +407,7 @@ class MatchService
 		$gameSettings->addChild('rounds_usenewrules', $gameInfos->roundsUseNewRules);
 		$gameSettings->addChild('rounds_forcedlaps', $gameInfos->roundsForcedLaps);
 		$gameSettings->addChild('rounds_pointslimitnewrules', $gameInfos->roundsPointsLimitNewRules);
-		$gameSettings->addChild('team_pointslimite', $gameInfos->teamPointsLimit);
+		$gameSettings->addChild('team_pointslimit', $gameInfos->teamPointsLimit);
 		$gameSettings->addChild('team_maxpoints', $gameInfos->teamMaxPoints);
 		$gameSettings->addChild('team_usenewrules', $gameInfos->teamUseNewRules);
 		$gameSettings->addChild('team_pointslimitnewrules', $gameInfos->teamPointsLimitNewRules);

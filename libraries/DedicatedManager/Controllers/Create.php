@@ -13,8 +13,9 @@ use \DedicatedManager\Services\GameInfos;
 
 class Create extends \ManiaLib\Application\Controller
 {
+
 	protected $defaultAction = 'configure';
-	
+
 	protected function onConstruct()
 	{
 		$header = \DedicatedManager\Helpers\Header::getInstance();
@@ -102,13 +103,13 @@ class Create extends \ManiaLib\Application\Controller
 			$this->session->delete('configFile');
 			$this->request->redirectArgList('../configure');
 		}
-		
+
 		$tmp = new \DedicatedManager\Services\Account();
 		foreach($account as $key => $value)
 		{
 			$tmp->$key = $value;
 		}
-		
+
 		$systemConfig = new \DedicatedManager\Services\SystemConfig();
 		foreach($system as $key => $value)
 		{
@@ -156,7 +157,7 @@ class Create extends \ManiaLib\Application\Controller
 		$this->response->maps = $maps;
 		$this->response->scripts = $scripts;
 		$this->response->title = $system->title;
-		
+
 		$header = \DedicatedManager\Helpers\Header::getInstance();
 		$header->rightText = _('Back to server configuration');
 		$header->rightIcon = 'back';
@@ -168,14 +169,62 @@ class Create extends \ManiaLib\Application\Controller
 		$this->session->getStrict('serverOptions');
 		$this->session->getStrict('systemConfig');
 		$this->session->getStrict('account');
+
+		foreach($matchSettings as $key => $value)
+		{
+			switch($key)
+			{
+				case 'gameMode':
+					\ManiaLive\Utilities\Validation::int($value, 0, 6);
+					break;
+				case 'disableRespawn':
+					\ManiaLive\Utilities\Validation::int($value, 0, 1);
+					break;
+				case 'forceShowAllOpponents':
+				case 'chatTime':
+				case 'finishTimeout':
+				case 'allWarmUpDuration':
+				case 'roundsPointsLimit':
+				case 'roundsUseNewRules':
+				case 'roundsForcedLaps':
+				case 'roundsPointsLimitNewRules':
+				case 'teamPointsLimit':
+				case 'teamMaxPoints':
+				case 'teamUseNewRules':
+				case 'teamPointsLimitNewRules':
+				case 'timeAttackLimit':
+				case 'timeAttackSynchStartPeriod':
+				case 'lapsNbLaps':
+				case 'lapsTimeLimit':
+				case 'cupPointsLimit':
+				case 'cupRoundsPerMap':
+				case 'cupNbWinners':
+				case 'cupWarmUpDuration':
+					\ManiaLive\Utilities\Validation::int($value);
+					break;
+				case 'scriptName':
+				default:
+					break;
+			}
+		}
+
 		$matchSettingsObj = GameInfos::fromArray($matchSettings);
-		$matchSettingsObj->chatTime *= (array_key_exists('chatTime', $matchSettings) ? 1000 : 1);
+		$matchSettingsObj->chatTime = ($matchSettingsObj->chatTime < 0 ? 1 : (array_key_exists('chatTime', $matchSettings) ? $matchSettingsObj->chatTime * 1000
+						: $matchSettingsObj->chatTime));
+		$matchSettingsObj->finishTimeout = ($matchSettingsObj->finishTimeout < 0 ? 1 : (array_key_exists('finishTimeout',
+					$matchSettings) ? $matchSettingsObj->finishTimeout * 1000 : $matchSettingsObj->finishTimeout));
+		$matchSettingsObj->timeAttackLimit = ($matchSettingsObj->timeAttackLimit < 0 ? 1 : (array_key_exists('timeAttackLimit',
+					$matchSettings) ? $matchSettingsObj->timeAttackLimit * 1000 : $matchSettingsObj->timeAttackLimit));
+		$matchSettingsObj->timeattack_synchstartperiod *= (array_key_exists('timeattack_synchstartperiod', $matchSettings) ? 1000
+					: 1);
+		$matchSettingsObj->lapsTimeLimit = ($matchSettingsObj->lapsTimeLimit < 0 ? 1 : (array_key_exists('lapsTimeLimit',
+					$matchSettings) ? $matchSettingsObj->lapsTimeLimit * 1000 : $matchSettingsObj->lapsTimeLimit));
 		$this->session->set('matchSettings', $matchSettingsObj);
 
 		$selected = array_map(function ($m)
-				{
-					return str_replace('\\', '/', $m);
-				}, $maps);
+			{
+				return str_replace('\\', '/', $m);
+			}, $maps);
 		$this->request->set('selected', $selected);
 
 		if($matchSettingsObj->gameMode === null)
@@ -186,7 +235,7 @@ class Create extends \ManiaLib\Application\Controller
 		{
 			$this->session->set('error', _('You have to select a script to play in script mode'));
 		}
-		
+
 		if($this->session->get('error'))
 		{
 			$this->request->set('matchFile', $this->session->get('matchFile'));
@@ -242,7 +291,7 @@ class Create extends \ManiaLib\Application\Controller
 
 		$this->response->files = $files;
 		$this->response->selected = $selected;
-		
+
 		$header = \DedicatedManager\Helpers\Header::getInstance();
 		$header->rightText = _('Back to match configuration');
 		$header->rightIcon = 'back';
@@ -284,7 +333,7 @@ class Create extends \ManiaLib\Application\Controller
 
 		$this->response->configFile = \ManiaLib\Utils\Formatting::stripStyles($configFile);
 		$this->response->matchFile = \ManiaLib\Utils\Formatting::stripStyles($matchFile);
-		
+
 		$header = \DedicatedManager\Helpers\Header::getInstance();
 		$header->rightText = _('Back to map selection');
 		$header->rightIcon = 'back';
@@ -298,7 +347,7 @@ class Create extends \ManiaLib\Application\Controller
 		if($count)
 		{
 			$this->session->set('error',
-					_('The filename must not contain any of the following characters: "/","\\",":","*","!","<",">","|"'));
+				_('The filename must not contain any of the following characters: "/","\\",":","*","!","<",">","|"'));
 			$this->session->set('configFile', $configFile);
 			$this->session->set('matchFile', $matchFile);
 			$this->request->set('selected', implode(',', $this->session->getStrict('selected')));
@@ -309,7 +358,7 @@ class Create extends \ManiaLib\Application\Controller
 		if($count)
 		{
 			$this->session->set('error',
-					_('The filename must not contain any of the following characters: "/","\\",":","*","!","<",">","|"'));
+				_('The filename must not contain any of the following characters: "/","\\",":","*","!","<",">","|"'));
 			$this->session->set('configFile', $configFile);
 			$this->session->set('matchFile', $matchFile);
 			$this->request->set('selected', implode(',', $this->session->getStrict('selected')));
@@ -408,7 +457,7 @@ class Create extends \ManiaLib\Application\Controller
 		$this->response->system = $system;
 		$this->response->configFile = $configFile;
 	}
-	
+
 	function saveRelayConfig(array $config, array $account, array $system, $isOnline = 0)
 	{
 		$errors = array();
@@ -443,13 +492,13 @@ class Create extends \ManiaLib\Application\Controller
 			$this->session->delete('configFile');
 			$this->request->redirectArgList('../configure');
 		}
-		
+
 		$tmp = new \DedicatedManager\Services\Account();
 		foreach($account as $key => $value)
 		{
 			$tmp->$key = $value;
 		}
-		
+
 		$systemConfig = new \DedicatedManager\Services\SystemConfig();
 		foreach($system as $key => $value)
 		{
@@ -464,7 +513,7 @@ class Create extends \ManiaLib\Application\Controller
 
 		$this->request->redirectArgList('../save-file');
 	}
-	
+
 	function saveFile()
 	{
 		$serverOptions = $this->session->getStrict('serverOptions');
@@ -481,7 +530,7 @@ class Create extends \ManiaLib\Application\Controller
 		}
 
 		$this->response->configFile = \ManiaLib\Utils\Formatting::stripStyles($configFile);
-		
+
 		$header = \DedicatedManager\Helpers\Header::getInstance();
 		$header->rightText = _('Back to relay server configuration');
 		$header->rightIcon = 'back';
@@ -494,7 +543,8 @@ class Create extends \ManiaLib\Application\Controller
 		str_ireplace(array('/', '\\', ':', '*', '!', '<', '>', '|'), '', $configFile, $count);
 		if($count)
 		{
-			$this->session->set('error', _('The filename must not contain any of the following characters: "/","\\",":","*","!","<",">","|"'));
+			$this->session->set('error',
+				_('The filename must not contain any of the following characters: "/","\\",":","*","!","<",">","|"'));
 			$this->session->set('configFile', $configFile);
 			$this->request->set('selected', implode(',', $this->session->getStrict('selected')));
 			$this->request->redirectArgList('../save-file/');
@@ -551,6 +601,7 @@ class Create extends \ManiaLib\Application\Controller
 		$this->session->delete('isLan');
 		$this->request->redirectArgList('/');
 	}
+
 }
 
 ?>
