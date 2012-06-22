@@ -48,8 +48,8 @@ class Ajax extends \ManiaLib\Application\Controller
 		}
 
 		$info = pathinfo($filename);
-		$service = new \DedicatedManager\Services\FileService();
-		$map = $service->getData($info['basename'],$info['dirname'].'/');
+		$service = new \DedicatedManager\Services\MapService();
+		$map = $service->getData($info['basename'], $info['dirname'].'/');
 		$data['name'] = StyleParser::toHtml($map->name);
 		$data['author'] = $map->author;
 		$data['goldTime'] = ($map->goldTime <= 0 ? '-' : \ManiaLive\Utilities\Time::fromTM($map->goldTime));

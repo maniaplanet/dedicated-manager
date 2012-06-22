@@ -144,7 +144,7 @@ class Edit extends \ManiaLib\Application\Controller implements \ManiaLib\Applica
 			$isLaps = $matchSettings->gameMode == GameInfos::GAMEMODE_LAPS;
 		}
 
-		$service = new \DedicatedManager\Services\FileService();
+		$service = new \DedicatedManager\Services\MapService();
 		$files = $service->getList('', true, $isLaps, $type, $this->currentMap->environnement);
 
 		$this->response->files = $files;
@@ -180,8 +180,8 @@ class Edit extends \ManiaLib\Application\Controller implements \ManiaLib\Applica
 
 	function rules()
 	{
-		$matchService = new \DedicatedManager\Services\MatchService();
-		$matchRules = $matchService->getCurrentMatchRules($this->hostname, $this->port);
+		$service = new \DedicatedManager\Services\MatchSettingsFileService();
+		$matchRules = $service->getCurrentMatchRules($this->hostname, $this->port);
 
 		$matchInfo = $this->connection->getCurrentGameInfo();
 		switch($matchInfo->gameMode)
@@ -269,33 +269,35 @@ class Edit extends \ManiaLib\Application\Controller implements \ManiaLib\Applica
 	 */
 	function saveConfig($config)
 	{
+		$errors = array();
 		if($config['name'] === '')
 		{
-			$this->session->set('error', _('You have to fill the "Name" field'));
+			$errors[] = _('You have to fill the "Name" field');
 		}
 
 		if($config['nextMaxPlayers'] <= 0)
 		{
-			$this->session->set('error', _('You have to set a positive value for the "Max players" field'));
+			$errors[] = _('You have to set a positive value for the "Max players" field');
 		}
 
 		if($config['nextMaxSpectators'] <= 0)
 		{
-			$this->session->set('error', _('You have to set a positive value for the "Max spectators" field'));
+			$errors[] = _('You have to set a positive value for the "Max spectators" field');
 		}
 
 		if(($config['callVoteRatio'] != -1 && $config['callVoteRatio'] < 0) || $config['callVoteRatio'] > 100)
 		{
-			$this->session->set('error',
-				_('The vote ratio has to be between 0 and 100, it can take the value -1 to disable vote'));
+			$errors[] = _('The vote ratio has to be between 0 and 100, it can take the value -1 to disable vote');
 		}
 
 		if($config['nextMaxSpectators'] + $config['nextMaxPlayers'] > 250)
 		{
-			$this->session->set('error', _('Too many players. Total must be lower than 250.'));
+			$errors[] = _('Too many players. Total must be lower than 250.');
 		}
-		if($this->session->get('error'))
+		
+		if($errors)
 		{
+			$this->session->set('error', $errors);
 			$this->request->redirectArgList('/edit/config/', 'hostname', 'port');
 		}
 
@@ -308,7 +310,7 @@ class Edit extends \ManiaLib\Application\Controller implements \ManiaLib\Applica
 		$serverOptions->passwordForSpectator = $config['passwordForSpectator'];
 		$serverOptions->hideServer = (int) $config['hideServer'];
 		$serverOptions->allowMapDownload = (bool) $config['allowMapDownload'];
-		$serverOptions->callVoteRatio = (float) $config['callVoteRatio'] / 100;
+		$serverOptions->callVoteRatio = $config['callVoteRatio'] == -1 ? -1 : (float) $config['callVoteRatio'] / 100;
 		$serverOptions->nextCallVoteTimeOut = (int) $config['nextCallVoteTimeOut'] * 1000;
 		$serverOptions->refereePassword = $config['refereePassword'];
 		$serverOptions->refereeMode = (int) $config['refereeMode'];
@@ -446,8 +448,8 @@ class Edit extends \ManiaLib\Application\Controller implements \ManiaLib\Applica
 
 	function blacklist()
 	{
-		$service = new \DedicatedManager\Services\FileService();
-		$this->response->blacklistFiles = $service->getBlacklistFileList();
+		$service = new \DedicatedManager\Services\BlacklistFileService();
+		$this->response->blacklistFiles = $service->getList();
 		$this->response->blackListedPlayers = $this->connection->getBlackList(-1, 0);
 		$this->response->players = $this->players;
 		
@@ -534,8 +536,8 @@ class Edit extends \ManiaLib\Application\Controller implements \ManiaLib\Applica
 	 */
 	function saveBlacklist($filename)
 	{
-		$service = new \DedicatedManager\Services\ServerService();
-		$configList = $service->getConfigFileList();
+		$service = new \DedicatedManager\Services\ConfigFileService();
+		$configList = $service->getList();
 		if(in_array($filename, $configList))
 		{
 			$this->session->set('error', _('You cannot use this filename'));
@@ -556,8 +558,8 @@ class Edit extends \ManiaLib\Application\Controller implements \ManiaLib\Applica
 
 	function guestlist()
 	{
-		$service = new \DedicatedManager\Services\FileService();
-		$this->response->guestlistFiles = $service->getGuestlistFileList();
+		$service = new \DedicatedManager\Services\GuestlistFileService();
+		$this->response->guestlistFiles = $service->getList();
 		$this->response->guestListedPlayers = $this->connection->getGuestList(-1, 0);
 		$this->response->players = $this->players;
 		
@@ -644,12 +646,12 @@ class Edit extends \ManiaLib\Application\Controller implements \ManiaLib\Applica
 	 */
 	function saveGuestlist($filename)
 	{
-		$service = new \DedicatedManager\Services\ServerService();
-		$configList = $service->getConfigFileList();
+		$service = new \DedicatedManager\Services\ConfigFileService();
+		$configList = $service->getList();
 		if(in_array($filename, $configList))
 		{
 			$this->session->set('error', _('You cannot use this filename'));
-			$this->request->redirectArgList('../blacklist/', 'hostname', 'port');
+			$this->request->redirectArgList('../guestlist/', 'hostname', 'port');
 		}
 
 		try

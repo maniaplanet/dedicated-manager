@@ -28,7 +28,7 @@ abstract class Files
 			if($file instanceof \DedicatedManager\Services\Directory)
 			{
 				/* @var $file \DedicatedManager\Services\Directory */
-				$displayedDirs .= self::subTree($file->childFiles, $selected, $hideSelected, $file->filename);
+				$displayedDirs .= self::subTree($file->children, $selected, $hideSelected, $file->filename);
 			}
 			else if($file instanceof \DedicatedManager\Services\Map)
 			{

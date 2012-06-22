@@ -24,12 +24,12 @@ class Create extends \ManiaLib\Application\Controller
 
 	function configure($configFile = '')
 	{
-		$service = new \DedicatedManager\Services\ServerService();
-		$configList = $service->getConfigFileList();
+		$service = new \DedicatedManager\Services\ConfigFileService();
+		$configList = $service->getList();
 
 		if($configFile)
 		{
-			list($config, $account, $system) = $service->getConfig($configFile);
+			list($config, $account, $system) = $service->get($configFile);
 		}
 		else
 		{
@@ -86,7 +86,7 @@ class Create extends \ManiaLib\Application\Controller
 		}
 		if(($config['callVoteRatio'] != -1 && $config['callVoteRatio'] < 0) || $config['callVoteRatio'] > 100)
 		{
-			$errors[] = _('The vote ratio has to be between 0 and 100, it can take the value -1 if vote are disabled.');
+			$errors[] = _('The vote ratio has to be between 0 and 100, it can take the value -1 to disable votes.');
 		}
 		if($account['login'] && !preg_match('/^[a-z0-9_\-.]{1,25}$/ixu', $account['login']))
 		{
@@ -97,7 +97,7 @@ class Create extends \ManiaLib\Application\Controller
 			$errors[] = _('The password entered is invalid, please check it.');
 		}
 
-		if(!empty($errors))
+		if($errors)
 		{
 			$this->session->set('error', $errors);
 			$this->session->delete('configFile');
@@ -132,8 +132,8 @@ class Create extends \ManiaLib\Application\Controller
 		$this->session->getStrict('serverOptions');
 		$system = $this->session->getStrict('systemConfig');
 		$this->session->getStrict('account');
-		$service = new \DedicatedManager\Services\MatchService();
-		$matchSettingsFiles = $service->getMatchSettingsFilesList();
+		$service = new \DedicatedManager\Services\MatchSettingsFileService();
+		$matchSettingsFiles = $service->getList();
 
 		$maps = array();
 
@@ -177,6 +177,8 @@ class Create extends \ManiaLib\Application\Controller
 				case 'gameMode':
 					\ManiaLive\Utilities\Validation::int($value, 0, 6);
 					break;
+				case 'roundsUseNewRules':
+				case 'teamUseNewRules':
 				case 'disableRespawn':
 					\ManiaLive\Utilities\Validation::int($value, 0, 1);
 					break;
@@ -185,12 +187,10 @@ class Create extends \ManiaLib\Application\Controller
 				case 'finishTimeout':
 				case 'allWarmUpDuration':
 				case 'roundsPointsLimit':
-				case 'roundsUseNewRules':
 				case 'roundsForcedLaps':
 				case 'roundsPointsLimitNewRules':
 				case 'teamPointsLimit':
 				case 'teamMaxPoints':
-				case 'teamUseNewRules':
 				case 'teamPointsLimitNewRules':
 				case 'timeAttackLimit':
 				case 'timeAttackSynchStartPeriod':
@@ -251,7 +251,6 @@ class Create extends \ManiaLib\Application\Controller
 		$system = $this->session->getStrict('systemConfig');
 		$this->session->getStrict('account');
 		$matchSettings = $this->session->getStrict('matchSettings');
-		$matchService = new \DedicatedManager\Services\MatchService();
 
 		//TODO Find a way to clean this mess
 		if($system->title == 'TMCanyon')
@@ -265,32 +264,20 @@ class Create extends \ManiaLib\Application\Controller
 
 		if($matchSettings->gameMode == GameInfos::GAMEMODE_SCRIPT)
 		{
-			$script = $matchSettings->scriptName;
-			$type = 'script';
-			$type = $matchService->getScriptMapType($script, $system->title);
+			$service = new \DedicatedManager\Services\MatchSettingsFileService();
+			$type = $service->getScriptMapType($matchSettings->scriptName, $system->title);
 		}
 		else
 		{
 			$type = array('Race');
 		}
 
-		if($matchSettings->gameMode == GameInfos::GAMEMODE_LAPS)
-		{
-			$isLaps = true;
-		}
-		else
-		{
-			$isLaps = false;
-		}
-		$service = new \DedicatedManager\Services\FileService();
-		$files = array();
-		$files = $service->getList('', true, $isLaps, $type, $environment);
-
-		$selected = $this->session->get('selected', $selected);
-		$this->session->delete('selected', $selected);
-
-		$this->response->files = $files;
-		$this->response->selected = $selected;
+		$isLaps = $matchSettings->gameMode == GameInfos::GAMEMODE_LAPS;
+		
+		$service = new \DedicatedManager\Services\MapService();
+		$this->response->files = $service->getList('', true, $isLaps, $type, $environment);
+		$this->response->selected = $this->session->get('selected', $selected);
+		$this->session->delete('selected');
 
 		$header = \DedicatedManager\Helpers\Header::getInstance();
 		$header->rightText = _('Back to match configuration');
@@ -307,7 +294,7 @@ class Create extends \ManiaLib\Application\Controller
 		}
 
 		$serverOptions = $this->session->getStrict('serverOptions');
-		$system = $this->session->getStrict('systemConfig');
+		$this->session->getStrict('systemConfig');
 		$this->session->getStrict('account');
 		$this->session->getStrict('matchSettings');
 
@@ -373,7 +360,7 @@ class Create extends \ManiaLib\Application\Controller
 		$isLan = $this->session->get('isLan');
 		try
 		{
-			$service = new \DedicatedManager\Services\MatchService();
+			$service = new \DedicatedManager\Services\MatchSettingsFileService();
 			$service->save($matchFile, $matchSettings, $maps);
 		}
 		catch(\Exception $e)
@@ -388,7 +375,7 @@ class Create extends \ManiaLib\Application\Controller
 
 		try
 		{
-			$service = new \DedicatedManager\Services\ServerService();
+			$service = new \DedicatedManager\Services\ConfigFileService();
 			$service->save($configFile, $serverOptions, $account, $system);
 		}
 		catch(\Exception $e)
@@ -403,6 +390,7 @@ class Create extends \ManiaLib\Application\Controller
 
 		try
 		{
+			$service = new \DedicatedManager\Services\ServerService();
 			$service->start($configFile, $matchFile, $isLan);
 		}
 		catch(\Exception $e)
@@ -426,12 +414,12 @@ class Create extends \ManiaLib\Application\Controller
 
 	function relay($configFile = '')
 	{
-		$service = new \DedicatedManager\Services\ServerService();
-		$configList = $service->getConfigFileList();
+		$service = new \DedicatedManager\Services\ConfigFileService();
+		$configList = $service->getList();
 
 		if($configFile)
 		{
-			list($config, $account, $system) = $service->getConfig($configFile);
+			list($config, $account, $system) = $service->get($configFile);
 		}
 		else
 		{
@@ -486,7 +474,7 @@ class Create extends \ManiaLib\Application\Controller
 			$errors[] = _('The password entered is invalid, please check it.');
 		}
 
-		if(!empty($errors))
+		if($errors)
 		{
 			$this->session->set('error', $errors);
 			$this->session->delete('configFile');
@@ -557,7 +545,7 @@ class Create extends \ManiaLib\Application\Controller
 
 		try
 		{
-			$service = new \DedicatedManager\Services\ServerService();
+			$service = new \DedicatedManager\Services\ConfigFileService();
 			$service->save($configFile, $serverOptions, $account, $system);
 		}
 		catch(\Exception $e)
@@ -570,6 +558,7 @@ class Create extends \ManiaLib\Application\Controller
 
 		try
 		{
+			$service = new \DedicatedManager\Services\ServerService();
 			$service->startRelay($configFile, $isLan);
 		}
 		catch(\Exception $e)

@@ -1,78 +1,118 @@
 <?php
 /**
- * @copyright   Copyright (c) 2009-2011 NADEO (http://www.nadeo.com)
- * @version     $Revision$:
- * @author      $Author$:
- * @date        $Date$:
+ * @copyright   Copyright (c) 2009-2012 NADEO (http://www.nadeo.com)
+ * @license     http://www.gnu.org/licenses/lgpl.html LGPL License 3
+ * @version     $Revision: $:
+ * @author      $Author: $:
+ * @date        $Date: $:
  */
 
 namespace DedicatedManager\Services;
 
-class MatchService
+class MatchSettingsFileService extends DedicatedFileService
 {
-
-	function getMatchSettingsFilesList()
+	function __construct()
 	{
-		$matchSettingsDirectory = \DedicatedManager\Config::getInstance()->dedicatedPath.'UserData/Maps/MatchSettings/';
-		$currentDir = getcwd();
-		if(!file_exists($matchSettingsDirectory))
+		$this->directory = \DedicatedManager\Config::getInstance()->dedicatedPath.'UserData/Maps/MatchSettings/';
+		$this->rootTag = '<playlist>';
+	}
+	
+	function get($filename)
+	{
+		if(!file_exists($this->directory.$filename.'.txt'))
 		{
-			return array();
+			throw new \InvalidArgumentException('File does not exists');
 		}
-		chdir($matchSettingsDirectory);
 
-		$matchSettingsFiles = array();
-		foreach(glob('*.[tT][xX][tT]') as $file)
+		$playlist = simplexml_load_file($this->directory.$filename.'.txt');
+
+		$gameInfos = new GameInfos();
+		$gameInfos->gameMode = (int) $playlist->gameinfos->game_mode;
+		$gameInfos->chatTime = (int) $playlist->gameinfos->chat_time;
+		$gameInfos->finishTimeout = (int) $playlist->gameinfos->finishtimeout;
+		$gameInfos->allWarmUpDuration = (int) $playlist->gameinfos->allwarmupduration;
+		$gameInfos->disableRespawn = (int) $playlist->gameinfos->disablerespawn;
+		$gameInfos->forceShowAllOpponents = (int) $playlist->gameinfos->forceshowallopponents;
+		$gameInfos->scriptName = (string) $playlist->gameinfos->script_name;
+		$gameInfos->roundsPointsLimit = (int) $playlist->gameinfos->rounds_pointslimit;
+		$gameInfos->roundsUseNewRules = (int) $playlist->gameinfos->rounds_usenewrules;
+		$gameInfos->roundsForcedLaps = (int) $playlist->gameinfos->rounds_forcedlaps;
+		$gameInfos->roundsPointsLimitNewRules = (int) $playlist->gameinfos->rounds_pointslimitnewrules;
+		$gameInfos->teamPointsLimit = (int) $playlist->gameinfos->team_pointslimit;
+		$gameInfos->teamUseNewRules = (int) $playlist->gameinfos->team_usenew_rules;
+		$gameInfos->teamMaxPoints = (int) $playlist->gameinfos->team_maxpoints;
+		$gameInfos->teamPointsLimitNewRules = (int) $playlist->gameinfos->team_pointslimitnewrules;
+		$gameInfos->timeAttackLimit = (int) $playlist->gameinfos->timeattack_limit;
+		$gameInfos->timeAttackSynchStartPeriod = (int) $playlist->gameinfos->timeattack_syncstartperiod;
+		$gameInfos->lapsNbLaps = (int) $playlist->gameinfos->laps_nblaps;
+		$gameInfos->lapsTimeLimit = (int) $playlist->gameinfos->laps_timelimit;
+		$gameInfos->cupPointsLimit = (int) $playlist->gameinfos->cup_pointslimit;
+		$gameInfos->cupRoundsPerMap = (int) $playlist->gameinfos->cup_roundsperchallenge;
+		$gameInfos->cupNbWinners = (int) $playlist->gameinfos->cup_nbwinners;
+		$gameInfos->cupWarmUpDuration = (int) $playlist->gameinfos->cup_warmupduration;
+
+		$maps = array();
+		for($i = 0; $i < count($playlist->map); $i++)
 		{
-			$matchSettingsFiles[] = stristr($file, '.txt', true);
+			$mapIndex = ($i + (int) $playlist->startindex) % count($playlist->map);
+			$maps[] = (string) $playlist->map[$mapIndex]->file;
 		}
-		chdir($currentDir);
-		return $matchSettingsFiles;
+		return array($gameInfos, $maps);
 	}
 
-	function deleteMatchSettingsFilesList(array $files)
+	function save($filename, GameInfos $gameInfos, array $maps)
 	{
-		$matchSettingsDirectory = \DedicatedManager\Config::getInstance()->dedicatedPath.'UserData/Maps/MatchSettings/';
-		foreach($files as $file)
-		{
-			if(file_exists($matchSettingsDirectory.$file.'.txt'))
-			{
-				unlink($matchSettingsDirectory.$file.'.txt');
-			}
-		}
-	}
+		$this->directory = \DedicatedManager\Config::getInstance()->dedicatedPath.'UserData/Maps/MatchSettings/';
 
-	function getScriptList($title)
-	{
-		//TODO Clean this mess with custom titles
-		if(preg_match('/(storm){1}$/ixu', $title))
+		$dom = new \DOMDocument('1.0', 'utf-8');
+		$playlist = simplexml_import_dom($dom->createElement('playlist'));
+
+		$gameSettings = $playlist->addChild('gameinfos');
+		$gameSettings->addChild('game_mode', (int) $gameInfos->gameMode);
+		$gameSettings->addChild('chat_time', (int) $gameInfos->chatTime);
+		$gameSettings->addChild('finishtimeout', (int) $gameInfos->finishTimeout);
+		$gameSettings->addChild('allwarmupduration', (int) $gameInfos->allWarmUpDuration);
+		$gameSettings->addChild('disablerespawn', $gameInfos->disableRespawn);
+		$gameSettings->addChild('forceshowallopponents', $gameInfos->forceShowAllOpponents);
+		$gameSettings->addChild('script_name', (string) $gameInfos->scriptName);
+		$gameSettings->addChild('rounds_pointslimit', (int) $gameInfos->roundsPointsLimit);
+		$gameSettings->addChild('rounds_usenewrules', (int) $gameInfos->roundsUseNewRules);
+		$gameSettings->addChild('rounds_forcedlaps', (int) $gameInfos->roundsForcedLaps);
+		$gameSettings->addChild('rounds_pointslimitnewrules', (int) $gameInfos->roundsPointsLimitNewRules);
+		$gameSettings->addChild('team_pointslimit', (int) $gameInfos->teamPointsLimit);
+		$gameSettings->addChild('team_maxpoints', (int) $gameInfos->teamMaxPoints);
+		$gameSettings->addChild('team_usenewrules', (int) $gameInfos->teamUseNewRules);
+		$gameSettings->addChild('team_pointslimitnewrules', (int) $gameInfos->teamPointsLimitNewRules);
+		$gameSettings->addChild('timeattack_limit', (int) $gameInfos->timeAttackLimit);
+		$gameSettings->addChild('timeattack_synchstartperiod', (int) $gameInfos->timeAttackSynchStartPeriod);
+		$gameSettings->addChild('laps_nblaps', (int) $gameInfos->lapsNbLaps);
+		$gameSettings->addChild('laps_timelimit', (int) $gameInfos->lapsTimeLimit);
+		$gameSettings->addChild('cup_pointslimit', (int) $gameInfos->cupPointsLimit);
+		$gameSettings->addChild('cup_roundsperchallenge', (int) $gameInfos->cupRoundsPerMap);
+		$gameSettings->addChild('cup_nbwinners', (int) $gameInfos->cupNbWinners);
+		$gameSettings->addChild('cup_warmupduration', (int) $gameInfos->cupWarmUpDuration);
+
+		$hotseat = $playlist->addChild('hotseat');
+		$hotseat->addChild('game_mode', 0);
+		$hotseat->addChild('time_limit', 300000);
+		$hotseat->addChild('rounds_count', 5);
+
+		$filter = $playlist->addChild('filter');
+		$filter->addChild('is_lan', 1);
+		$filter->addChild('is_internet', 1);
+		$filter->addChild('is_solo', 0);
+		$filter->addChild('sort_index', 1000);
+		$filter->addChild('random_map_order', 0);
+		$filter->addChild('force_default_gamemode', 0);
+
+		$playlist->addChild('startindex', 0);
+
+		foreach($maps as $map)
 		{
-			$game = 'ShootMania';
-		}
-		elseif(preg_match('/(canyon|valley){1}$/ixu', $title))
-		{
-			$game = 'TrackMania';
-		}
-		elseif($title == 'SMStormElite@nadeolabs')
-		{
-			return array('Elite.Script.txt');
-		}
-		elseif($title == 'SMStormjoust@nadeolabs')
-		{
-			return array('Joust.Script.txt');
+			$playlist->addChild('map')->addChild('file', $map);
 		}
 
-		$scriptDirectory = \DedicatedManager\Config::getInstance()->dedicatedPath.'UserData/Scripts/Modes/'.$game.'/';
-		if(!file_exists($scriptDirectory))
-		{
-			return array();
-		}
-		$currentDir = getcwd();
-		chdir($scriptDirectory);
-
-		$scripts = glob('*.[sS][cC][rR][iI][pP][tT].[tT][Xx][tT]');
-		chdir($currentDir);
-		return $scripts;
+		$playlist->asXML($this->directory.$filename.'.txt');
 	}
 
 	function getCurrentMatchRules($hostname, $port)
@@ -93,7 +133,6 @@ class MatchService
 		switch($gameInfo->gameMode)
 		{
 			case GameInfos::GAMEMODE_SCRIPT:
-				$values = $connection->getModeScriptSettings();
 				$info = $connection->getModeScriptInfo();
 				$matchRules = array();
 				foreach($info->paramDescs as $value)
@@ -277,6 +316,39 @@ class MatchService
 
 		return $matchRules;
 	}
+	
+	function getScriptList($title)
+	{
+		//TODO Clean this mess with custom titles
+		if(preg_match('/(storm){1}$/ixu', $title))
+		{
+			$game = 'ShootMania';
+		}
+		elseif(preg_match('/(canyon|valley){1}$/ixu', $title))
+		{
+			$game = 'TrackMania';
+		}
+		elseif($title == 'SMStormElite@nadeolabs')
+		{
+			return array('Elite.Script.txt');
+		}
+		elseif($title == 'SMStormjoust@nadeolabs')
+		{
+			return array('Joust.Script.txt');
+		}
+
+		$scriptDirectory = \DedicatedManager\Config::getInstance()->dedicatedPath.'UserData/Scripts/Modes/'.$game.'/';
+		if(!file_exists($scriptDirectory))
+		{
+			return array();
+		}
+		$currentDir = getcwd();
+		chdir($scriptDirectory);
+
+		$scripts = glob('*.[sS][cC][rR][iI][pP][tT].[tT][xX][tT]');
+		chdir($currentDir);
+		return $scripts;
+	}
 
 	function getScriptMapType($scriptName, $title)
 	{
@@ -343,106 +415,6 @@ class MatchService
 				}, $scripts));
 		return $scripts;
 	}
-
-	function get($filename)
-	{
-		$matchSettingsDirectory = \DedicatedManager\Config::getInstance()->dedicatedPath.'UserData/Maps/MatchSettings/';
-		if(!file_exists($matchSettingsDirectory.$filename.'.txt'))
-		{
-			throw new \InvalidArgumentException('File does not exists');
-		}
-
-		$playlist = simplexml_load_file($matchSettingsDirectory.$filename.'.txt');
-
-		$gameInfos = new GameInfos();
-		$gameInfos->gameMode = (int) $playlist->gameinfos->game_mode;
-		$gameInfos->chatTime = (int) $playlist->gameinfos->chat_time;
-		$gameInfos->finishTimeout = (int) $playlist->gameinfos->finishtimeout;
-		$gameInfos->allWarmUpDuration = (int) $playlist->gameinfos->allwarmupduration;
-		$gameInfos->disableRespawn = (int) $playlist->gameinfos->disablerespawn;
-		$gameInfos->forceShowAllOpponents = (int) $playlist->gameinfos->forceshowallopponents;
-		$gameInfos->scriptName = (string) $playlist->gameinfos->script_name;
-		$gameInfos->roundsPointsLimit = (int) $playlist->gameinfos->rounds_pointslimit;
-		$gameInfos->roundsUseNewRules = (int) $playlist->gameinfos->rounds_usenewrules;
-		$gameInfos->roundsForcedLaps = (int) $playlist->gameinfos->rounds_forcedlaps;
-		$gameInfos->roundsPointsLimitNewRules = (int) $playlist->gameinfos->rounds_pointslimitnewrules;
-		$gameInfos->teamPointsLimit = (int) $playlist->gameinfos->team_pointslimit;
-		$gameInfos->teamUseNewRules = (int) $playlist->gameinfos->team_usenew_rules;
-		$gameInfos->teamMaxPoints = (int) $playlist->gameinfos->team_maxpoints;
-		$gameInfos->teamPointsLimitNewRules = (int) $playlist->gameinfos->team_pointslimitnewrules;
-		$gameInfos->timeAttackLimit = (int) $playlist->gameinfos->timeattack_limit;
-		$gameInfos->timeAttackSynchStartPeriod = (int) $playlist->gameinfos->timeattack_syncstartperiod;
-		$gameInfos->lapsNbLaps = (int) $playlist->gameinfos->laps_nblaps;
-		$gameInfos->lapsTimeLimit = (int) $playlist->gameinfos->laps_timelimit;
-		$gameInfos->cupPointsLimit = (int) $playlist->gameinfos->cup_pointslimit;
-		$gameInfos->cupRoundsPerMap = (int) $playlist->gameinfos->cup_roundsperchallenge;
-		$gameInfos->cupNbWinners = (int) $playlist->gameinfos->cup_nbwinners;
-		$gameInfos->cupWarmUpDuration = (int) $playlist->gameinfos->cup_warmupduration;
-
-		$maps = array();
-		for($i = 0; $i < count($playlist->map); $i++)
-		{
-			$mapIndex = ($i + (int) $playlist->startindex) % count($playlist->map);
-			$maps[] = (string) $playlist->map[$mapIndex]->file;
-		}
-		return array($gameInfos, $maps);
-	}
-
-	function save($filename, GameInfos $gameInfos, array $maps)
-	{
-		$matchSettingsDirectory = \DedicatedManager\Config::getInstance()->dedicatedPath.'UserData/Maps/MatchSettings/';
-
-		$dom = new \DOMDocument('1.0', 'utf-8');
-		$playlist = simplexml_import_dom($dom->createElement('playlist'));
-
-		$gameSettings = $playlist->addChild('gameinfos');
-		$gameSettings->addChild('game_mode', $gameInfos->gameMode);
-		$gameSettings->addChild('chat_time', $gameInfos->chatTime);
-		$gameSettings->addChild('finishtimeout', $gameInfos->finishTimeout);
-		$gameSettings->addChild('allwarmupduration', $gameInfos->allWarmUpDuration);
-		$gameSettings->addChild('disablerespawn', $gameInfos->disableRespawn);
-		$gameSettings->addChild('forceshowallopponents', $gameInfos->forceShowAllOpponents);
-		$gameSettings->addChild('script_name', $gameInfos->scriptName);
-		$gameSettings->addChild('rounds_pointslimit', $gameInfos->roundsPointsLimit);
-		$gameSettings->addChild('rounds_usenewrules', $gameInfos->roundsUseNewRules);
-		$gameSettings->addChild('rounds_forcedlaps', $gameInfos->roundsForcedLaps);
-		$gameSettings->addChild('rounds_pointslimitnewrules', $gameInfos->roundsPointsLimitNewRules);
-		$gameSettings->addChild('team_pointslimit', $gameInfos->teamPointsLimit);
-		$gameSettings->addChild('team_maxpoints', $gameInfos->teamMaxPoints);
-		$gameSettings->addChild('team_usenewrules', $gameInfos->teamUseNewRules);
-		$gameSettings->addChild('team_pointslimitnewrules', $gameInfos->teamPointsLimitNewRules);
-		$gameSettings->addChild('timeattack_limit', $gameInfos->timeAttackLimit);
-		$gameSettings->addChild('timeattack_synchstartperiod', $gameInfos->timeAttackSynchStartPeriod);
-		$gameSettings->addChild('laps_nblaps', $gameInfos->lapsNbLaps);
-		$gameSettings->addChild('laps_timelimit', $gameInfos->lapsTimeLimit);
-		$gameSettings->addChild('cup_pointslimit', $gameInfos->cupPointsLimit);
-		$gameSettings->addChild('cup_roundsperchallenge', $gameInfos->cupRoundsPerMap);
-		$gameSettings->addChild('cup_nbwinners', $gameInfos->cupNbWinners);
-		$gameSettings->addChild('cup_warmupduration', $gameInfos->cupWarmUpDuration);
-
-		$hotseat = $playlist->addChild('hotseat');
-		$hotseat->addChild('game_mode', 0);
-		$hotseat->addChild('time_limit', 300000);
-		$hotseat->addChild('rounds_count', 5);
-
-		$filter = $playlist->addChild('filter');
-		$filter->addChild('is_lan', 1);
-		$filter->addChild('is_internet', 1);
-		$filter->addChild('is_solo', 0);
-		$filter->addChild('sort_index', 1000);
-		$filter->addChild('random_map_order', 0);
-		$filter->addChild('force_default_gamemode', 0);
-
-		$playlist->addChild('startindex', 0);
-
-		foreach($maps as $map)
-		{
-			$playlist->addChild('map')->addChild('file', $map);
-		}
-
-		$playlist->asXML($matchSettingsDirectory.$filename.'.txt');
-	}
-
 }
 
 ?>

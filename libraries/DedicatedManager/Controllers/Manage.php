@@ -14,10 +14,10 @@ class Manage extends \ManiaLib\Application\Controller
 
 	function index()
 	{
-		$service = new \DedicatedManager\Services\ServerService();
-		$configFiles = $service->getConfigFileList();
-		$service = new \DedicatedManager\Services\MatchService();
-		$matchFiles = $service->getMatchSettingsFilesList();
+		$service = new \DedicatedManager\Services\ConfigFileService();
+		$configFiles = $service->getList();
+		$service = new \DedicatedManager\Services\MatchSettingsFileService();
+		$matchFiles = $service->getList();
 
 		$this->response->configFiles = $configFiles;
 		$this->response->matchFiles = $matchFiles;
@@ -30,8 +30,8 @@ class Manage extends \ManiaLib\Application\Controller
 		{
 			try
 			{
-				$service = new \DedicatedManager\Services\ServerService();
-				$service->deleteConfigFileList($configFiles);
+				$service = new \DedicatedManager\Services\ConfigFileService();
+				$service->deleteList($configFiles);
 			}
 			catch(\Exception $e)
 			{
@@ -43,8 +43,8 @@ class Manage extends \ManiaLib\Application\Controller
 		{
 			try
 			{
-				$service = new \DedicatedManager\Services\MatchService();
-				$service->deleteMatchSettingsFilesList($matchFiles);
+				$service = new \DedicatedManager\Services\MatchSettingsFileService();
+				$service->deleteList($configFiles);
 			}
 			catch(\Exception $e)
 			{
