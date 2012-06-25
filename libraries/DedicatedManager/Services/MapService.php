@@ -68,7 +68,7 @@ class MapService extends AbstractService
 				$thumbnail = imagecreatetruecolor($width, $height);
 				foreach(range($height - 1, 0) as $oldY => $newY)
 					imagecopy($thumbnail, $mirroredThumbnail, 0, $newY, 0, $oldY, $width, 1);
-				imagejpeg($thumbnail, \ManiaLib\Application\Config::getInstance()->getImagesURL().'thumbnails/'.$map->uid.'.jpg', 100);
+				imagejpeg($thumbnail, MANIALIB_APP_PATH.'/www/media/images/thumbnails/'.$map->uid.'.jpg', 100);
 			}
 			catch(\Exception $e)
 			{
