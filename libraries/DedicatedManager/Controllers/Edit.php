@@ -684,7 +684,7 @@ class Edit extends \ManiaLib\Application\Controller implements \ManiaLib\Applica
 			{
 				$receiver = null;
 			}
-			$this->connection->chatSend($message, $receiver);
+			$this->connection->chatSendServerMessage($message, $receiver);
 			$this->session->set('success', _('Your message has been send'));
 		}
 		catch(\Exception $e)
