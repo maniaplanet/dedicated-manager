@@ -57,10 +57,6 @@
 		margin: 0;
 	}
 	
-	.content-primary ul:first-child {
-		margin-top: 0;
-	}
-	
 	.content-secondary .ui-collapsible-heading {
 		display: none;
 	}

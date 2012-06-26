@@ -17,6 +17,62 @@ class MatchSettingsFileService extends DedicatedFileService
 		$this->rootTag = '<playlist>';
 	}
 	
+	function validate(GameInfos $gameInfos)
+	{
+		$errors = array();
+		foreach((array) $gameInfos as $key => $value)
+		{
+			try
+			{
+				switch($key)
+				{
+					case 'gameMode':
+						\ManiaLive\Utilities\Validation::int($value, 0, 6);
+						break;
+					case 'roundsUseNewRules':
+					case 'teamUseNewRules':
+					case 'disableRespawn':
+						\ManiaLive\Utilities\Validation::int($value, 0, 1);
+						break;
+					case 'forceShowAllOpponents':
+					case 'chatTime':
+					case 'finishTimeout':
+					case 'allWarmUpDuration':
+					case 'roundsPointsLimit':
+					case 'roundsForcedLaps':
+					case 'roundsPointsLimitNewRules':
+					case 'teamPointsLimit':
+					case 'teamMaxPoints':
+					case 'teamPointsLimitNewRules':
+					case 'timeAttackLimit':
+					case 'timeAttackSynchStartPeriod':
+					case 'lapsNbLaps':
+					case 'lapsTimeLimit':
+					case 'cupPointsLimit':
+					case 'cupRoundsPerMap':
+					case 'cupNbWinners':
+					case 'cupWarmUpDuration':
+						\ManiaLive\Utilities\Validation::int($value);
+						break;
+					case 'scriptName':
+					default:
+						break;
+				}
+			}
+			catch(\Exception $e)
+			{
+				$errors[] = sprintf(_('Wrong value for field "%s".'), $key);
+			}
+		}
+		
+		if($gameInfos->gameMode === GameInfos::GAMEMODE_SCRIPT && $gameInfos->scriptName == '')
+		{
+			$errors[] = _('You have to select a script to play in script mode.');
+		}
+		
+		return $errors;
+	}
+	
 	function get($filename)
 	{
 		if(!file_exists($this->directory.$filename.'.txt'))
@@ -55,7 +111,7 @@ class MatchSettingsFileService extends DedicatedFileService
 		for($i = 0; $i < count($playlist->map); $i++)
 		{
 			$mapIndex = ($i + (int) $playlist->startindex) % count($playlist->map);
-			$maps[] = (string) $playlist->map[$mapIndex]->file;
+			$maps[] = str_replace('\\', '/', (string) $playlist->map[$mapIndex]->file);
 		}
 		return array($gameInfos, $maps);
 	}
@@ -324,15 +380,15 @@ class MatchSettingsFileService extends DedicatedFileService
 		{
 			$game = 'ShootMania';
 		}
-		elseif(preg_match('/(canyon|valley){1}$/ixu', $title))
+		else if(preg_match('/(canyon|valley){1}$/ixu', $title))
 		{
 			$game = 'TrackMania';
 		}
-		elseif($title == 'SMStormElite@nadeolabs')
+		else if($title == 'SMStormElite@nadeolabs')
 		{
 			return array('Elite.Script.txt');
 		}
-		elseif($title == 'SMStormjoust@nadeolabs')
+		else if($title == 'SMStormJoust@nadeolabs')
 		{
 			return array('Joust.Script.txt');
 		}

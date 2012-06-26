@@ -34,9 +34,11 @@ class Plugin extends \ManiaLive\PluginHandler\Plugin
 		{
 			$config = \ManiaLive\DedicatedApi\Config::getInstance();
 			$this->db->execute(
-					'INSERT INTO Servers (hostname,port,password,name,lastLiveDate) '.
-					'VALUES (%s,%d,%s,%s,NOW()) ON DUPLICATE KEY UPDATE name = VALUES(name), lastLiveDate = NOW()',
-					$this->db->quote($config->host), $config->port,
+					'INSERT INTO Servers (login, hostname, port, password, name, lastLiveDate) '.
+					'VALUES (%s, %s, %d, %s, %s, NOW()) ON DUPLICATE KEY UPDATE login = VALUES(login), name = VALUES(name), lastLiveDate = NOW()',
+					$this->db->quote($this->storage->serverLogin),
+					$this->db->quote($config->host),
+					$config->port,
 					$this->db->quote($config->password),
 					$this->db->quote($this->storage->server->name)
 			);

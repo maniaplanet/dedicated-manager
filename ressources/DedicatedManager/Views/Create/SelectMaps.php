@@ -12,7 +12,7 @@ $r = ManiaLib\Application\Request::getInstance();
     </div>
 	<?= DedicatedManager\Helpers\Box\Box::detect() ?>
     <div data-role="content">
-		<form action="<?= $r->createLinkArgList('../save-files') ?>" data-ajax="false" method="get">
+		<form action="<?= $r->createLinkArgList('../save-maps') ?>" data-ajax="false" method="get">
 			<?= DedicatedManager\Helpers\Files::tree($files, $selected, 'selected') ?>
 			<div class="ui-grid-a">
 				<div class="ui-block-a">

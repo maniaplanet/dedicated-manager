@@ -3,7 +3,7 @@
 <div class="ui-bar ui-bar-b">
 	<div class="ui-grid-a">
 		<div class="ui-block-a">
-			<?= _('Server name:') ?>&nbsp;<?= ManiaLib\Utils\StyleParser::toHtml($serverOptions->name) ?>
+			<?= _('Server name:') ?>&nbsp;<?= ManiaLib\Utils\StyleParser::toHtml($options->name) ?>
 		</div>
 		<div class="ui-block-b">
 			<?= _('Number of connected players:') ?>&nbsp;<?= $playersCount ?>

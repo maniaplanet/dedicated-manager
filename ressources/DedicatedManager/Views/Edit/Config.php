@@ -17,22 +17,21 @@ $r = ManiaLib\Application\Request::getInstance();
 								<strong><?= _('Displayed name'); ?></strong><br/>
 								<i><?= _('Name that will be displayed in the server list.') ?></i>
 							</label>
-							<input type="text" name="config[name]" id="name" value="<?= $serverOptions->name; ?>" required="required" class="formattingPreview"/>
-							<div class="formattingResult"></div>
+							<?= DedicatedManager\Helpers\Input::text('options[name]', 'name', $options->name) ?>
 						</li>
 						<li data-role="fieldcontain">
 							<label for="comment">
 								<strong><?= _('Description'); ?></strong><br/>
 								<i><?= _('Short description of the server.') ?></i>
 							</label>
-							<textarea name="config[comment]" id="comment" rows="4" cols="25"><?= $serverOptions->comment; ?></textarea>
+							<textarea name="options[comment]" id="comment" rows="4" cols="25"><?= $options->comment; ?></textarea>
 						</li>
 						<li data-role="fieldcontain">
 							<label for="maxPlayers">
 								<strong><?= _('Max players'); ?></strong><br/>
 								<i><?= _('Maximum number of players you want to be able to connect on the server.') ?></i><br/>
 							</label>
-							<input type="range" name="config[nextMaxPlayers]" id="maxPlayers" min="0" value="<?= $serverOptions->nextMaxPlayers; ?>" max="250" data-highlight="true"/>
+							<input type="range" name="options[nextMaxPlayers]" id="maxPlayers" value="<?= $options->nextMaxPlayers; ?>" min="0" max="255" data-highlight="true"/>
 						</li>
 					</ul>
 				</fieldset>
@@ -44,30 +43,30 @@ $r = ManiaLib\Application\Request::getInstance();
 								<strong><?= _('Password'); ?></strong><br/>
 								<i><?= _('Password if you want to limit access to players.') ?></i>
 							</label>
-							<input type="text" name="config[password]" id="password" value="<?= $serverOptions->password; ?>"/>
+							<?= DedicatedManager\Helpers\Input::text('options[password]', 'password', $options->password) ?>
 						</li>
 						<li data-role="fieldcontain">
 							<label for="maxSpectators">
 								<strong><?= _('Max spectators'); ?></strong><br/>
 								<i><?= _('Maximum number of spectators you want to be able to connect on the server.') ?></i>
 							</label>
-							<input type="range" name="config[nextMaxSpectators]" id="maxSpectators" min="0" value="<?= $serverOptions->nextMaxSpectators; ?>" max="250" data-highlight="true"/>
+							<input type="range" name="options[nextMaxSpectators]" id="maxSpectators" value="<?= $options->nextMaxSpectators; ?>" min="0" max="255" data-highlight="true"/>
 						</li>
 						<li data-role="fieldcontain">
 							<label for="passwordForSpectator">
 								<strong><?= _('Password for spectator'); ?></strong><br/>
 								<i><?= _('Enter a password if you want to limit access to spectators.') ?></i>
 							</label>
-							<input type="text" name="config[passwordForSpectator]" id="passwordForSpectator" value="<?= $serverOptions->passwordForSpectator; ?>"/>
+							<?= DedicatedManager\Helpers\Input::text('options[passwordForSpectator]', 'passwordForSpectator', $options->passwordForSpectator) ?>
 						</li>
 						<li data-role="fieldcontain">
 							<label for="hideServer">
 								<strong><?= _('Hide server'); ?></strong><br/>
 								<i><?= _('If checked the server will not be visible in the server list.') ?></i>
 							</label>
-							<select id="hideServer" name="config[hideServer]" data-role="slider">
-								<option value="0" <?= !$serverOptions->hideServer ? 'selected="selected"' : '' ?>><?= _('No') ?></option>
-								<option value="1" <?= $serverOptions->hideServer ? 'selected="selected"' : '' ?>><?= _('Yes') ?></option>
+							<select id="hideServer" name="options[hideServer]" data-role="slider">
+								<option value="0" <?= !$options->hideServer ? 'selected="selected"' : '' ?>><?= _('No') ?></option>
+								<option value="1" <?= $options->hideServer ? 'selected="selected"' : '' ?>><?= _('Yes') ?></option>
 							</select>
 						</li>
 						<li data-role="fieldcontain">
@@ -75,31 +74,31 @@ $r = ManiaLib\Application\Request::getInstance();
 								<strong><?= _('Allow map download'); ?></strong><br/>
 								<i><?= _('Allow players to download maps from the server.') ?></i>
 							</label>
-							<select id="allowMapDownload" name="config[allowMapDownload]" data-role="slider">
-								<option value="0" <?= !$serverOptions->allowMapDownload ? 'selected="selected"' : '' ?>><?= _('No') ?></option>
-								<option value="1" <?= $serverOptions->allowMapDownload ? 'selected="selected"' : '' ?>><?= _('Yes') ?></option>
+							<select id="allowMapDownload" name="options[allowMapDownload]" data-role="slider">
+								<option value="0" <?= !$options->allowMapDownload ? 'selected="selected"' : '' ?>><?= _('No') ?></option>
+								<option value="1" <?= $options->allowMapDownload ? 'selected="selected"' : '' ?>><?= _('Yes') ?></option>
 							</select>
 						</li>
 						<li data-role="fieldcontain">
 							<label for="callVoteRation">
 								<strong><?= _('Call vote ratio (in %)'); ?></strong><br/>
-								<i><?= _('Ratio in % that define if a vote passed or not.')._('It has to be set at -1 to inactive votes') ?></i>
+								<i><?= _('Ratio in % that define if a vote passed or -1 to disable votes') ?></i>
 							</label>
-							<input type="range" name="config[callVoteRatio]" id="callVoteRation" value="<?= $serverOptions->callVoteRatio * 100; ?>" min="-1" max="100"/>
+							<input type="range" name="options[callVoteRatio]" id="callVoteRation" value="<?= $options->callVoteRatio == -1 ? -1 : $options->callVoteRatio * 100; ?>" min="-1" max="100" data-highlight="true"/>
 						</li>
 						<li data-role="fieldcontain">
 							<label for="callVoteTimeOut">
 								<strong><?= _('Call vote timeout (in seconds)'); ?></strong><br/>
 								<i><?= _('Time of duration of a vote') ?></i>
 							</label>
-							<input type="number" name="config[nextCallVoteTimeOut]" id="callVoteTimeOut" value="<?= $serverOptions->nextCallVoteTimeOut / 1000; ?>"/>
+							<input type="number" name="options[nextCallVoteTimeOut]" id="callVoteTimeOut" value="<?= $options->nextCallVoteTimeOut / 1000; ?>"/>
 						</li>
 						<li data-role="fieldcontain">
 							<label for="refereePassword">
 								<strong><?= _('Referee password'); ?></strong><br/>
 								<i><?= _('Enter a password if you want to limit access to referees.') ?></i>
 							</label>
-							<input type="text" name="config[refereePassword]" id="refereePassword" value="<?= $serverOptions->refereePassword; ?>"/>
+							<?= DedicatedManager\Helpers\Input::text('options[refereePassword]', 'refereePassword', $options->refereePassword) ?>
 						</li>
 						<li data-role="fieldcontain">
 							<fieldset data-role="controlgroup">
@@ -107,9 +106,9 @@ $r = ManiaLib\Application\Request::getInstance();
 									<strong><?= _('Referee Mode'); ?></strong><br/>
 									<i><?= _('Select if the referees will validate only top3 on eache race or everyone.') ?></i>
 								</legend>
-								<input type="radio" name="config[refereeMode]" id="refereeModeTop3" value="0" <?= $serverOptions->refereeMode == 0 ? 'checked="checked"' : '' ?>/>
+								<input type="radio" name="options[refereeMode]" id="refereeModeTop3" value="0" <?= $options->refereeMode == 0 ? 'checked="checked"' : '' ?>/>
 								<label for="refereeModeTop3"><?= _('Top 3'); ?></label>
-								<input type="radio" name="config[refereeMode]" id="refereeModeAll" value="1" <?= $serverOptions->refereeMode == 1 ? 'checked="checked"' : '' ?>/>
+								<input type="radio" name="options[refereeMode]" id="refereeModeAll" value="1" <?= $options->refereeMode == 1 ? 'checked="checked"' : '' ?>/>
 								<label for="refereeModeAll"><?= _('All players'); ?></label>
 							</fieldset>
 						</li>
@@ -118,9 +117,9 @@ $r = ManiaLib\Application\Request::getInstance();
 								<strong><?= _('Autosave replays'); ?></strong><br/>
 								<i><?= _('If checked every a replay will be saved on each map.') ?></i>
 							</label>
-							<select id="autosaveReplays" name="config[autosaveReplays]" data-role="slider">
-								<option value="0" <?= !$serverOptions->autosaveReplays ? 'selected="selected"' : '' ?>><?= _('No') ?></option>
-								<option value="1" <?= $serverOptions->autosaveReplays ? 'selected="selected"' : '' ?>><?= _('Yes') ?></option>
+							<select id="autosaveReplays" name="options[autosaveReplays]" data-role="slider">
+								<option value="0" <?= !$options->autosaveReplays ? 'selected="selected"' : '' ?>><?= _('No') ?></option>
+								<option value="1" <?= $options->autosaveReplays ? 'selected="selected"' : '' ?>><?= _('Yes') ?></option>
 							</select>
 						</li>
 						<li data-role="fieldcontain">
@@ -128,9 +127,9 @@ $r = ManiaLib\Application\Request::getInstance();
 								<strong><?= _('Autosave replays for validation'); ?></strong><br/>
 								<i><?= _('If checked a replay of validation will be generated on each map.') ?></i>
 							</label>
-							<select id="autosaveValidationReplays" name="config[autosaveValidationReplays]" data-role="slider">
-								<option value="0" <?= !$serverOptions->autosaveValidationReplays ? 'selected="selected"' : '' ?>><?= _('No') ?></option>
-								<option value="1" <?= $serverOptions->autosaveValidationReplays ? 'selected="selected"' : '' ?>><?= _('Yes') ?></option>
+							<select id="autosaveValidationReplays" name="options[autosaveValidationReplays]" data-role="slider">
+								<option value="0" <?= !$options->autosaveValidationReplays ? 'selected="selected"' : '' ?>><?= _('No') ?></option>
+								<option value="1" <?= $options->autosaveValidationReplays ? 'selected="selected"' : '' ?>><?= _('Yes') ?></option>
 							</select>
 						</li>
 						<li data-role="fieldcontain">
@@ -138,9 +137,9 @@ $r = ManiaLib\Application\Request::getInstance();
 								<strong><?= _('Ladder Mode'); ?></strong><br/>
 								<i><?= _("Choose if you want to activate or not the ladder on your server.") ?></i>
 							</label>
-							<select id="nextLadderMode" name="config[nextLadderMode]" data-role="slider">
-								<option value="0" <?= !$serverOptions->nextLadderMode ? 'selected="selected"' : '' ?>><?= _('No') ?></option>
-								<option value="1" <?= $serverOptions->nextLadderMode ? 'selected="selected"' : '' ?>><?= _('Yes') ?></option>
+							<select id="nextLadderMode" name="options[nextLadderMode]" data-role="slider">
+								<option value="0" <?= !$options->nextLadderMode ? 'selected="selected"' : '' ?>><?= _('No') ?></option>
+								<option value="1" <?= $options->nextLadderMode ? 'selected="selected"' : '' ?>><?= _('Yes') ?></option>
 							</select>
 						</li>
 						<li data-role="fieldcontain">
@@ -148,14 +147,14 @@ $r = ManiaLib\Application\Request::getInstance();
 								<strong><?= _('Ladder limit min'); ?></strong><br/>
 								<i><?= _("Enter the minimal number of ladder points required to connect to the server.") ?></i>
 							</label>
-							<input type="number" name="config[ladderServerLimitMin]" id="ladderServerLimitMin" value="<?= $serverOptions->ladderServerLimitMin; ?>" min="0" max="80000" step="10000"/>
+							<input type="number" name="options[ladderServerLimitMin]" id="ladderServerLimitMin" value="<?= $options->ladderServerLimitMin; ?>" min="0" max="80000" step="10000"/>
 						</li>
 						<li data-role="fieldcontain">
 							<label for="ladderServerLimitMax">
 								<strong><?= _('Ladder limit max'); ?></strong><br/>
 								<i><?= _("Enter the maximum number of ladder points to win on the server.") ?></i>
 							</label>
-							<input type="number" name="config[ladderServerLimitMax]" id="ladderServerLimitMax" value="<?= $serverOptions->ladderServerLimitMax; ?>" min="10000" max="100000" step="10000"/>
+							<input type="number" name="options[ladderServerLimitMax]" id="ladderServerLimitMax" value="<?= $options->ladderServerLimitMax; ?>" min="10000" max="100000" step="10000"/>
 						</li>
 					</ul>
 				</fieldset>

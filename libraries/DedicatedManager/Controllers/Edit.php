@@ -20,7 +20,7 @@ class Edit extends \ManiaLib\Application\Controller implements \ManiaLib\Applica
 	/** @var \ManiaLive\DedicatedApi\Connection */
 	private $connection;
 	private $players;
-	private $serverOptions;
+	private $options;
 	private $currentMap;
 	private $nextMap;
 	
@@ -44,8 +44,9 @@ class Edit extends \ManiaLib\Application\Controller implements \ManiaLib\Applica
 		$comment = $rm->getDocComment();
 		if(!$comment || !preg_match('/@redirect/u', $comment))
 		{
+			$this->request->registerReferer();
 			$this->players = $this->connection->getPlayerList(-1, 0);
-			$this->serverOptions = $this->connection->getServerOptions();
+			$this->options = $this->connection->getServerOptions();
 			$this->currentMap = $this->connection->getCurrentMapInfo();
 			$this->nextMap = $this->connection->getNextMapInfo();
 		}
@@ -82,7 +83,7 @@ class Edit extends \ManiaLib\Application\Controller implements \ManiaLib\Applica
 		$this->response->hostname = $this->hostname;
 		$this->response->port = $this->port;
 		$this->response->playersCount = count($this->players);
-		$this->response->serverOptions = $this->serverOptions;
+		$this->response->options = $this->options;
 		$this->response->currentMap = $this->currentMap;
 		$this->response->nextMap = $this->nextMap;
 	}
@@ -267,62 +268,28 @@ class Edit extends \ManiaLib\Application\Controller implements \ManiaLib\Applica
 	/**
 	 * @redirect
 	 */
-	function saveConfig($config)
+	function saveConfig($options)
 	{
-		$errors = array();
-		if($config['name'] === '')
-		{
-			$errors[] = _('You have to fill the "Name" field');
-		}
-
-		if($config['nextMaxPlayers'] <= 0)
-		{
-			$errors[] = _('You have to set a positive value for the "Max players" field');
-		}
-
-		if($config['nextMaxSpectators'] <= 0)
-		{
-			$errors[] = _('You have to set a positive value for the "Max spectators" field');
-		}
-
-		if(($config['callVoteRatio'] != -1 && $config['callVoteRatio'] < 0) || $config['callVoteRatio'] > 100)
-		{
-			$errors[] = _('The vote ratio has to be between 0 and 100, it can take the value -1 to disable vote');
-		}
-
-		if($config['nextMaxSpectators'] + $config['nextMaxPlayers'] > 250)
-		{
-			$errors[] = _('Too many players. Total must be lower than 250.');
-		}
+		$optionsObj = \DedicatedManager\Services\ServerOptions::fromArray($options);
+		$optionsObj->callVoteRatio = $optionsObj->callVoteRatio < 0 ? $optionsObj->callVoteRatio : $optionsObj->callVoteRatio / 100;
+		$optionsObj->nextCallVoteTimeOut = $optionsObj->nextCallVoteTimeOut * 1000;
 		
-		if($errors)
+		$service = new \DedicatedManager\Services\ConfigFileService();
+		if( ($errors = $service->validate($optionsObj)) )
 		{
 			$this->session->set('error', $errors);
 			$this->request->redirectArgList('/edit/config/', 'hostname', 'port');
 		}
 
-		$serverOptions = $this->connection->getServerOptions();
-		$serverOptions->name = $config['name'];
-		$serverOptions->comment = $config['comment'];
-		$serverOptions->nextMaxPlayers = (int) $config['nextMaxPlayers'];
-		$serverOptions->password = $config['password'];
-		$serverOptions->nextMaxSpectators = (int) $config['nextMaxSpectators'];
-		$serverOptions->passwordForSpectator = $config['passwordForSpectator'];
-		$serverOptions->hideServer = (int) $config['hideServer'];
-		$serverOptions->allowMapDownload = (bool) $config['allowMapDownload'];
-		$serverOptions->callVoteRatio = $config['callVoteRatio'] == -1 ? -1 : (float) $config['callVoteRatio'] / 100;
-		$serverOptions->nextCallVoteTimeOut = (int) $config['nextCallVoteTimeOut'] * 1000;
-		$serverOptions->refereePassword = $config['refereePassword'];
-		$serverOptions->refereeMode = (int) $config['refereeMode'];
-		$serverOptions->autoSaveReplays = (bool) $config['autosaveReplays'];
-		$serverOptions->autoSaveValidationReplays = (bool) $config['autosaveValidationReplays'];
-		$serverOptions->nextLadderMode = (int) $config['nextLadderMode'];
-		$serverOptions->ladderServerLimitMax = (int) $config['ladderServerLimitMax'];
-		$serverOptions->ladderServerLimitMin = (int) $config['ladderServerLimitMin'];
+		$optionsCur = $this->connection->getServerOptions();
+		$optionsObj->isP2PDownload = $optionsCur->isP2PDownload;
+		$optionsObj->isP2PUpload = $optionsCur->isP2PUpload;
+		$optionsObj->nextVehicleNetQuality = $optionsCur->nextVehicleNetQuality;
+		$optionsObj->nextUseChangingValidationSeed = $optionsCur->nextUseChangingValidationSeed;
 
 		try
 		{
-			$this->connection->setServerOptions($serverOptions->toArray());
+			$this->connection->setServerOptions($optionsObj->toArray());
 			$this->session->set('success', _('Configuration successfully changed'));
 		}
 		catch(\Exception $e)
@@ -685,7 +652,7 @@ class Edit extends \ManiaLib\Application\Controller implements \ManiaLib\Applica
 				$receiver = null;
 			}
 			$this->connection->chatSendServerMessage($message, $receiver);
-			$this->session->set('success', _('Your message has been send'));
+			$this->session->set('success', _('Your message has been sent'));
 		}
 		catch(\Exception $e)
 		{
@@ -728,7 +695,7 @@ class Edit extends \ManiaLib\Application\Controller implements \ManiaLib\Applica
 	function restart()
 	{
 		$this->connection->restartMap();
-		$this->request->redirectArgList('../', 'hostname', 'port');
+		$this->request->redirectToReferer();
 	}
 
 	/**
@@ -737,7 +704,7 @@ class Edit extends \ManiaLib\Application\Controller implements \ManiaLib\Applica
 	function next()
 	{
 		$this->connection->nextMap();
-		$this->request->redirectArgList('../', 'hostname', 'port');
+		$this->request->redirectToReferer();
 	}
 
 }

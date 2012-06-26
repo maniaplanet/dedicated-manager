@@ -17,6 +17,48 @@ class ConfigFileService extends DedicatedFileService
 		$this->rootTag = '<dedicated>';
 	}
 	
+	function validate(ServerOptions $options, Account $account = null, SystemConfig $system = null, $isLan = true)
+	{
+		$errors = array();
+		if(!$system->title)
+		{
+			$errors[] = _('You have to select a game title');
+		}
+		if(!$options->name)
+		{
+			$errors[] = _('You have to fill the "Name" field.');
+		}
+		if($options->nextMaxPlayers <= 0)
+		{
+			$errors[] = _('You have to set a positive value for the "Max players" field.');
+		}
+		if($options->nextMaxSpectators < 0)
+		{
+			$errors[] = _('You have to set a positive value for the "Max spectators" field.');
+		}
+		if($options->nextMaxSpectators + $options->nextMaxPlayers > 255)
+		{
+			$errors[] = _('Too many player allowed. Total must be lower than 255.');
+		}
+		if(($options->callVoteRatio != -1 && $options->callVoteRatio < 0) || $options->callVoteRatio > 1)
+		{
+			$errors[] = _('The vote ratio has to be between 0 and 100, it can take the value -1 to disable votes.');
+		}
+		if(!$isLan && $account)
+		{
+			if(!preg_match('/^[a-z0-9_.-]{1,25}$/ixu', $account->login))
+			{
+				$errors[] = _('The login entered is invalid, please check it.');
+			}
+			if(!$account->password || strlen($account->password) > 20)
+			{
+				$errors[] = _('The password entered is invalid, please check it.');
+			}
+		}
+
+		return $errors;
+	}
+	
 	function get($filename)
 	{
 		if(!file_exists($this->directory.$filename.'.txt'))
@@ -48,6 +90,11 @@ class ConfigFileService extends DedicatedFileService
 		$config->refereePassword = (string) $configObj->server_options->referee_password;
 		$config->refereeMode = (string) $configObj->server_options->referee_validation_mode;
 		$config->nextUseChangingValidationSeed = self::toBool($configObj->server_options->use_changing_validation_seed);
+
+		$account = new Account();
+		$account->login = (string) $configObj->masterserver_account->login;
+		$account->password = (string) $configObj->masterserver_account->password;
+		$account->validationKey = (string) $configObj->masterserver_account->validation_key;
 		
 		$system = new SystemConfig();
 		$system->connectionUploadrate = (int)$configObj->system_config->connection_uploadrate;
@@ -71,11 +118,6 @@ class ConfigFileService extends DedicatedFileService
 		$system->useProxy = self::toBool($configObj->system_config->use_proxy);
 		$system->proxyLogin = (string) $configObj->system_config->proxy_login;
 		$system->proxyPassword = (string) $configObj->system_config->proxyPassword;
-
-		$account = new Account();
-		$account->login = (string) $configObj->masterserver_account->login;
-		$account->password = (string) $configObj->masterserver_account->password;
-		$account->validationKey = (string) $configObj->masterserver_account->validation_key;
 
 		return array($config, $account, $system);
 	}

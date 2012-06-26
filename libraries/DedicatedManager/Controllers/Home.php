@@ -11,7 +11,6 @@ namespace DedicatedManager\Controllers;
 
 class Home extends \ManiaLib\Application\Controller
 {
-
 	protected function onConstruct()
 	{
 		$header = \DedicatedManager\Helpers\Header::getInstance();
@@ -20,10 +19,9 @@ class Home extends \ManiaLib\Application\Controller
 	
 	function index()
 	{
+		$this->request->registerReferer();
 		$config = \DedicatedManager\Config::getInstance();
-		/**
-		 * @var $config \DedicatedManager\Config
-		 */
+		
 		$errors = array();
 		$writables[] = $config->dedicatedPath;
 		$currentDir = getcwd();
@@ -31,11 +29,8 @@ class Home extends \ManiaLib\Application\Controller
 		{
 			$writables[] = $config->dedicatedPath.'UserData/Maps/MatchSettings/';
 			chdir($config->dedicatedPath.'UserData/Maps/MatchSettings/');
-			$tmp = glob('*.txt');
-			$tmp = array_map(function ($a) use ($config)
-					{
-						return $config->dedicatedPath.'UserData/Maps/MatchSettings/'.$a;
-					}, $tmp);
+			$tmp = glob('*.[tT][xX][tT]');
+			$tmp = array_map(function ($a) use ($config) { return $config->dedicatedPath.'UserData/Maps/MatchSettings/'.$a; }, $tmp);
 			$writables = array_merge($writables, $tmp);
 		}
 		$writables[] = $config->dedicatedPath.'UserData/Config/';
@@ -43,66 +38,37 @@ class Home extends \ManiaLib\Application\Controller
 		if(file_exists($config->dedicatedPath.'UserData/Config/'))
 		{
 			chdir($config->dedicatedPath.'UserData/Config/');
-			$tmp = glob('*.txt');
-			$tmp = array_map(function ($a) use ($config)
-					{
-						return $config->dedicatedPath.'UserData/Config/'.$a;
-					}, $tmp);
+			$tmp = glob('*.[tT][xX][tT]');
+			$tmp = array_map(function ($f) use ($config) { return $config->dedicatedPath.'UserData/Config/'.$f; }, $tmp);
 			$writables = array_merge($writables, $tmp);
 		}
 		$writables[] = $config->manialivePath.'logs/';
 		$writables[] = $config->manialivePath.'data/';
 		chdir($currentDir);
 
-		$executables = array();
-		if(stripos(PHP_OS, 'win') !== false)
-		{
-			$executables[] = $config->dedicatedPath.'ManiaPlanetServer.exe';
-		}
-		else
-		{
-			$executables[] = $config->dedicatedPath.'ManiaPlanetServer';
-		}
+		$executables[] = stripos(PHP_OS, 'win') !== false ? $config->dedicatedPath.'ManiaPlanetServer.exe' : $config->dedicatedPath.'ManiaPlanetServer';
 
-		$failed = array();
-		foreach($writables as $writable)
-		{
-			if(file_exists($writable) && !is_writable($writable)) $failed[] = $writable;
-		}
+		$failed = array_filter($writables, function ($f) { return file_exists($f) && !is_writable($f); });
 		if($failed)
 		{
-			$str = _('The following folders cannot be written by Apache user.').
-					' '._('Contact the admin to check this.').'<br/>'.
-					_('Folder list: ').'<ul>';
-			foreach($failed as $fail)
-			{
-				$str.= '<li>'.$fail.'</li>';
-			}
-			$errors[] = $str.'</ul>';
+			$errors[] = _('The following folders cannot be written by Apache user.').' '._('Contact the admin to check this.').'<br/>'.
+					_('Folder list: ').'<ul>'.implode('', array_map(function ($f) { return '<li>'.$f.'</li>'; }, $failed)).'</ul>';
 		}
 
-		$failed = array();
-		foreach($executables as $executable)
-		{
-			if(file_exists($writable) && !is_executable($executable)) $failed[] = $executable;
-		}
+		$failed = array_filter($executables, function ($f) { return file_exists($f) && !is_executable($f); });
 		if($failed)
 		{
-			$str = _('The following files cannot be executed by Apache user.').
-					' '._('Contact the admin to check this.').'<br/>'.
-					_('File list: ').'<ul>';
-			foreach($failed as $fail)
-			{
-				$str.= '<li>'.$fail.'</li>';
-			}
-			$errors[] = $str.'</ul>';
+			$errors[] = _('The following files cannot be executed by Apache user.').' '._('Contact the admin to check this.').'<br/>'.
+					_('File list: ').'<ul>'.implode('', array_map(function ($f) { return '<li>'.$f.'</li>'; }, $failed)).'</ul>';
 		}
 
-		if($errors) $this->session->set('error', $errors);
+		if($errors)
+		{
+			$this->session->set('error', $errors);
+		}
 
 		$service = new \DedicatedManager\Services\ServerService();
-		$servers = $service->getLives();
-		$this->response->servers = $servers;
+		$this->response->servers = $service->getLives();
 	}
 }
 

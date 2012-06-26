@@ -71,10 +71,10 @@ class ServerService extends AbstractService
 	
 	/**
 	 * @param string $configFile
-	 * @param string $toJoin
+	 * @param Spectate $spectate
 	 * @param bool $isLan
 	 */
-	function startRelay($configFile, $toJoin, $isLan)
+	function startRelay($configFile, Spectate $spectate, $isLan)
 	{
 		$config = \DedicatedManager\Config::getInstance();
 
@@ -84,7 +84,7 @@ class ServerService extends AbstractService
 			$startCommand = 'START /D "'.$config->dedicatedPath.'" ManiaPlanetServer.exe';
 		else
 			$startCommand = 'cd "'.$config->dedicatedPath.'"; ./ManiaPlanetServer';
-		$startCommand .= sprintf(' /dedicated_cfg=%s /join=%s', escapeshellarg($configFile.'.txt'), escapeshellarg($toJoin));
+		$startCommand .= sprintf(' /dedicated_cfg=%s /join=%s', escapeshellarg($configFile.'.txt'), $spectate);
 		if($isLan)
 			$startCommand .= ' /lan';
 		if(!$isWindows)

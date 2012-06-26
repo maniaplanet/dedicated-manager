@@ -20,14 +20,14 @@ $r = ManiaLib\Application\Request::getInstance();
 						<?= _('Server config filename') ?><br/>
 						<i><?= _('You have to enter a filename to save your server configuration.') ?></i>
 					</label>
-					<input type="text" name="configFile" id="configFile" value="<?= $configFile ?>"/>
+					<?= DedicatedManager\Helpers\Input::text('configFile', 'configFile', $configFile) ?>
 				</li>
 				<li data-role="fieldcontain">
 					<label for="matchFile">
 						<?= _('Match settings filename') ?><br/>
 						<i><?= _('You have to enter a filename to save your match configuration.') ?></i>
 					</label>
-					<input type="text" name="matchFile" id="matchFile" value="<?= $matchFile ?>"/>
+					<?= DedicatedManager\Helpers\Input::text('matchFile', 'matchFile', $matchFile) ?>
 				</li>
 			</ul>
 			<input type="submit" value="<?= _('Start your server') ?>"/>

@@ -39,14 +39,28 @@ $r = ManiaLib\Application\Request::getInstance();
 							<strong><?= _('Displayed name'); ?></strong><br/>
 							<i><?= _('Name that will be displayed in the server list.') ?></i>
 						</label>
-						<input type="text" name="config[name]" id="name" value="<?= $serverOptions->name; ?>" required="required" class="formattingPreview"/>
+						<?= DedicatedManager\Helpers\Input::text('options[name]', 'name', $options->name) ?>
 					</li>
 					<li data-role="fieldcontain">
 						<label for="comment">
 							<strong><?= _('Description'); ?></strong><br/>
 							<i><?= _('Short description of the relay server.') ?></i>
 						</label>
-						<textarea name="config[comment]" id="comment" rows="4" cols="25"><?= $serverOptions->comment; ?></textarea>
+						<textarea name="options[comment]" id="comment"><?= htmlentities($options->comment, ENT_QUOTES, 'utf-8') ?></textarea>
+					</li>
+					<li data-role="fieldcontain">
+						<label for="maxSpectators">
+							<strong><?= _('Max spectators'); ?></strong><br/>
+							<i><?= _('Maximum number of spectators you want to be able to connect on the relay server.') ?></i>
+						</label>
+						<input type="range" name="options[nextMaxSpectators]" id="maxSpectators" value="<?= $options->nextMaxSpectators; ?>" min="0" max="255" data-highlight="true"/>
+					</li>
+					<li data-role="fieldcontain">
+						<label for="passwordForSpectator">
+							<strong><?= _('Password for spectator'); ?></strong><br/>
+							<i><?= _('Enter a password if you want to limit access to spectators.') ?></i>
+						</label>
+						<?= DedicatedManager\Helpers\Input::text('options[passwordForSpectator]', 'passwordForSpectator', $options->passwordForSpectator) ?>
 					</li>
 					<li data-role="fieldcontain">
 						<label for="isOnline">
@@ -64,20 +78,6 @@ $r = ManiaLib\Application\Request::getInstance();
 				<legend><?= _('Advanced Server Configuration') ?></legend>
 				<ul data-role="listview">
 					<li data-role="fieldcontain">
-						<label for="maxSpectators">
-							<strong><?= _('Max spectators'); ?></strong><br/>
-							<i><?= _('Maximum number of spectators you want to be able to connect on the relay server.') ?></i>
-						</label>
-						<input type="text" name="config[nextMaxSpectators]" id="maxSpectators" value="<?= $serverOptions->nextMaxSpectators; ?>"/>
-					</li>
-					<li data-role="fieldcontain">
-						<label for="passwordForSpectator">
-							<strong><?= _('Password for spectator'); ?></strong><br/>
-							<i><?= _('Enter a password if you want to limit access to spectators.') ?></i>
-						</label>
-						<input type="text" name="config[passwordForSpectator]" id="passwordForSpectator" value="<?= $serverOptions->passwordForSpectator; ?>"/>
-					</li>
-					<li data-role="fieldcontain">
 						<label for="spectatorRelay">
 							<strong><?= _('Allow Spectator Relay'); ?></strong><br/>
 							<i><?= _('Allow relay server to connect as spectator on your server') ?></i>
@@ -93,8 +93,8 @@ $r = ManiaLib\Application\Request::getInstance();
 							<i><?= _('If "yes" is selected the server will not be visible in the server list.') ?></i>
 						</label>
 						<select id="hideServer" name="config[hideServer]" data-role="slider">
-							<option value="0" <?= !$serverOptions->hideServer ? 'selected="selected"' : '' ?>><?= _('No') ?></option>
-							<option value="1" <?= $serverOptions->hideServer ? 'selected="selected"' : '' ?>><?= _('Yes') ?></option>
+							<option value="0" <?= !$options->hideServer ? 'selected="selected"' : '' ?>><?= _('No') ?></option>
+							<option value="1" <?= $options->hideServer ? 'selected="selected"' : '' ?>><?= _('Yes') ?></option>
 						</select>
 					</li>
 					<li data-role="fieldcontain">
@@ -103,8 +103,8 @@ $r = ManiaLib\Application\Request::getInstance();
 							<i><?= _('Allow players to download maps from the server.') ?></i>
 						</label>
 						<select id="allowMapDownload" name="config[allowMapDownload]" data-role="slider">
-							<option value="0" <?= !$serverOptions->allowMapDownload ? 'selected="selected"' : '' ?>><?= _('No') ?></option>
-							<option value="1" <?= $serverOptions->allowMapDownload ? 'selected="selected"' : '' ?>><?= _('Yes') ?></option>
+							<option value="0" <?= !$options->allowMapDownload ? 'selected="selected"' : '' ?>><?= _('No') ?></option>
+							<option value="1" <?= $options->allowMapDownload ? 'selected="selected"' : '' ?>><?= _('Yes') ?></option>
 						</select>
 					</li>
 					<li data-role="fieldcontain">
@@ -112,7 +112,7 @@ $r = ManiaLib\Application\Request::getInstance();
 							<strong><?= _('Referee password'); ?></strong><br/>
 							<i><?= _('Enter a password if you want to limit access to referees.') ?></i>
 						</label>
-						<input type="text" name="config[refereePassword]" id="refereePassword" value="<?= $serverOptions->refereePassword; ?>"/>
+						<input type="text" name="config[refereePassword]" id="refereePassword" value="<?= $options->refereePassword; ?>"/>
 					</li>
 					<li data-role="fieldcontain">
 						<fieldset data-role="controlgroup">
@@ -121,9 +121,9 @@ $r = ManiaLib\Application\Request::getInstance();
 								<i><?= _('Select if the referees will validate only top3 on each race or everyone.') ?></i>
 							</legend>
 
-							<input type="radio" name="config[refereeMode]" id="refereeModeTop3" value="0" <?= $serverOptions->refereeMode == 0 ? 'checked="checked"' : '' ?>/>
+							<input type="radio" name="config[refereeMode]" id="refereeModeTop3" value="0" <?= $options->refereeMode == 0 ? 'checked="checked"' : '' ?>/>
 							<label for="refereeModeTop3"><?= _('Top 3'); ?></label>
-							<input type="radio" name="config[refereeMode]" id="refereeModeAll" value="1" <?= $serverOptions->refereeMode == 1 ? 'checked="checked"' : '' ?>/>
+							<input type="radio" name="config[refereeMode]" id="refereeModeAll" value="1" <?= $options->refereeMode == 1 ? 'checked="checked"' : '' ?>/>
 							<label for="refereeModeAll"><?= _('All players'); ?></label>
 						</fieldset>
 					</li>
@@ -133,8 +133,8 @@ $r = ManiaLib\Application\Request::getInstance();
 							<i><?= _('If "yes" every a replay will be saved on each map.') ?></i>
 						</label>
 						<select id="autosaveReplays" name="config[autosaveReplays]" data-role="slider">
-							<option value="0" <?= !$serverOptions->autosaveReplays ? 'selected="selected"' : '' ?>><?= _('No') ?></option>
-							<option value="1" <?= $serverOptions->autosaveReplays ? 'selected="selected"' : '' ?>><?= _('Yes') ?></option>
+							<option value="0" <?= !$options->autosaveReplays ? 'selected="selected"' : '' ?>><?= _('No') ?></option>
+							<option value="1" <?= $options->autosaveReplays ? 'selected="selected"' : '' ?>><?= _('Yes') ?></option>
 						</select>
 					</li>
 					<li data-role="fieldcontain">
@@ -143,8 +143,8 @@ $r = ManiaLib\Application\Request::getInstance();
 							<i><?= _('If "yes" a replay of validation will be generated on each map.') ?></i>
 						</label>
 						<select id="autosaveValidationReplays" name="config[autosaveValidationReplays]" data-role="slider">
-							<option value="0" <?= !$serverOptions->autosaveValidationReplays ? 'selected="selected"' : '' ?>><?= _('No') ?></option>
-							<option value="1" <?= $serverOptions->autosaveValidationReplays ? 'selected="selected"' : '' ?>><?= _('Yes') ?></option>
+							<option value="0" <?= !$options->autosaveValidationReplays ? 'selected="selected"' : '' ?>><?= _('No') ?></option>
+							<option value="1" <?= $options->autosaveValidationReplays ? 'selected="selected"' : '' ?>><?= _('Yes') ?></option>
 						</select>
 					</li>
 				</ul>
@@ -153,28 +153,31 @@ $r = ManiaLib\Application\Request::getInstance();
 				<legend><?= _('Internet Server Configuration') ?></legend>
 				<ul data-role="listview">
 					<li data-role="fieldcontain">
-<?= _('Create a dedicated server account:') ?><a href="http://player.maniaplanet.com/index.php/advanced/dedicated-servers/" target="blank"><?= _('Go to the Player page') ?></a>
+						<?= _('Create a dedicated server account:') ?>
+						<a href="http://player.maniaplanet.com/index.php/advanced/dedicated-servers/" target="blank">
+							<?= _('Go to the Player page') ?>
+						</a>
 					</li>
 					<li data-role="fieldcontain">
 						<label for="masterLogin">
 							<strong><?= _('Dedicated server account login'); ?></strong><br/>
 							<i><?= _("Enter the dedicated server's login.") ?></i>
 						</label>
-						<input type="text" name="account[login]" id="masterLogin" value="<?= $account->login; ?>"/>
+						<?= DedicatedManager\Helpers\Input::text('account[login]', 'masterLogin', $account->login) ?>
 					</li>
 					<li data-role="fieldcontain">
 						<label for="masterPassword">
 							<strong><?= _('Dedicated server account password'); ?></strong><br/>
 							<i><?= _("Enter the dedicated server's password.") ?></i>
 						</label>
-						<input type="password" name="account[password]" id="masterPassword" value="<?= $account->password; ?>"/>
+						<input type="password" name="account[password]" id="masterPassword" value="<?= htmlentities($account->password, ENT_QUOTES, 'utf-8') ?>"/>
 					</li>
 					<li data-role="fieldcontain">
 						<label for="masterValidationKey">
 							<strong><?= _('Validation key (optionnal)'); ?></strong><br/>
 							<i><?= _("Enter the dedicated server's validation key.") ?></i>
 						</label>
-						<input type="text" name="account[validationKey]" id="masterValidationKey" value="<?= $account->validationKey; ?>"/>
+						<?= DedicatedManager\Helpers\Input::text('account[validationKey]', 'masterValidationKey', $account->validationKey) ?>
 					</li>
 				</ul>
 			</fieldset>
@@ -186,14 +189,14 @@ $r = ManiaLib\Application\Request::getInstance();
 							<strong><?= _('Force IP address'); ?></strong><br/>
 							<i><?= _('Enter the IP address you want to be used to join the server.') ?></i>
 						</label>
-						<input type="text" name="system[forceIpAddress]" id="forceip" value="<?= $system->forceIpAddress; ?>"/>
+						<?= DedicatedManager\Helpers\Input::text('system[forceIpAddress]', 'forceip', $system->forceIpAddress) ?>
 					</li>
 					<li data-role="fieldcontain">
 						<label for="allowremote">
 							<strong><?= _('Allow remote control'); ?></strong><br/>
 							<i><?= _('Enter the IP address you want to be able to control your server.') ?></i>
 						</label>
-						<input type="text" name="system[xmlrpcAllowremote]" id="allowremote" value="<?= $system->xmlrpcAllowremote; ?>"/>
+						<?= DedicatedManager\Helpers\Input::text('system[xmlrpcAllowremote]', 'allowremote', $system->xmlrpcAllowremote) ?>
 					</li>
 					<li data-role="fieldcontain">
 						<label for="useProxy">
@@ -210,27 +213,14 @@ $r = ManiaLib\Application\Request::getInstance();
 							<strong><?= _('Proxy login'); ?></strong><br/>
 							<i><?= _('Enter your proxy login.') ?></i>
 						</label>
-						<input type="text" name="system[proxyLogin]" id="proxyLogin" value="<?= $system->proxyLogin; ?>"/>
+						<?= DedicatedManager\Helpers\Input::text('system[proxyLogin]', 'proxyLogin', $system->proxyLogin) ?>
 					</li>
 					<li data-role="fieldcontain">
 						<label for="proxyPassword">
 							<strong><?= _('Proxy password'); ?></strong><br/>
 							<i><?= _('Enter your proxy password.') ?></i>
 						</label>
-						<input type="text" name="system[proxyPassword]" id="proxyPassword" value="<?= $system->proxyPassword; ?>"/>
-					</li>
-				</ul>
-			</fieldset>
-			<fieldset data-role="collapsible" data-collapsed="false" data-theme="b">
-				<legend><?= _('Server config filename') ?></legend>
-				<ul data-role="listview">
-					<li data-role="fieldcontain">
-						<label for="configFile">
-							<strong><?= _('Save this configuration for later') ?></strong><br/>
-							<i><?= _('If you want to reuse this configuration later, please choose a name wisely.') ?>
-							<?= _('If any configuration already exists with this name, it will be overwritten!') ?></i>
-						</label>
-						<input type="text" name="configFile" id="configFile" value="<?= $configFile ?>"/>
+						<?= DedicatedManager\Helpers\Input::text('system[proxyPassword]', 'proxyPassword', $system->proxyPassword) ?>
 					</li>
 				</ul>
 			</fieldset>
@@ -239,7 +229,7 @@ $r = ManiaLib\Application\Request::getInstance();
 					<input type="reset" id="reset" value="<?= _('Restore') ?>"/>
 				</div>
 				<div class="ui-block-b">
-					<input type="submit" id="submit" value="<?= _('Start your relay server') ?>" data-theme="b"/>
+					<input type="submit" id="submit" value="<?= _('Next step') ?>" data-theme="b"/>
 				</div>
 			</div>
 		</form>

@@ -7,7 +7,7 @@ $r = ManiaLib\Application\Request::getInstance();
 	<?= DedicatedManager\Helpers\Box\Box::detect() ?>
 	<div data-role="content">
 		<a href="<?= $r->createLinkArgList('/create/configure') ?>" data-ajax="false" data-role="button" data-icon="plus"><?= _('Start a new server') ?></a>
-<!--		<a href="<?= $r->createLinkArgList('/create/relay') ?>" data-ajax="false" data-role="button" data-icon="plus"><?= _('Start a new relay server') ?></a>-->
+		<a href="<?= $r->createLinkArgList('/create/relay') ?>" data-ajax="false" data-role="button" data-icon="plus"><?= _('Start a new relay server') ?></a>
 		<a href="<?= $r->createLinkArgList('/manage') ?>" data-ajax="false" data-role="button" data-icon="gear"><?= _('Manage your config files') ?></a>
 		<?php if($servers): ?>
 			<p><?= _('Edit a server') ?></p>

@@ -16,9 +16,9 @@ var updateFormattingPreview = function(that)
 $(document).bind('pageinit', function() {
 	// Form reset fix
 	$('form').bind('reset', function() {
+		var self = this;
 		setTimeout(function() {
-			$('input:checkbox, input:radio').checkboxradio('refresh');
-			$('select[data-role="slider"]').slider('refresh');
+			$(self).find('input, textarea, select, button').trigger('change');
 		}, 1);
 	});
 	
@@ -67,37 +67,27 @@ $(document).bind('pageinit', function() {
 	
 	$('#roundsUseNewRules').change(function() {
 		if($(this).val() == '1') {
-			$('#roundsPointsLimit').parent().hide();
-			$('#roundsPointsLimitNewRules').parent().show();
+			$('#roundsPointsLimit').textinput('disable').parent().hide();
+			$('#roundsPointsLimitNewRules').textinput('enable').parent().show();
 		}
 		else {
-			$('#roundsPointsLimitNewRules').parent().hide();
-			$('#roundsPointsLimit').parent().show();
+			$('#roundsPointsLimitNewRules').textinput('disable').parent().hide();
+			$('#roundsPointsLimit').textinput('enable').parent().show();
 		}
 	});
 	$('#roundsUseNewRules').trigger('change');
 	
 	$('#teamUseNewRules').change(function() {
 		if($(this).val() == '1') {
-			$('#teamPointsLimit').parent().hide();
-			$('#teamPointsLimitNewRules').parent().show();
+			$('#teamPointsLimit').textinput('disable').parent().hide();
+			$('#teamPointsLimitNewRules').textinput('enable').parent().show();
 		}
 		else {
-			$('#teamPointsLimitNewRules').parent().hide();
-			$('#teamPointsLimit').parent().show();
+			$('#teamPointsLimitNewRules').textinput('disable').parent().hide();
+			$('#teamPointsLimit').textinput('enable').parent().show();
 		}
 	});
 	$('#teamUseNewRules').trigger('change');
-	
-	$('form').bind('reset', function() {
-		setTimeout(function() {
-			$('#isOnline').trigger('change');
-			$('#nextLadderMode').trigger('change');
-			$('#useProxy').trigger('change');
-			$('#roundsUseNewRules').trigger('change');
-			$('#teamUseNewRules').trigger('change');
-		}, 1);
-	});
 
 	$('.alert-bar a').click(function() {
 		$(this).closest('.alert-bar').slideUp(200);
@@ -128,56 +118,50 @@ $(document).bind('pageinit', function() {
 	});
 
 	$('#gameMode').change(function() {
+		$('fieldset.gamemode').trigger('collapse');
 		switch($(this).val())
 		{
 			case '0':
 				$('#fieldset-gamemode-script').trigger('expand');
-				$('#fieldset-gamemode-round').trigger('collapse');
-				$('#fieldset-gamemode-timeattack').trigger('collapse');
-				$('#fieldset-gamemode-team').trigger('collapse');
-				$('#fieldset-gamemode-laps').trigger('collapse');
-				$('#fieldset-gamemode-cup').trigger('collapse');
 				break;
 			case '1':
-				$('#fieldset-gamemode-script').trigger('collapse');
 				$('#fieldset-gamemode-round').trigger('expand');
-				$('#fieldset-gamemode-timeattack').trigger('collapse');
-				$('#fieldset-gamemode-team').trigger('collapse');
-				$('#fieldset-gamemode-laps').trigger('collapse');
-				$('#fieldset-gamemode-cup').trigger('collapse');
 				break;
 			case '2':
-				$('#fieldset-gamemode-script').trigger('collapse');
-				$('#fieldset-gamemode-round').trigger('collapse');
 				$('#fieldset-gamemode-timeattack').trigger('expand');
-				$('#fieldset-gamemode-team').trigger('collapse');
-				$('#fieldset-gamemode-laps').trigger('collapse');
-				$('#fieldset-gamemode-cup').trigger('collapse');
 				break;
 			case '3':
-				$('#fieldset-gamemode-script').trigger('collapse');
-				$('#fieldset-gamemode-round').trigger('collapse');
-				$('#fieldset-gamemode-timeattack').trigger('collapse');
 				$('#fieldset-gamemode-team').trigger('expand');
-				$('#fieldset-gamemode-laps').trigger('collapse');
-				$('#fieldset-gamemode-cup').trigger('collapse');
 				break;
 			case '4':
-				$('#fieldset-gamemode-script').trigger('collapse');
-				$('#fieldset-gamemode-round').trigger('collapse');
-				$('#fieldset-gamemode-timeattack').trigger('collapse');
-				$('#fieldset-gamemode-team').trigger('collapse');
 				$('#fieldset-gamemode-laps').trigger('expand');
-				$('#fieldset-gamemode-cup').trigger('collapse');
 				break;
 			case '5':
-				$('#fieldset-gamemode-script').trigger('collapse');
-				$('#fieldset-gamemode-round').trigger('collapse');
-				$('#fieldset-gamemode-timeattack').trigger('collapse');
-				$('#fieldset-gamemode-team').trigger('collapse');
-				$('#fieldset-gamemode-laps').trigger('collapse');
 				$('#fieldset-gamemode-cup').trigger('expand');
 				break;
 		}
 	});
+	$('#gameMode').trigger('change');
+	
+	$('#relayMethod').change(function() {
+		switch($(this).val())
+		{
+			case '0':
+				$('#fieldset-spectate-managed').show().find('select').select('enable');
+				$('#fieldset-spectate-login').hide().find('input').textinput('disable');
+				$('#fieldset-spectate-ipAndPort').hide().find('input').textinput('disable');
+				break;
+			case '1':
+				$('#fieldset-spectate-managed').hide().find('select').select('disable');
+				$('#fieldset-spectate-login').show().find('input').textinput('enable');
+				$('#fieldset-spectate-ipAndPort').hide().find('input').textinput('disable');
+				break;
+			case '2':
+				$('#fieldset-spectate-managed').hide().find('select').select('disable');
+				$('#fieldset-spectate-login').hide().find('input').textinput('disable');
+				$('#fieldset-spectate-ipAndPort').show().find('input').textinput('enable');
+				break;
+		}
+	});
+	$('#relayMethod').trigger('change');
 });
