@@ -30,6 +30,16 @@ CREATE TABLE IF NOT EXISTS `Servers` (
   PRIMARY KEY (`hostname`,`port`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+CREATE TABLE IF NOT EXISTS `Managers` (
+	`hostname` VARCHAR(25) NOT NULL,
+	`port` INT(11) NOT NULL,
+	`login` VARCHAR(25) NOT NULL,
+	PRIMARY KEY (`hostname`, `port`, `login`),
+	CONSTRAINT `FK_Managers_Servers` FOREIGN KEY (`hostname`, `port`) REFERENCES `Servers` (`hostname`, `port`) ON UPDATE CASCADE ON DELETE CASCADE
+)
+COLLATE='utf8_general_ci'
+ENGINE=InnoDB;
+
 -- Data exporting was unselected.
 /*!40014 SET FOREIGN_KEY_CHECKS=1 */;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

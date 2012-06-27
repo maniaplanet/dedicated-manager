@@ -13,6 +13,8 @@ class Config extends \ManiaLib\Utils\Singleton
 {
 	public $dedicatedPath = '';
 	public $manialivePath = '';
+	public $lanMode = false;
+	public $admins = array();
 }
 
 ?>

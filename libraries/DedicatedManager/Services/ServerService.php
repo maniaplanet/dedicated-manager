@@ -156,12 +156,17 @@ class ServerService extends AbstractService
 		fclose($logFile);
 
 		// Checking for errors
-		if(preg_match_all('/ERROR:\s+([^\.$]+)/um', $buffer, $errors))
+		if(preg_match_all('/ERROR:\s+([^\.$]+)/um', $buffer, $errors) || strpos($buffer, '...Server stopped') !== false)
 		{
 			if($isWindows)
 				`TASKKILL /PID $pid`;
 			else
 				`kill -9 $pid`;
+			
+			if(!$errors)
+			{
+				$errors[1] = 'Server stopped automatically';
+			}
 
 			throw new \Exception(serialize(array_map('ucfirst', $errors[1])));
 		}
