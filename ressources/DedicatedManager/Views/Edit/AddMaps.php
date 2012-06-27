@@ -8,7 +8,7 @@ $r = ManiaLib\Application\Request::getInstance();
 		<div class="content-primary">
 			<p><?= _('The "Insert to map list" button will add selected maps after the current one. The "add to map list" will add selected maps at the end of the map list.') ?></p>
 			<form action="<?= $r->createLinkArgList('../insert-maps') ?>" method="get" data-ajax="false">
-				<input type="hidden" name="hostname" value="<?= $hostname ?>"/>
+				<input type="hidden" name="host" value="<?= $host ?>"/>
 				<input type="hidden" name="port" value="<?= $port ?>"/>
 				<?= DedicatedManager\Helpers\Files::tree($files, $selected, 'selected', true) ?>
 				<div class="ui-grid-a">

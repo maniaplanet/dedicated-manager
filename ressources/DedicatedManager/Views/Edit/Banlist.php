@@ -8,7 +8,7 @@ $r = ManiaLib\Application\Request::getInstance();
 		<div class="content-primary">
 			<form method="get" action="<?= $r->createLinkArgList('../unban') ?>" data-ajax="false">
 				<input type="hidden" name="port" value="<?= $port ?>"/>
-				<input type="hidden" name="hostname" value="<?= $hostname ?>"/>
+				<input type="hidden" name="host" value="<?= $host ?>"/>
 				<ul data-role="listview" data-inset="true">
 					<li data-role="list-divider">
 						<?= _('Banned players') ?>
@@ -32,7 +32,7 @@ $r = ManiaLib\Application\Request::getInstance();
 								<input type="submit" value="<?= _('Unban') ?>" data-icon="minus" <?= count($banlist) ? '' : 'disabled="disabled"' ?>/>
 							</div>
 							<div class="ui-block-b">
-								<a href="<?= htmlentities($r->createLinkArgList('../clean-banlist', 'hostname', 'port'), ENT_QUOTES, 'UTF-8') ?>" data-role="button" data-icon="delete"><?= _('Clean banlist') ?></a>
+								<a href="<?= htmlentities($r->createLinkArgList('../clean-banlist', 'host', 'port'), ENT_QUOTES, 'UTF-8') ?>" data-role="button" data-icon="delete"><?= _('Clean banlist') ?></a>
 							</div>
 						</div>
 					</li>

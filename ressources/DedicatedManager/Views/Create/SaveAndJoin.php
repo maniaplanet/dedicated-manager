@@ -41,10 +41,10 @@ $r = ManiaLib\Application\Request::getInstance();
 							</option>
 						<?php endif; ?>
 							<option value="<?= Spectate::LOGIN ?>" <?= $spectate->method == Spectate::LOGIN ? 'selected="selected"' : '' ?>>
-								<?= _('Specify a login') ?>
+								<?= _('Join by login') ?>
 							</option>
 							<option value="<?= Spectate::IP_AND_PORT ?>" <?= $spectate->method == Spectate::IP_AND_PORT ? 'selected="selected"' : '' ?>>
-								<?= _('Specify IP and port') ?>
+								<?= _('Join by IP and port') ?>
 							</option>
 						</select>
 					</li>
@@ -56,12 +56,13 @@ $r = ManiaLib\Application\Request::getInstance();
 					<li data-role="list-divider"><?= _('Choose a managed server') ?></li>
 					<li data-role="fieldcontain">
 						<label for="spectateManaged">
-							<strong><?= _('Set IP') ?></strong><br/>
-							<i><?= _('If you don\'t know the login of the server or if it\'s a LAN server, you can use its IP.') ?></i>
+							<strong><?= _('Select server') ?></strong><br/>
+							<i><?= _('You can easily connect a relay to a server you previously started.') ?></i>
 						</label>
-						<select id="spectateManaged" name="spectate[managedLogin]" data-native-menu="false">
+						<select id="spectateManaged" name="spectate[managed]" data-native-menu="false">
 						<?php foreach($servers as $server): ?>
-							<option value="<?= $server->login ?>" <?= $server->login == $spectate->managedLogin ? 'selected="selected"' : '' ?>>
+							<?php $serverId = $server->joinIp.':'.$server->joinPort.':'.$server->specPassword; ?>
+							<option value="<?= $serverId ?>" <?= $serverId == $spectate->managed ? 'selected="selected"' : '' ?>>
 								<?= \ManiaLib\Utils\Formatting::stripStyles($server->name) ?>
 							</option>
 						<?php endforeach; ?>
@@ -72,19 +73,26 @@ $r = ManiaLib\Application\Request::getInstance();
 		<?php endif; ?>
 			<fieldset id="fieldset-spectate-login" class="relay-method" data-theme="b">
 				<ul data-role="listview" data-inset="true">
-					<li data-role="list-divider"><?= _('Specify a login') ?></li>
+					<li data-role="list-divider"><?= _('Join by login') ?></li>
 					<li data-role="fieldcontain">
 						<label for="spectateLogin">
-							<strong><?= _('Set login') ?></strong><br/>
+							<strong><?= _('Login') ?></strong><br/>
 							<i><?= _('If you want to relay a server which isn\'t listed in the manager') ?></i>
 						</label>
 						<?= DedicatedManager\Helpers\Input::text('spectate[login]', 'spectateLogin', $spectate->login) ?><br/>
+					</li>
+					<li data-role="fieldcontain">
+						<label for="spectateLoginPassword">
+							<strong><?= _('Password (optionnal)') ?></strong><br/>
+							<i><?= _('If the server has a password for spectators, you have to set it.') ?></i>
+						</label>
+						<?= DedicatedManager\Helpers\Input::text('spectate[password]', 'spectateLoginPassword', $spectate->password) ?><br/>
 					</li>
 				</ul>
 			</fieldset>
 			<fieldset id="fieldset-spectate-ipAndPort" class="relay-method" data-theme="b">
 				<ul data-role="listview" data-inset="true">
-					<li data-role="list-divider"><?= _('Specify IP and port') ?></li>
+					<li data-role="list-divider"><?= _('Join by IP and port') ?></li>
 					<li data-role="fieldcontain">
 						<label for="spectateIp">
 							<strong><?= _('Set IP') ?></strong><br/>
@@ -98,6 +106,13 @@ $r = ManiaLib\Application\Request::getInstance();
 							<i><?= _('Change the port if the server don\'t use the default one or if there are several servers on this IP.') ?></i>
 						</label>
 						<?= DedicatedManager\Helpers\Input::text('spectate[port]', 'spectatePort', $spectate->port) ?>
+					</li>
+					<li data-role="fieldcontain">
+						<label for="spectateIpAndPortPassword">
+							<strong><?= _('Password (optionnal)') ?></strong><br/>
+							<i><?= _('If the server has a password for spectators, you have to set it.') ?></i>
+						</label>
+						<?= DedicatedManager\Helpers\Input::text('spectate[password]', 'spectateIpAndPortPassword', $spectate->password) ?><br/>
 					</li>
 				</ul>
 			</fieldset>

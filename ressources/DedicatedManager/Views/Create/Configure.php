@@ -122,11 +122,11 @@ $r = ManiaLib\Application\Request::getInstance();
 						</select>
 					</li>
 					<li data-role="fieldcontain">
-						<label for="callVoteRation">
+						<label for="callVoteRatio">
 							<strong><?= _('Call vote ratio (in %)'); ?></strong><br/>
 							<i><?= _('Ratio in % that define if a vote passed or -1 to disable votes') ?></i>
 						</label>
-						<input type="range" name="options[callVoteRatio]" id="callVoteRation" value="<?= $options->callVoteRatio == -1 ? -1 : $options->callVoteRatio * 100 ?>" min="-1" max="100" data-highlight="true"/>
+						<input type="range" name="options[callVoteRatio]" id="callVoteRatio" value="<?= $options->callVoteRatio == -1 ? -1 : $options->callVoteRatio * 100 ?>" min="-1" max="100" data-highlight="true"/>
 					</li>
 					<li data-role="fieldcontain">
 						<label for="callVoteTimeOut">

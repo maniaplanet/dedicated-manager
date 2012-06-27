@@ -8,7 +8,7 @@ $r = ManiaLib\Application\Request::getInstance();
 		<div class="content-primary">
 			<form action="<?= $r->createLinkArgList('../save-config') ?>" method="get" data-ajax="false">
 				<input type="hidden" name="port" value="<?= $port ?>"/>
-				<input type="hidden" name="hostname" value="<?= $hostname ?>"/>
+				<input type="hidden" name="host" value="<?= $host ?>"/>
 				<fieldset data-role="collapsible" data-collapsed="false" data-theme="b">
 					<legend><?= _('Basic Server Configuration') ?></legend>
 					<ul data-role="listview">

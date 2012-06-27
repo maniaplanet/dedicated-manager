@@ -83,7 +83,7 @@ class ConfigFileService extends DedicatedFileService
 		$config->ladderServerLimitMax = (int) $configObj->server_options->ladder_serverlimit_max;
 		$config->ladderServerLimitMin = (int) $configObj->server_options->ladder_serverlimit_min;
 		$config->nextCallVoteTimeOut = (int) $configObj->server_options->callvote_timeout;
-		$config->callVoteRatio = (double) $configObj->server_options->callvote_ratio;
+		$config->callVoteRatio = (float) $configObj->server_options->callvote_ratio;
 		$config->allowMapDownload = self::toBool($configObj->server_options->allow_map_download);
 		$config->autoSaveReplays = self::toBool($configObj->server_options->autosave_replays);
 		$config->autoSaveValidationReplays = self::toBool($configObj->server_options->autosave_validation_replays);

@@ -23,26 +23,27 @@ class ServerService extends AbstractService
 	}
 
 	/**
-	 * @param string $hostname
-	 * @param int $port
+	 * @param string $rpcHost
+	 * @param int $rpcPort
 	 * @return Server
 	 */
-	function get($hostname, $port)
+	function get($rpcHost, $rpcPort)
 	{
 		$result = $this->db()->execute(
-				'SELECT * FROM Servers '.
-				'WHERE hostname=%s AND port=%d', $this->db()->quote($hostname), $port
+				'SELECT * FROM Servers WHERE rpcHost=%s AND rpcPort=%d',
+				$this->db()->quote($rpcHost),
+				$rpcPort
 		);
 		return Server::fromRecordSet($result);
 	}
 
 	/**
-	 * @param string $hostname
-	 * @param int $port
+	 * @param string $rpcHost
+	 * @param int $rpcPort
 	 */
-	function delete($hostname, $port)
+	function delete($rpcHost, $rpcPort)
 	{
-		$this->db()->execute('DELETE FROM Servers WHERE hostname=%s AND port=%d', $this->db()->quote($hostname), $port);
+		$this->db()->execute('DELETE FROM Servers WHERE rpcHost=%s AND rpcPort=%d', $this->db()->quote($rpcHost), $rpcPort);
 	}
 
 	/**
@@ -84,12 +85,15 @@ class ServerService extends AbstractService
 			$startCommand = 'START /D "'.$config->dedicatedPath.'" ManiaPlanetServer.exe';
 		else
 			$startCommand = 'cd "'.$config->dedicatedPath.'"; ./ManiaPlanetServer';
-		$startCommand .= sprintf(' /dedicated_cfg=%s /join=%s', escapeshellarg($configFile.'.txt'), $spectate);
+		$startCommand .= sprintf(' /dedicated_cfg=%s /join=%s', escapeshellarg($configFile.'.txt'), escapeshellarg($spectate->getIdentifier()));
+		if( ($password = $spectate->getPassword()) )
+			$startCommand .= sprintf(' /joinpassword=%s', $password);
 		if($isLan)
 			$startCommand .= ' /lan';
 		if(!$isWindows)
 			$startCommand .= ' &';
 
+		\ManiaLib\Utils\Logger::info($startCommand);
 		$this->doStart($startCommand);
 	}
 	
@@ -97,26 +101,19 @@ class ServerService extends AbstractService
 	{
 		$config = \DedicatedManager\Config::getInstance();
 
+		// Getting current PIDs
+		$currentPids = $this->getPIDs();
+		
 		// Starting dedicated
 		$isWindows = stripos(PHP_OS, 'WIN') === 0;
 		$procHandle = proc_open($commandLine, array(), $pipes, $config->dedicatedPath);
 		proc_close($procHandle);
 
 		// Getting its PID
-		if($isWindows)
-		{
-			$dedicatedProc = `TASKLIST /FI "IMAGENAME eq ManiaPlanetServer.exe" /FI "CPUTIME eq 00:00:00" /NH`;
-			if(!preg_match('/ManiaPlanetServer\.exe\s+(\d+)/m', $dedicatedProc, $matches))
-				throw new \Exception('Can\'t start dedicated server.');
-			$pid = $matches[1];
-		}
-		else
-		{
-			$dedicatedProc = `ps -C "ManiaPlanetServer" --format pid,cputime --no-headers --sort +cputime`;
-			if(!preg_match('/(\\d+)\s+(?:00-)?00:00:00/', $dedicatedProc, $matches))
-				throw new \Exception('Can\'t start dedicated server.');
-			$pid = $matches[1];
-		}
+		$diffPids = array_diff($this->getPIDs(), $currentPids);
+		if(!$diffPids)
+			throw new \Exception('Can\'t start dedicated server.');
+		$pid = $diffPids[0];
 
 		// Reading dedicated log while it's written
 		$logFileName = $config->dedicatedPath.'Logs/ConsoleLog.'.$pid.'.txt';
@@ -198,7 +195,23 @@ class ServerService extends AbstractService
 		$procHandle = proc_open($startCommand, array(), $pipes);
 		proc_close($procHandle);
 	}
-
+	
+	private function getPIDs()
+	{
+		if(stripos(PHP_OS, 'WIN') === 0)
+		{
+			$dedicatedProc = `TASKLIST /FI "IMAGENAME eq ManiaPlanetServer.exe" /NH`;
+			if(preg_match_all('/ManiaPlanetServer\.exe\s+(\d+)/m', $dedicatedProc, $matches))
+				return $matches[1];
+		}
+		else
+		{
+			$dedicatedProc = `ps -C "ManiaPlanetServer" --format pid --no-headers --sort +cputime`;
+			if(preg_match_all('/(\\d+)/', $dedicatedProc, $matches))
+				return $matches[1];
+		}
+		return array();
+	}
 }
 
 ?>

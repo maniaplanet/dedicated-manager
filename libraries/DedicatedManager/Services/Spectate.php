@@ -16,25 +16,34 @@ class Spectate extends \ManiaLive\DedicatedApi\Structures\AbstractStructure
 	const IP_AND_PORT = 2;
 	
 	public $method = self::MANAGED;
-	public $managedLogin = '';
+	public $managed = '';
 	public $login = '';
 	public $ip = '127.0.0.1';
 	public $port = 2350;
+	public $password = '';
 	
-	function __toString()
+	function getIdentifier()
 	{
 		switch($this->method)
 		{
 			case self::MANAGED:
-				if(preg_match('/_(\d{1,3}.\d{1,3}.\d{1,3}.\d{1,3})_(\d{1,5})$/', $this->managedLogin, $matches))
-					return sprintf('%s:%s', $matches[1], $matches[2]);
-				return $this->managedLogin;
+				list($ip,$port) = explode(':', $this->managed);
+				return $ip.':'.$port;
 			case self::IP_AND_PORT:
-				return sprintf('%s:%s', $this->ip, $this->port);
+				return $this->ip.':'.$this->port;
 			case self::LOGIN:
 				return $this->login;
 		}
-		return '';
+	}
+	
+	function getPassword()
+	{
+		if($this->method == self::MANAGED)
+		{
+			list(,,$password) = explode(':', $this->managed);
+			return $password;
+		}
+		return $this->password;
 	}
 }
 

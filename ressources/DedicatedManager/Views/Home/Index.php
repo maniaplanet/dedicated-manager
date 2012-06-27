@@ -13,8 +13,8 @@ $r = ManiaLib\Application\Request::getInstance();
 			<p><?= _('Edit a server') ?></p>
 			<ul data-role="listview" data-filter="true" data-inset="true">
 			<?php foreach($servers as $server):
-				$r->set('hostname', $server->hostname);
-				$r->set('port', $server->port); ?>
+				$r->set('hostname', $server->rpcHost);
+				$r->set('port', $server->rpcPort); ?>
 				<li>
 					<a href="<?= htmlentities($r->createLinkArgList('/edit', 'hostname', 'port'), ENT_QUOTES, 'UTF-8') ?>" data-ajax="false"><?= ManiaLib\Utils\StyleParser::toHtml($server->name) ?></a>
 				</li>

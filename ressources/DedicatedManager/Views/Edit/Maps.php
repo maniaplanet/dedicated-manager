@@ -7,7 +7,7 @@ $r = ManiaLib\Application\Request::getInstance();
 	<div data-role="content">
 		<div class="content-primary">
 			<form action="<?= $r->createLinkArgList('../map-action') ?>" method="get" data-ajax="false">
-				<input type="hidden" name="hostname" value="<?= $hostname ?>"/>
+				<input type="hidden" name="host" value="<?= $host ?>"/>
 				<input type="hidden" name="port" value="<?= $port ?>"/>
 				<ul data-role="listview" data-inset="true">
 					<li data-role="list-divider"><?= _('Change maps order') ?></li>
@@ -37,7 +37,7 @@ $r = ManiaLib\Application\Request::getInstance();
 					</li>
 				</ul>
 			</form>
-			<a href="<?= htmlentities($r->createLinkArgList('../add-maps', 'hostname', 'port'), ENT_QUOTES, 'UTF-8') ?>" data-role="button" data-icon="plus" data-ajax="false"><?= _('Add new maps') ?></a>
+			<a href="<?= htmlentities($r->createLinkArgList('../add-maps', 'host', 'port'), ENT_QUOTES, 'UTF-8') ?>" data-role="button" data-icon="plus" data-ajax="false"><?= _('Add new maps') ?></a>
 		</div>
 		<?php require __DIR__.'/Navigation.php'; ?>
 	</div>

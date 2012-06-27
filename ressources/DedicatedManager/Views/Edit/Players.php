@@ -8,7 +8,7 @@ $r = ManiaLib\Application\Request::getInstance();
 		<div class="content-primary">
 			<form method="get" action="<?= $r->createLinkArgList('../action-players') ?>" data-ajax="false">
 				<input type="hidden" name="port" value="<?= $port ?>"/>
-				<input type="hidden" name="hostname" value="<?= $hostname ?>"/>
+				<input type="hidden" name="host" value="<?= $host ?>"/>
 				<ul data-role="listview" data-inset="true">
 					<li data-role="list-divider">
 						<?= _('Select players to interact with them') ?>
@@ -55,13 +55,13 @@ $r = ManiaLib\Application\Request::getInstance();
 			</form>
 			<div class="ui-grid-b">
 				<div class="ui-block-a">
-					<a href="<?= htmlentities($r->createLinkArgList('../guestlist', 'hostname', 'port'), ENT_QUOTES, 'UTF-8') ?>" data-role="button" data-icon="star" data-ajax="false"><?= _('Manage guest list') ?></a>
+					<a href="<?= htmlentities($r->createLinkArgList('../guestlist', 'host', 'port'), ENT_QUOTES, 'UTF-8') ?>" data-role="button" data-icon="star" data-ajax="false"><?= _('Manage guest list') ?></a>
 				</div>
 				<div class="ui-block-b">
-					<a href="<?= htmlentities($r->createLinkArgList('../blacklist', 'hostname', 'port'), ENT_QUOTES, 'UTF-8') ?>" data-role="button" data-icon="delete" data-ajax="false"><?= _('Manage black list') ?></a>
+					<a href="<?= htmlentities($r->createLinkArgList('../blacklist', 'host', 'port'), ENT_QUOTES, 'UTF-8') ?>" data-role="button" data-icon="delete" data-ajax="false"><?= _('Manage black list') ?></a>
 				</div>
 				<div class="ui-block-c">
-					<a href="<?= htmlentities($r->createLinkArgList('../banlist', 'hostname', 'port'), ENT_QUOTES, 'UTF-8') ?>" data-role="button" data-icon="alert" data-ajax="false"><?= _('Manage ban list') ?></a>
+					<a href="<?= htmlentities($r->createLinkArgList('../banlist', 'host', 'port'), ENT_QUOTES, 'UTF-8') ?>" data-role="button" data-icon="alert" data-ajax="false"><?= _('Manage ban list') ?></a>
 				</div>
 			</div>
 		</div>

@@ -13,7 +13,7 @@ $r = ManiaLib\Application\Request::getInstance();
 				<?php endforeach; ?>
 			</ul>
 			<form action="<?= $r->createLinkArgList('../send-message') ?>" method="get" data-ajax="false">
-				<input type="hidden" name="hostname" value="<?= $hostname ?>"/>
+				<input type="hidden" name="host" value="<?= $host ?>"/>
 				<input type="hidden" name="port" value="<?= $port ?>"/>
 				<ul data-role="listview" data-inset="true">
 					<li data-role="list-divider"><?= _('Send a message') ?></li>

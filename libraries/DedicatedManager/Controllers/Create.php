@@ -29,6 +29,9 @@ class Create extends \ManiaLib\Application\Controller
 		{
 			list($options, $account, $system) = $service->get($configFile);
 			$this->session->set('configFile', $configFile);
+			$this->session->set('options', $options);
+			$this->session->set('account', $account);
+			$this->session->set('system', $system);
 		}
 		else
 		{
@@ -46,7 +49,7 @@ class Create extends \ManiaLib\Application\Controller
 	function saveServerConfig(array $options, array $account, array $system, $isOnline = 0)
 	{
 		$options = \DedicatedManager\Services\ServerOptions::fromArray($options);
-		$options->callVoteRatio = $options->callVoteRatio < 0 ? $options->callVoteRatio : $options->callVoteRatio / 100;
+		$options->callVoteRatio = $options->callVoteRatio < 0 ? -1 : $options->callVoteRatio / 100;
 		$options->nextCallVoteTimeOut = $options->nextCallVoteTimeOut * 1000;
 		$account = \DedicatedManager\Services\Account::fromArray($account);
 		$system = \DedicatedManager\Services\SystemConfig::fromArray($system);
@@ -76,6 +79,7 @@ class Create extends \ManiaLib\Application\Controller
 		{
 			list($gameInfos, $maps) = $service->get($matchFile);
 			$this->session->set('matchFile', $matchFile);
+			$this->session->set('gameInfos', $gameInfos);
 			$this->session->set('selected', $maps);
 		}
 		else
@@ -276,7 +280,7 @@ class Create extends \ManiaLib\Application\Controller
 		if( ($errors = $service->validate($options, $account, $system, !$isOnline)) )
 		{
 			$this->session->set('error', $errors);
-			$this->request->redirectArgList('../configure');
+			$this->request->redirectArgList('../relay');
 		}
 
 		$this->request->redirectArgList('../save-and-join');
@@ -284,7 +288,7 @@ class Create extends \ManiaLib\Application\Controller
 
 	function saveAndJoin()
 	{
-		list($options) = $this->fetchAndAssertConfig(_('starting it'));
+		list($options) = $this->fetchAndAssertConfig(_('starting it'), '../relay');
 
 		$defaultFileName = \ManiaLib\Utils\Formatting::stripStyles($options->name);
 		$this->response->configFile = $this->session->get('configFile', $defaultFileName);
@@ -359,7 +363,7 @@ class Create extends \ManiaLib\Application\Controller
 		$this->request->redirectArgList('/');
 	}
 	
-	private function fetchAndAssertConfig($actionStr)
+	private function fetchAndAssertConfig($actionStr, $redirectTo='../configure')
 	{
 		try
 		{
@@ -372,7 +376,7 @@ class Create extends \ManiaLib\Application\Controller
 		catch(\Exception $e)
 		{
 			$this->session->set('error', sprintf(_('You need to configure the server before %s.'), $actionStr));
-			$this->request->redirectArgList('../configure');
+			$this->request->redirectArgList($redirectTo);
 		}
 	}
 	

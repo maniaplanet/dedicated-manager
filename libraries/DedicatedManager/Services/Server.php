@@ -11,10 +11,16 @@ namespace DedicatedManager\Services;
 
 class Server extends AbstractObject
 {
-	public $hostname;
-	public $port;
-	public $password;
+	public $login;
 	public $name;
+	public $rpcHost;
+	public $rpcPort;
+	public $rpcPassword;
+	public $joinIp;
+	public $joinPort;
+	public $joinPassword;
+	public $specPassword;
+	public $isRelay;
 }
 
 ?>

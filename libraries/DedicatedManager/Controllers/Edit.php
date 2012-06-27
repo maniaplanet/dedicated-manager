@@ -14,7 +14,7 @@ use ManiaLive\DedicatedApi\Structures\GameInfos;
 class Edit extends \ManiaLib\Application\Controller implements \ManiaLib\Application\Filterable
 {
 	/** @var string */
-	private $hostname;
+	private $host;
 	/** @var int */
 	private $port;
 	/** @var \ManiaLive\DedicatedApi\Connection */
@@ -31,12 +31,12 @@ class Edit extends \ManiaLib\Application\Controller implements \ManiaLib\Applica
 		$header = \DedicatedManager\Helpers\Header::getInstance();
 		$header->rightText = _('Back to server home');
 		$header->rightIcon = 'back';
-		$header->rightLink = $this->request->createLinkArgList('..', 'hostname', 'port');
+		$header->rightLink = $this->request->createLinkArgList('..', 'host', 'port');
 	}
 	
 	function preFilter()
 	{
-		$this->hostname = $this->request->get('hostname');
+		$this->host = $this->request->get('host');
 		$this->port = $this->request->get('port');
 		$this->createConnection();
 		
@@ -55,16 +55,16 @@ class Edit extends \ManiaLib\Application\Controller implements \ManiaLib\Applica
 	private function createConnection()
 	{
 		$service = new \DedicatedManager\Services\ServerService();
-		$server = $service->get($this->hostname, $this->port);
+		$server = $service->get($this->host, $this->port);
 		
 		define('APP_ROOT', MANIALIB_APP_PATH);
 		\ManiaLive\Utilities\Logger::getLog('Runtime')->disableLog();
 		$config = \ManiaLive\Config\Config::getInstance();
 		$config->verbose = false;
 		$config = \ManiaLive\DedicatedApi\Config::getInstance();
-		$config->host = $this->hostname;
+		$config->host = $this->host;
 		$config->port = $this->port;
-		$config->password = $server->password;
+		$config->password = $server->rpcPassword;
 		$config->timeout = 3;
 
 		try
@@ -80,7 +80,7 @@ class Edit extends \ManiaLib\Application\Controller implements \ManiaLib\Applica
 	
 	function postFilter()
 	{
-		$this->response->hostname = $this->hostname;
+		$this->response->host = $this->host;
 		$this->response->port = $this->port;
 		$this->response->playersCount = count($this->players);
 		$this->response->options = $this->options;
@@ -108,7 +108,7 @@ class Edit extends \ManiaLib\Application\Controller implements \ManiaLib\Applica
 		if(!$maps)
 		{
 			$this->session->set('error', _('You have to select at least one map'));
-			$this->request->redirectArgList('../maps/', 'hostname', 'port');
+			$this->request->redirectArgList('../maps/', 'host', 'port');
 		}
 
 		if($deleteFilenames)
@@ -119,7 +119,7 @@ class Edit extends \ManiaLib\Application\Controller implements \ManiaLib\Applica
 		{
 			$this->connection->chooseNextMapList($maps);
 		}
-		$this->request->redirectArgList('../maps/', 'hostname', 'port');
+		$this->request->redirectArgList('../maps/', 'host', 'port');
 	}
 
 	function addMaps()
@@ -153,7 +153,7 @@ class Edit extends \ManiaLib\Application\Controller implements \ManiaLib\Applica
 		
 		$header = \DedicatedManager\Helpers\Header::getInstance();
 		$header->rightText = _('Back to maps management');
-		$header->rightLink = $this->request->createLinkArgList('../maps', 'hostname', 'port');
+		$header->rightLink = $this->request->createLinkArgList('../maps', 'host', 'port');
 	}
 
 	/**
@@ -164,7 +164,7 @@ class Edit extends \ManiaLib\Application\Controller implements \ManiaLib\Applica
 		if(!$selected)
 		{
 			$this->session->set('error', _('You have to select at least one map'));
-			$this->request->redirectArgList('../add-maps/', 'hostname', 'port');
+			$this->request->redirectArgList('../add-maps/', 'host', 'port');
 		}
 		$selected = explode(',', $selected);
 		if($insert)
@@ -176,13 +176,13 @@ class Edit extends \ManiaLib\Application\Controller implements \ManiaLib\Applica
 			$this->connection->addMapList($selected);
 		}
 
-		$this->request->redirectArgList('../add-maps/', 'hostname', 'port');
+		$this->request->redirectArgList('../add-maps/', 'host', 'port');
 	}
 
 	function rules()
 	{
 		$service = new \DedicatedManager\Services\MatchSettingsFileService();
-		$matchRules = $service->getCurrentMatchRules($this->hostname, $this->port);
+		$matchRules = $service->getCurrentMatchRules($this->host, $this->port);
 
 		$matchInfo = $this->connection->getCurrentGameInfo();
 		switch($matchInfo->gameMode)
@@ -258,7 +258,7 @@ class Edit extends \ManiaLib\Application\Controller implements \ManiaLib\Applica
 			\ManiaLib\Application\ErrorHandling::logException($e);
 			$this->session->set('error', _('An error occured while changing rules'));
 		}
-		$this->request->redirectArgList('../rules/', 'hostname', 'port');
+		$this->request->redirectArgList('../rules/', 'host', 'port');
 	}
 
 	function config()
@@ -278,7 +278,7 @@ class Edit extends \ManiaLib\Application\Controller implements \ManiaLib\Applica
 		if( ($errors = $service->validate($optionsObj)) )
 		{
 			$this->session->set('error', $errors);
-			$this->request->redirectArgList('/edit/config/', 'hostname', 'port');
+			$this->request->redirectArgList('/edit/config/', 'host', 'port');
 		}
 
 		$optionsCur = $this->connection->getServerOptions();
@@ -297,7 +297,7 @@ class Edit extends \ManiaLib\Application\Controller implements \ManiaLib\Applica
 			\ManiaLib\Application\ErrorHandling::logException($e);
 			$this->session->set('error', _('An error occured while changing server configuration'));
 		}
-		$this->request->redirectArgList('/edit/config/', 'hostname', 'port');
+		$this->request->redirectArgList('/edit/config/', 'host', 'port');
 	}
 
 	function players()
@@ -363,7 +363,7 @@ class Edit extends \ManiaLib\Application\Controller implements \ManiaLib\Applica
 				$this->session->set('error', _('An error occurred while adding players to the guest list.'));
 			}
 		}
-		$this->request->redirectArgList('/edit/players/', 'hostname', 'port');
+		$this->request->redirectArgList('/edit/players/', 'host', 'port');
 	}
 
 	function banlist()
@@ -373,7 +373,7 @@ class Edit extends \ManiaLib\Application\Controller implements \ManiaLib\Applica
 		
 		$header = \DedicatedManager\Helpers\Header::getInstance();
 		$header->rightText = _('Back to players management');
-		$header->rightLink = $this->request->createLinkArgList('../players', 'hostname', 'port');
+		$header->rightLink = $this->request->createLinkArgList('../players', 'host', 'port');
 	}
 
 	/**
@@ -392,7 +392,7 @@ class Edit extends \ManiaLib\Application\Controller implements \ManiaLib\Applica
 			\ManiaLib\Application\ErrorHandling::logException($e);
 			$this->session->set('error', _('An error occurred while unbanning players.'));
 		}
-		$this->request->redirectArgList('../banlist/', 'hostname', 'port');
+		$this->request->redirectArgList('../banlist/', 'host', 'port');
 	}
 
 	/**
@@ -422,7 +422,7 @@ class Edit extends \ManiaLib\Application\Controller implements \ManiaLib\Applica
 		
 		$header = \DedicatedManager\Helpers\Header::getInstance();
 		$header->rightText = _('Back to players management');
-		$header->rightLink = $this->request->createLinkArgList('../players', 'hostname', 'port');
+		$header->rightLink = $this->request->createLinkArgList('../players', 'host', 'port');
 	}
 
 	/**
@@ -441,7 +441,7 @@ class Edit extends \ManiaLib\Application\Controller implements \ManiaLib\Applica
 			\ManiaLib\Application\ErrorHandling::logException($e);
 			$this->session->set('error', _('An error occurred while unblacklisting players.'));
 		}
-		$this->request->redirectArgList('../blacklist/', 'hostname', 'port');
+		$this->request->redirectArgList('../blacklist/', 'host', 'port');
 	}
 
 	/**
@@ -459,7 +459,7 @@ class Edit extends \ManiaLib\Application\Controller implements \ManiaLib\Applica
 			\ManiaLib\Application\ErrorHandling::logException($e);
 			$this->session->set('error', _('An error occurred while adding the player to blacklist.'));
 		}
-		$this->request->redirectArgList('../blacklist/', 'hostname', 'port');
+		$this->request->redirectArgList('../blacklist/', 'host', 'port');
 	}
 
 	/**
@@ -495,7 +495,7 @@ class Edit extends \ManiaLib\Application\Controller implements \ManiaLib\Applica
 			\ManiaLib\Application\ErrorHandling::logException($e);
 			$this->session->set('error', _('An error occurred while loading the blacklist.'));
 		}
-		$this->request->redirectArgList('../blacklist/', 'hostname', 'port');
+		$this->request->redirectArgList('../blacklist/', 'host', 'port');
 	}
 
 	/**
@@ -508,7 +508,7 @@ class Edit extends \ManiaLib\Application\Controller implements \ManiaLib\Applica
 		if(in_array($filename, $configList))
 		{
 			$this->session->set('error', _('You cannot use this filename'));
-			$this->request->redirectArgList('../blacklist/', 'hostname', 'port');
+			$this->request->redirectArgList('../blacklist/', 'host', 'port');
 		}
 		try
 		{
@@ -520,7 +520,7 @@ class Edit extends \ManiaLib\Application\Controller implements \ManiaLib\Applica
 			\ManiaLib\Application\ErrorHandling::logException($e);
 			$this->session->set('error', _('An error occurred while saving the blacklist.'));
 		}
-		$this->request->redirectArgList('../blacklist/', 'hostname', 'port');
+		$this->request->redirectArgList('../blacklist/', 'host', 'port');
 	}
 
 	function guestlist()
@@ -532,7 +532,7 @@ class Edit extends \ManiaLib\Application\Controller implements \ManiaLib\Applica
 		
 		$header = \DedicatedManager\Helpers\Header::getInstance();
 		$header->rightText = _('Back to players management');
-		$header->rightLink = $this->request->createLinkArgList('../players', 'hostname', 'port');
+		$header->rightLink = $this->request->createLinkArgList('../players', 'host', 'port');
 	}
 
 	/**
@@ -551,7 +551,7 @@ class Edit extends \ManiaLib\Application\Controller implements \ManiaLib\Applica
 			\ManiaLib\Application\ErrorHandling::logException($e);
 			$this->session->set('error', _('An error occurred while removing guests.'));
 		}
-		$this->request->redirectArgList('../guestlist/', 'hostname', 'port');
+		$this->request->redirectArgList('../guestlist/', 'host', 'port');
 	}
 
 	/**
@@ -587,7 +587,7 @@ class Edit extends \ManiaLib\Application\Controller implements \ManiaLib\Applica
 			\ManiaLib\Application\ErrorHandling::logException($e);
 			$this->session->set('error', _('An error occurred while loading the guestlist.'));
 		}
-		$this->request->redirectArgList('../guestlist/', 'hostname', 'port');
+		$this->request->redirectArgList('../guestlist/', 'host', 'port');
 	}
 
 	/**
@@ -605,7 +605,7 @@ class Edit extends \ManiaLib\Application\Controller implements \ManiaLib\Applica
 			\ManiaLib\Application\ErrorHandling::logException($e);
 			$this->session->set('error', _('An error occurred while addind the player to guestlist.'));
 		}
-		$this->request->redirectArgList('../guestlist/', 'hostname', 'port');
+		$this->request->redirectArgList('../guestlist/', 'host', 'port');
 	}
 
 	/**
@@ -618,7 +618,7 @@ class Edit extends \ManiaLib\Application\Controller implements \ManiaLib\Applica
 		if(in_array($filename, $configList))
 		{
 			$this->session->set('error', _('You cannot use this filename'));
-			$this->request->redirectArgList('../guestlist/', 'hostname', 'port');
+			$this->request->redirectArgList('../guestlist/', 'host', 'port');
 		}
 
 		try
@@ -631,7 +631,7 @@ class Edit extends \ManiaLib\Application\Controller implements \ManiaLib\Applica
 			\ManiaLib\Application\ErrorHandling::logException($e);
 			$this->session->set('error', _('An error occurred while saving the guestlist.'));
 		}
-		$this->request->redirectArgList('../guestlist/', 'hostname', 'port');
+		$this->request->redirectArgList('../guestlist/', 'host', 'port');
 	}
 
 	function chat()
@@ -660,7 +660,7 @@ class Edit extends \ManiaLib\Application\Controller implements \ManiaLib\Applica
 			$this->session->set('error', _('Fail to send your message'));
 		}
 
-		$this->request->redirectArgList('../chat/', 'hostname', 'port');
+		$this->request->redirectArgList('../chat/', 'host', 'port');
 	}
 
 	function teams()
@@ -674,7 +674,7 @@ class Edit extends \ManiaLib\Application\Controller implements \ManiaLib\Applica
 	{
 		$this->connection->setTeamInfo($team1['name'], (double) $team1['color'], $team1['country'], $team2['name'], (double) $team2['color'], $team2['country']);
 		$this->session->set('success',_('Changes has been applied'));
-		$this->request->redirectArgList('../teams/', 'hostname', 'port');
+		$this->request->redirectArgList('../teams/', 'host', 'port');
 		
 	}
 
@@ -685,7 +685,7 @@ class Edit extends \ManiaLib\Application\Controller implements \ManiaLib\Applica
 	{
 		$this->connection->stopServer();
 		$service = new \DedicatedManager\Services\ServerService();
-		$service->delete($this->hostname, $this->port);
+		$service->delete($this->host, $this->port);
 		$this->request->redirectArgList('/');
 	}
 

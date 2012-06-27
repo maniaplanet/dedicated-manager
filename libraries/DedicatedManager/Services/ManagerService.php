@@ -11,29 +11,35 @@ namespace DedicatedManager\Services;
 
 class ManagerService extends AbstractService
 {
-
-	function getAllManagers()
+	function getAll()
 	{
 		return $this->db()->execute('SELECT DISTINCT login FROM Managers')->fetchArrayOfSingleValues();
 	}
 
-	function getList($hostname, $port)
+	function getList($rpcHost, $rpcPort)
 	{
-		return $this->db()->execute('SELECT login FROM Managers WHERE hostname = %s AND port = %d',
-				$this->db()->quote($hostname), $port)->fetchArrayOfSingleValues();
+		return $this->db()->execute(
+				'SELECT login FROM Managers WHERE rpcHost=%s AND rpcPort=%d', $this->db()->quote($rpcHost), $rpcPort
+			)->fetchArrayOfSingleValues();
 	}
 
-	function set($hostname, $port, $login)
+	function grant($rpcHost, $rpcPort, $login)
 	{
-		$this->db()->execute('INSERT INTO Managers (hostname, port, login) VALUES (%s,%d,%s)', $this->db()->quote($hostname),
-		$port, $this->db()->quote($login));
+		$this->db()->execute(
+				'INSERT INTO Managers (rpcHost, rpcPort, login) VALUES (%s,%d,%s)',
+				$this->db()->quote($rpcHost),
+				$rpcPort,
+				$this->db()->quote($login));
 	}
 
-	function revoke($hostname, $port, $login)
+	function revoke($rpcHost, $rpcPort, $login)
 	{
-		$this->db()->execute('DELETE FROM Managers WHERE hostname = %s AND port = %d AND login = %s', $this->db()->quote($hostname), $port, $this->db()->quote($login));
+		$this->db()->execute(
+				'DELETE FROM Managers WHERE rpcHost=%s AND rpcPort=%d AND login=%s',
+				$this->db()->quote($rpcHost),
+				$rpcPort,
+				$this->db()->quote($login));
 	}
-
 }
 
 ?>

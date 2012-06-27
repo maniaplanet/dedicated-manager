@@ -8,7 +8,7 @@ $r = ManiaLib\Application\Request::getInstance();
 		<div class="content-primary">
 			<form method="get" action="<?= $r->createLinkArgList('../unguestlist') ?>" data-ajax="false">
 				<input type="hidden" name="port" value="<?= $port ?>"/>
-				<input type="hidden" name="hostname" value="<?= $hostname ?>"/>
+				<input type="hidden" name="host" value="<?= $host ?>"/>
 				<ul data-role="listview" data-inset="true">
 					<li data-role="list-divider">
 						<?= _('Current guest list') ?>
@@ -35,7 +35,7 @@ $r = ManiaLib\Application\Request::getInstance();
 								<input type="submit" value="<?= _('Remove from list') ?>" data-icon="minus" <?= count($guestListedPlayers) ? '' : 'disabled="disabled"' ?>/>
 							</div>
 							<div class="ui-block-c">
-								<a href="<?= htmlentities($r->createLinkArgList('../clean-guestlist', 'hostname', 'port'), ENT_QUOTES, 'UTF-8') ?>" data-role="button" data-icon="delete" data-ajax="false"><?= _('Clean the list') ?></a>
+								<a href="<?= htmlentities($r->createLinkArgList('../clean-guestlist', 'host', 'port'), ENT_QUOTES, 'UTF-8') ?>" data-role="button" data-icon="delete" data-ajax="false"><?= _('Clean the list') ?></a>
 							</div>
 							<div class="ui-block-d">
 								<a href="#load" data-role="button" data-icon="gear" data-rel="dialog" data-transition="pop"><?= _('Load a guest list') ?></a>
@@ -58,7 +58,7 @@ $r = ManiaLib\Application\Request::getInstance();
 	<div data-role="content">
 		<form method="get" action="<?= $r->createLinkArgList('../load-guestlist') ?>" data-ajax="false">
 			<input type="hidden" name="port" value="<?= $port ?>"/>
-			<input type="hidden" name="hostname" value="<?= $hostname ?>"/>
+			<input type="hidden" name="host" value="<?= $host ?>"/>
 			<fieldset data-role="controlgroup">
 				<legend><?= _('Available guestlist') ?></legend>
 				<?php foreach($guestlistFiles as $file): ?>
@@ -84,7 +84,7 @@ $r = ManiaLib\Application\Request::getInstance();
 	<div data-role="content">
 		<form method="get" action="<?= $r->createLinkArgList('../add-guest') ?>" data-ajax="false">
 			<input type="hidden" name="port" value="<?= $port ?>"/>
-			<input type="hidden" name="hostname" value="<?= $hostname ?>"/>
+			<input type="hidden" name="host" value="<?= $host ?>"/>
 			<label for="login"><?= _('Enter the login to add') ?></label>
 			<input type="text" name="login" id="login" value="" placeholder="login..."/>
 			<div class="ui-grid-a">
@@ -105,7 +105,7 @@ $r = ManiaLib\Application\Request::getInstance();
 	<div data-role="content">
 		<form method="get" action="<?= $r->createLinkArgList('../save-guestlist') ?>" data-ajax="false">
 			<input type="hidden" name="port" value="<?= $port ?>"/>
-			<input type="hidden" name="hostname" value="<?= $hostname ?>"/>
+			<input type="hidden" name="host" value="<?= $host ?>"/>
 			<label for="filename"><?= _('Enter a filename to save the guestlist') ?></label>
 			<input type="text" name="filename" id="filename" value=""/>
 			<div class="ui-grid-a">

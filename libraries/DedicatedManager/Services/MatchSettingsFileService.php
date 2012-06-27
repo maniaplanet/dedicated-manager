@@ -181,7 +181,7 @@ class MatchSettingsFileService extends DedicatedFileService
 		$config = \ManiaLive\DedicatedApi\Config::getInstance();
 		$config->host = $hostname;
 		$config->port = $port;
-		$config->password = $server->password;
+		$config->password = $server->rpcPassword;
 
 		$connection = \ManiaLive\DedicatedApi\Connection::getInstance();
 		$gameInfo = $connection->getCurrentGameInfo();
