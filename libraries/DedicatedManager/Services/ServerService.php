@@ -23,6 +23,19 @@ class ServerService extends AbstractService
 	}
 
 	/**
+	 * @param string $login
+	 * @return Server[]
+	 */
+	function getLivesForManager($login)
+	{
+		$result = $this->db()->execute(
+				'SELECT S.* FROM Managers M INNER JOIN Servers S USING (rpcHost,rpcPort) '.
+				'WHERE M.login = %s AND DATE_ADD(lastLiveDate, INTERVAL 1 MINUTE) > NOW()',
+				$this->db()->quote($login));
+		return Server::arrayFromRecordSet($result);
+	}
+
+	/**
 	 * @param string $rpcHost
 	 * @param int $rpcPort
 	 * @return Server
@@ -93,11 +106,27 @@ class ServerService extends AbstractService
 		if(!$isWindows)
 			$startCommand .= ' &';
 
-		\ManiaLib\Utils\Logger::info($startCommand);
-		$this->doStart($startCommand);
+		$this->doStart($startCommand, 'Synchronizing...');
 	}
 	
-	private function doStart($commandLine)
+	function startNoautoquit()
+	{
+		$config = \DedicatedManager\Config::getInstance();
+
+		// Starting dedicated
+		$isWindows = stripos(PHP_OS, 'WIN') === 0;
+		if($isWindows)
+			$startCommand = 'START /D "'.$config->dedicatedPath.'" ManiaPlanetServer.exe';
+		else
+			$startCommand = 'cd "'.$config->dedicatedPath.'"; ./ManiaPlanetServer';
+		$startCommand .= ' /noautoquit';
+		if(!$isWindows)
+			$startCommand .= ' &';
+
+		$this->doStart($startCommand, 'Ready, waiting for commands.');
+	}
+	
+	private function doStart($commandLine, $successStr='...Load succeeds')
 	{
 		$config = \DedicatedManager\Config::getInstance();
 
@@ -113,7 +142,7 @@ class ServerService extends AbstractService
 		$diffPids = array_diff($this->getPIDs(), $currentPids);
 		if(!$diffPids)
 			throw new \Exception('Can\'t start dedicated server.');
-		$pid = $diffPids[0];
+		$pid = reset($diffPids);
 
 		// Reading dedicated log while it's written
 		$logFileName = $config->dedicatedPath.'Logs/ConsoleLog.'.$pid.'.txt';
@@ -138,8 +167,11 @@ class ServerService extends AbstractService
 			$line = fgets($logFile);
 			if(!$line)
 			{
-				if(strpos($buffer, '...Load succeeds') !== false || strpos($buffer, 'exiting') !== false)
+				if(strpos($buffer, $successStr) !== false)
 					break;
+				if(strpos($buffer, 'Server not running, exiting.') !== false || strpos($buffer, 'This title isn\'t playable.') !== false)
+					throw new \Exception('Server stopped automatically');
+				
 				if(!$buffer)
 					fseek($logFile, 0, SEEK_SET);
 				else
@@ -153,24 +185,19 @@ class ServerService extends AbstractService
 		fclose($logFile);
 
 		// Checking for errors
-		if(preg_match_all('/ERROR:\s+([^\.$]+)/um', $buffer, $errors) || strpos($buffer, '...Server stopped') !== false)
+		if(preg_match_all('/ERROR:\s+([^\.$]+)/um', $buffer, $errors))
 		{
 			if($isWindows)
 				`TASKKILL /PID $pid`;
 			else
 				`kill -9 $pid`;
-			
-			if(!$errors)
-			{
-				$errors[1] = 'Server stopped automatically';
-			}
 
 			throw new \Exception(serialize(array_map('ucfirst', $errors[1])));
 		}
 
 		// Retrieving XML-RPC port
 		if(preg_match('/Listening for xml-rpc commands on port (\d+)/um', $buffer, $matches))
-				$port = $matches[1];
+			$port = $matches[1];
 		else
 			throw new \Exception('XML-RPC port not found');
 
@@ -183,7 +210,7 @@ class ServerService extends AbstractService
 		$config = \DedicatedManager\Config::getInstance();
 		$isWindows = stripos(PHP_OS, 'WIN') === 0;
 		if($isWindows)
-				$startCommand = 'START php.exe "'.$config->manialivePath.'bootstrapper.php"';
+			$startCommand = 'START php.exe "'.$config->manialivePath.'bootstrapper.php"';
 		else
 			$startCommand = 'cd "'.$config->manialivePath.'"; php bootstrapper.php';
 		$startCommand .= sprintf(' --rpcport=%d', $port);

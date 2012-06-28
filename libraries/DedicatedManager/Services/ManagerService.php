@@ -16,7 +16,7 @@ class ManagerService extends AbstractService
 		return $this->db()->execute('SELECT DISTINCT login FROM Managers')->fetchArrayOfSingleValues();
 	}
 
-	function getList($rpcHost, $rpcPort)
+	function getByServer($rpcHost, $rpcPort)
 	{
 		return $this->db()->execute(
 				'SELECT login FROM Managers WHERE rpcHost=%s AND rpcPort=%d', $this->db()->quote($rpcHost), $rpcPort
@@ -30,6 +30,16 @@ class ManagerService extends AbstractService
 				$this->db()->quote($rpcHost),
 				$rpcPort,
 				$this->db()->quote($login));
+	}
+	
+	function isAllowed($rpcHost, $rpcPort, $login)
+	{
+		return $this->db()->execute(
+				'SELECT COUNT(*)>0 FROM Managers WHERE rpcHost=%s AND rpcPort=%d AND login=%s',
+				$this->db()->quote($rpcHost),
+				$rpcPort,
+				$this->db()->quote($login)
+			)->fetchSingleValue(false);
 	}
 
 	function revoke($rpcHost, $rpcPort, $login)

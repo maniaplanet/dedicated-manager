@@ -1,4 +1,5 @@
 <?php $currentAction = \ManiaLib\Application\Dispatcher::getInstance()->getAction(); ?>
+<link rel="stylesheet" href="<?= $mediaURL ?>css/navigation.css" type="text/css" media="all" />
 <div class="content-secondary">
 	<div data-role="collapsible" data-collapsed="true" data-theme="e" data-content-theme="d">
 		<h3><?= _('Show more') ?></h3>
@@ -22,7 +23,11 @@
 			<li data-icon="grid" <?= $currentAction == 'chat' ? 'data-theme="e"' : '' ?>>
 				<a href="<?= htmlentities($r->createLinkArgList('../chat', 'host', 'port'), ENT_QUOTES, 'UTF-8') ?>" data-ajax="false"><?= _('Chat') ?></a>
 			</li>
+		<?php if($isAdmin): ?>
+			<li data-icon="grid" <?= $currentAction == 'managers' ? 'data-theme="e"' : '' ?>>
+				<a href="<?= htmlentities($r->createLinkArgList('../managers', 'host', 'port'), ENT_QUOTES, 'UTF-8') ?>" data-ajax="false"><?= _('Managers') ?></a>
+			</li>
+		<?php endif; ?>
 		</ul>
 	</div>
 </div>
-<link rel="stylesheet" href="<?= $mediaURL ?>css/navigation.css" type="text/css" media="all" />

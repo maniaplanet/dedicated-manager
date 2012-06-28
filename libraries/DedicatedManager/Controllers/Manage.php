@@ -11,6 +11,15 @@ namespace DedicatedManager\Controllers;
 
 class Manage extends \ManiaLib\Application\Controller
 {
+	function preFilter()
+	{
+		parent::preFilter();
+		if(!$this->isAdmin)
+		{
+			$this->session->set('error', _('You need to be an admin to manage files.'));
+			$this->request->redirectArgList('/');
+		}
+	}
 
 	function index()
 	{

@@ -21,8 +21,7 @@ abstract class AbstractObject
 	/**
 	 * Fetches a single object from the record set
 	 */
-	static function fromRecordSet(\ManiaLib\Database\RecordSet $result,
-		$strict=true, $default=null, $message='Object not found')
+	static function fromRecordSet(\ManiaLib\Database\RecordSet $result, $strict=true, $default=null, $message='Object not found')
 	{
 		if(!($object = $result->fetchObject(get_called_class())))
 		{

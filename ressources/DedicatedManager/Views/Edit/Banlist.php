@@ -7,8 +7,8 @@ $r = ManiaLib\Application\Request::getInstance();
 	<div data-role="content">
 		<div class="content-primary">
 			<form method="get" action="<?= $r->createLinkArgList('../unban') ?>" data-ajax="false">
-				<input type="hidden" name="port" value="<?= $port ?>"/>
 				<input type="hidden" name="host" value="<?= $host ?>"/>
+				<input type="hidden" name="port" value="<?= $port ?>"/>
 				<ul data-role="listview" data-inset="true">
 					<li data-role="list-divider">
 						<?= _('Banned players') ?>

@@ -11,14 +11,25 @@ namespace DedicatedManager\Controllers;
 
 use \DedicatedManager\Services\GameInfos;
 
-class Create extends \ManiaLib\Application\Controller
+class Create extends AbstractController
 {
 	protected $defaultAction = 'configure';
 
 	protected function onConstruct()
 	{
+		parent::onConstruct();
 		$header = \DedicatedManager\Helpers\Header::getInstance();
 		$header->leftLink = $this->request->createLinkArgList('../go-home');
+	}
+	
+	function preFilter()
+	{
+		parent::preFilter();
+		if(!$this->isAdmin)
+		{
+			$this->session->set('error', _('You need to be an admin to create a server.'));
+			$this->request->redirectArgList('/');
+		}
 	}
 
 	function configure($configFile = '')

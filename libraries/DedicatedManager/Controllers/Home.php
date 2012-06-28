@@ -9,10 +9,11 @@
 
 namespace DedicatedManager\Controllers;
 
-class Home extends \ManiaLib\Application\Controller
+class Home extends AbstractController
 {
 	protected function onConstruct()
 	{
+		parent::onConstruct();
 		$header = \DedicatedManager\Helpers\Header::getInstance();
 		$header->leftLink = null;
 	}
@@ -68,7 +69,7 @@ class Home extends \ManiaLib\Application\Controller
 		}
 
 		$service = new \DedicatedManager\Services\ServerService();
-		$this->response->servers = $service->getLives();
+		$this->response->servers = $this->isAdmin ? $service->getLives() : $service->getLivesForManager($this->session->login);
 	}
 }
 

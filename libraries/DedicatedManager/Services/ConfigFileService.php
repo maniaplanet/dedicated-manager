@@ -20,7 +20,7 @@ class ConfigFileService extends DedicatedFileService
 	function validate(ServerOptions $options, Account $account = null, SystemConfig $system = null, $isLan = true)
 	{
 		$errors = array();
-		if(!$system->title)
+		if($system && !$system->title)
 		{
 			$errors[] = _('You have to select a game title');
 		}

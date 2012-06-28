@@ -11,7 +11,7 @@ namespace DedicatedManager\Controllers;
 
 use ManiaLive\DedicatedApi\Structures\GameInfos;
 
-class Edit extends \ManiaLib\Application\Controller implements \ManiaLib\Application\Filterable
+class Edit extends AbstractController
 {
 	/** @var string */
 	private $host;
@@ -26,7 +26,7 @@ class Edit extends \ManiaLib\Application\Controller implements \ManiaLib\Applica
 	
 	protected function onConstruct()
 	{
-		$this->addFilter($this);
+		parent::onConstruct();
 		
 		$header = \DedicatedManager\Helpers\Header::getInstance();
 		$header->rightText = _('Back to server home');
@@ -36,9 +36,35 @@ class Edit extends \ManiaLib\Application\Controller implements \ManiaLib\Applica
 	
 	function preFilter()
 	{
+		parent::preFilter();
+		
 		$this->host = $this->request->get('host');
 		$this->port = $this->request->get('port');
-		$this->createConnection();
+		
+		$service = new \DedicatedManager\Services\ServerService();
+		try
+		{
+			$server = $service->get($this->host, $this->port);
+			$this->response->maniaplanetJoin = $server->getJoinLink();
+			$this->response->maniaplanetSpectate = $server->getSpectateLink();
+		}
+		catch(\DedicatedManager\Services\NotFoundException $e)
+		{
+			$this->session->set('error', _('Unknown server.'));
+			$this->request->redirectArgList('/');
+		}
+		
+		if(!$this->isAdmin)
+		{
+			$service = new \DedicatedManager\Services\ManagerService();
+			if(!$service->isAllowed($this->host, $this->port, $this->session->login))
+			{
+				$this->session->set('error', _('You\'re not allowed to edit this server.'));
+				$this->request->redirectArgList('/');
+			}
+		}
+		
+		$this->createConnection($server);
 		
 		$rm = new \ReflectionMethod($this, $this->request->getAction('index'));
 		$comment = $rm->getDocComment();
@@ -52,18 +78,15 @@ class Edit extends \ManiaLib\Application\Controller implements \ManiaLib\Applica
 		}
 	}
 	
-	private function createConnection()
+	private function createConnection($server)
 	{
-		$service = new \DedicatedManager\Services\ServerService();
-		$server = $service->get($this->host, $this->port);
-		
 		define('APP_ROOT', MANIALIB_APP_PATH);
 		\ManiaLive\Utilities\Logger::getLog('Runtime')->disableLog();
 		$config = \ManiaLive\Config\Config::getInstance();
 		$config->verbose = false;
 		$config = \ManiaLive\DedicatedApi\Config::getInstance();
-		$config->host = $this->host;
-		$config->port = $this->port;
+		$config->host = $server->rpcHost;
+		$config->port = $server->rpcPort;
 		$config->password = $server->rpcPassword;
 		$config->timeout = 3;
 
@@ -80,6 +103,8 @@ class Edit extends \ManiaLib\Application\Controller implements \ManiaLib\Applica
 	
 	function postFilter()
 	{
+		parent::postFilter();
+		
 		$this->response->host = $this->host;
 		$this->response->port = $this->port;
 		$this->response->playersCount = count($this->players);
@@ -278,7 +303,7 @@ class Edit extends \ManiaLib\Application\Controller implements \ManiaLib\Applica
 		if( ($errors = $service->validate($optionsObj)) )
 		{
 			$this->session->set('error', $errors);
-			$this->request->redirectArgList('/edit/config/', 'host', 'port');
+			$this->request->redirectArgList('../config/', 'host', 'port');
 		}
 
 		$optionsCur = $this->connection->getServerOptions();
@@ -297,7 +322,7 @@ class Edit extends \ManiaLib\Application\Controller implements \ManiaLib\Applica
 			\ManiaLib\Application\ErrorHandling::logException($e);
 			$this->session->set('error', _('An error occured while changing server configuration'));
 		}
-		$this->request->redirectArgList('/edit/config/', 'host', 'port');
+		$this->request->redirectArgList('../config/', 'host', 'port');
 	}
 
 	function players()
@@ -363,7 +388,7 @@ class Edit extends \ManiaLib\Application\Controller implements \ManiaLib\Applica
 				$this->session->set('error', _('An error occurred while adding players to the guest list.'));
 			}
 		}
-		$this->request->redirectArgList('/edit/players/', 'host', 'port');
+		$this->request->redirectArgList('../players/', 'host', 'port');
 	}
 
 	function banlist()
@@ -643,15 +668,11 @@ class Edit extends \ManiaLib\Application\Controller implements \ManiaLib\Applica
 	/**
 	 * @redirect
 	 */
-	function sendMessage($message,$receiver = null)
+	function sendMessage($message, $receiver = null)
 	{
 		try
 		{
-			if(!$receiver)
-			{
-				$receiver = null;
-			}
-			$this->connection->chatSendServerMessage($message, $receiver);
+			$this->connection->chatSendServerMessage($message, $receiver ?: null);
 			$this->session->set('success', _('Your message has been sent'));
 		}
 		catch(\Exception $e)
@@ -675,7 +696,61 @@ class Edit extends \ManiaLib\Application\Controller implements \ManiaLib\Applica
 		$this->connection->setTeamInfo($team1['name'], (double) $team1['color'], $team1['country'], $team2['name'], (double) $team2['color'], $team2['country']);
 		$this->session->set('success',_('Changes has been applied'));
 		$this->request->redirectArgList('../teams/', 'host', 'port');
+	}
+	
+	function managers()
+	{
+		if(!$this->isAdmin)
+		{
+			$this->session->set('error', _('You need to be an admin to do this.'));
+			$this->request->redirectToReferer();
+		}
 		
+		$service = new \DedicatedManager\Services\ManagerService();
+		$this->response->managers = $service->getByServer($this->host, $this->port);
+	}
+	
+	/**
+	 * @redirect
+	 */
+	function actionManagers(array $managers, $revoke = '')
+	{
+		if(!$this->isAdmin)
+		{
+			$this->session->set('error', _('You need to be an admin to do this.'));
+			$this->request->redirectToReferer();
+		}
+		
+		if($revoke)
+		{
+			$service = new \DedicatedManager\Services\ManagerService();
+			foreach($managers as $manager)
+				$service->revoke($this->host, $this->port, $manager);
+		}
+		$this->request->redirectArgList('../managers/', 'host', 'port');
+	}
+	
+	/**
+	 * @redirect
+	 */
+	function addManager($login)
+	{
+		if(!$this->isAdmin)
+		{
+			$this->session->set('error', _('You need to be an admin to do this.'));
+			$this->request->redirectToReferer();
+		}
+		
+		$service = new \DedicatedManager\Services\ManagerService();
+		try
+		{
+			$service->grant($this->host, $this->port, $login);
+		}
+		catch(\Exception $e)
+		{
+			$this->session->set('warning', _('Already a manager.'));
+		}
+		$this->request->redirectArgList('../managers/', 'host', 'port');
 	}
 
 	/**
@@ -683,6 +758,12 @@ class Edit extends \ManiaLib\Application\Controller implements \ManiaLib\Applica
 	 */
 	function stop()
 	{
+		if(!$this->isAdmin)
+		{
+			$this->session->set('error', _('You need to be an admin to do this.'));
+			$this->request->redirectToReferer();
+		}
+		
 		$this->connection->stopServer();
 		$service = new \DedicatedManager\Services\ServerService();
 		$service->delete($this->host, $this->port);
