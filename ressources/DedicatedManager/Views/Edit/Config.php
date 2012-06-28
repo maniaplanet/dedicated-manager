@@ -26,6 +26,15 @@ $r = ManiaLib\Application\Request::getInstance();
 							</label>
 							<textarea name="options[comment]" id="comment" rows="4" cols="25"><?= $options->comment; ?></textarea>
 						</li>
+					<?php if($isRelay): ?>
+						<li data-role="fieldcontain">
+							<label for="maxSpectators">
+								<strong><?= _('Max spectators'); ?></strong><br/>
+								<i><?= _('Maximum number of spectators you want to be able to connect on the server.') ?></i>
+							</label>
+							<input type="range" name="options[nextMaxSpectators]" id="maxSpectators" value="<?= $options->nextMaxSpectators; ?>" min="0" max="255" data-highlight="true"/>
+						</li>
+					<?php else: ?>
 						<li data-role="fieldcontain">
 							<label for="maxPlayers">
 								<strong><?= _('Max players'); ?></strong><br/>
@@ -33,11 +42,13 @@ $r = ManiaLib\Application\Request::getInstance();
 							</label>
 							<input type="range" name="options[nextMaxPlayers]" id="maxPlayers" value="<?= $options->nextMaxPlayers; ?>" min="0" max="255" data-highlight="true"/>
 						</li>
+					<?php endif; ?>
 					</ul>
 				</fieldset>
 				<fieldset data-role="collapsible" data-theme="b">
 					<legend><?= _('Advanced Server Configuration') ?></legend>
 					<ul data-role="listview">
+					<?php if(!$isRelay): ?>
 						<li data-role="fieldcontain">
 							<label for="password">
 								<strong><?= _('Password'); ?></strong><br/>
@@ -52,6 +63,7 @@ $r = ManiaLib\Application\Request::getInstance();
 							</label>
 							<input type="range" name="options[nextMaxSpectators]" id="maxSpectators" value="<?= $options->nextMaxSpectators; ?>" min="0" max="255" data-highlight="true"/>
 						</li>
+					<?php endif; ?>
 						<li data-role="fieldcontain">
 							<label for="passwordForSpectator">
 								<strong><?= _('Password for spectator'); ?></strong><br/>
@@ -79,12 +91,13 @@ $r = ManiaLib\Application\Request::getInstance();
 								<option value="1" <?= $options->allowMapDownload ? 'selected="selected"' : '' ?>><?= _('Yes') ?></option>
 							</select>
 						</li>
+					<?php if(!$isRelay): ?>
 						<li data-role="fieldcontain">
-							<label for="callVoteRation">
+							<label for="callVoteRatio">
 								<strong><?= _('Call vote ratio (in %)'); ?></strong><br/>
 								<i><?= _('Ratio in % that define if a vote passed or -1 to disable votes') ?></i>
 							</label>
-							<input type="range" name="options[callVoteRatio]" id="callVoteRation" value="<?= $options->callVoteRatio == -1 ? -1 : $options->callVoteRatio * 100; ?>" min="-1" max="100" data-highlight="true"/>
+							<input type="range" name="options[callVoteRatio]" id="callVoteRatio" value="<?= $options->callVoteRatio == -1 ? -1 : $options->callVoteRatio * 100; ?>" min="-1" max="100" data-highlight="true"/>
 						</li>
 						<li data-role="fieldcontain">
 							<label for="callVoteTimeOut">
@@ -93,6 +106,7 @@ $r = ManiaLib\Application\Request::getInstance();
 							</label>
 							<input type="number" name="options[nextCallVoteTimeOut]" id="callVoteTimeOut" value="<?= $options->nextCallVoteTimeOut / 1000; ?>"/>
 						</li>
+					<?php endif; ?>
 						<li data-role="fieldcontain">
 							<label for="refereePassword">
 								<strong><?= _('Referee password'); ?></strong><br/>
@@ -132,6 +146,7 @@ $r = ManiaLib\Application\Request::getInstance();
 								<option value="1" <?= $options->autosaveValidationReplays ? 'selected="selected"' : '' ?>><?= _('Yes') ?></option>
 							</select>
 						</li>
+					<?php if(!$isRelay): ?>
 						<li data-role="fieldcontain">
 							<label for="nextLadderMode">
 								<strong><?= _('Ladder Mode'); ?></strong><br/>
@@ -156,6 +171,7 @@ $r = ManiaLib\Application\Request::getInstance();
 							</label>
 							<input type="number" name="options[ladderServerLimitMax]" id="ladderServerLimitMax" value="<?= $options->ladderServerLimitMax; ?>" min="10000" max="100000" step="10000"/>
 						</li>
+					<?php endif; ?>
 					</ul>
 				</fieldset>
 				<div class="ui-grid-a">

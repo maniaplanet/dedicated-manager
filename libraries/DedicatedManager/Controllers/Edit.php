@@ -13,10 +13,8 @@ use ManiaLive\DedicatedApi\Structures\GameInfos;
 
 class Edit extends AbstractController
 {
-	/** @var string */
-	private $host;
-	/** @var int */
-	private $port;
+	/** @var \DedicatedManager\Services\Server */
+	private $server;
 	/** @var \ManiaLive\DedicatedApi\Connection */
 	private $connection;
 	private $players;
@@ -38,15 +36,13 @@ class Edit extends AbstractController
 	{
 		parent::preFilter();
 		
-		$this->host = $this->request->get('host');
-		$this->port = $this->request->get('port');
+		$host = $this->request->get('host');
+		$port = $this->request->get('port');
 		
 		$service = new \DedicatedManager\Services\ServerService();
 		try
 		{
-			$server = $service->get($this->host, $this->port);
-			$this->response->maniaplanetJoin = $server->getJoinLink();
-			$this->response->maniaplanetSpectate = $server->getSpectateLink();
+			$this->server = $service->get($host, $port);
 		}
 		catch(\DedicatedManager\Services\NotFoundException $e)
 		{
@@ -57,17 +53,25 @@ class Edit extends AbstractController
 		if(!$this->isAdmin)
 		{
 			$service = new \DedicatedManager\Services\ManagerService();
-			if(!$service->isAllowed($this->host, $this->port, $this->session->login))
+			if(!$service->isAllowed($host, $port, $this->session->login))
 			{
 				$this->session->set('error', _('You\'re not allowed to edit this server.'));
 				$this->request->redirectArgList('/');
 			}
 		}
 		
-		$this->createConnection($server);
+		$this->createConnection();
 		
 		$rm = new \ReflectionMethod($this, $this->request->getAction('index'));
 		$comment = $rm->getDocComment();
+		if($this->server->isRelay && $comment && preg_match('/@norelay/u', $comment))
+		{
+			$this->session->set('error', _('Unauthorized action on a relay.'));
+			if($this->request->getReferer() == $this->request->createLink())
+				$this->request->redirectArgList('..');
+			else
+				$this->request->redirectToReferer();
+		}
 		if(!$comment || !preg_match('/@redirect/u', $comment))
 		{
 			$this->request->registerReferer();
@@ -78,16 +82,16 @@ class Edit extends AbstractController
 		}
 	}
 	
-	private function createConnection($server)
+	private function createConnection()
 	{
 		define('APP_ROOT', MANIALIB_APP_PATH);
 		\ManiaLive\Utilities\Logger::getLog('Runtime')->disableLog();
 		$config = \ManiaLive\Config\Config::getInstance();
 		$config->verbose = false;
 		$config = \ManiaLive\DedicatedApi\Config::getInstance();
-		$config->host = $server->rpcHost;
-		$config->port = $server->rpcPort;
-		$config->password = $server->rpcPassword;
+		$config->host = $this->server->rpcHost;
+		$config->port = $this->server->rpcPort;
+		$config->password = $this->server->rpcPassword;
 		$config->timeout = 3;
 
 		try
@@ -105,8 +109,11 @@ class Edit extends AbstractController
 	{
 		parent::postFilter();
 		
-		$this->response->host = $this->host;
-		$this->response->port = $this->port;
+		$this->response->host = $this->server->rpcHost;
+		$this->response->port = $this->server->rpcPort;
+		$this->response->isRelay = $this->server->isRelay;
+		$this->response->maniaplanetJoin = $this->server->getJoinLink();
+		$this->response->maniaplanetSpectate = $this->server->getSpectateLink();
 		$this->response->playersCount = count($this->players);
 		$this->response->options = $this->options;
 		$this->response->currentMap = $this->currentMap;
@@ -127,6 +134,7 @@ class Edit extends AbstractController
 
 	/**
 	 * @redirect
+	 * @norelay
 	 */
 	function mapAction(array $maps = array(), $nextMapIndex = '', $deleteFilenames = '')
 	{
@@ -147,6 +155,9 @@ class Edit extends AbstractController
 		$this->request->redirectArgList('../maps/', 'host', 'port');
 	}
 
+	/**
+	 * @norelay
+	 */
 	function addMaps()
 	{
 		$maps = $this->connection->getMapList(-1, 0);
@@ -183,6 +194,7 @@ class Edit extends AbstractController
 
 	/**
 	 * @redirect
+	 * @norelay
 	 */
 	function insertMaps($selected = '', $insert = '', $add = '')
 	{
@@ -204,10 +216,13 @@ class Edit extends AbstractController
 		$this->request->redirectArgList('../add-maps/', 'host', 'port');
 	}
 
+	/**
+	 * @norelay 
+	 */
 	function rules()
 	{
 		$service = new \DedicatedManager\Services\MatchSettingsFileService();
-		$matchRules = $service->getCurrentMatchRules($this->host, $this->port);
+		$matchRules = $service->getCurrentMatchRules($this->server->rpcHost, $this->server->rpcPort);
 
 		$matchInfo = $this->connection->getCurrentGameInfo();
 		switch($matchInfo->gameMode)
@@ -239,6 +254,7 @@ class Edit extends AbstractController
 
 	/**
 	 * @redirect
+	 * @norelay
 	 */
 	function setRules(array $rules)
 	{
@@ -684,12 +700,16 @@ class Edit extends AbstractController
 		$this->request->redirectArgList('../chat/', 'host', 'port');
 	}
 
+	/**
+	 * @norelay 
+	 */
 	function teams()
 	{
 	}
 
 	/**
 	 * @redirect
+	 * @norelay
 	 */
 	function setTeams($team1, $team2)
 	{
@@ -707,7 +727,7 @@ class Edit extends AbstractController
 		}
 		
 		$service = new \DedicatedManager\Services\ManagerService();
-		$this->response->managers = $service->getByServer($this->host, $this->port);
+		$this->response->managers = $service->getByServer($this->server->rpcHost, $this->server->rpcPort);
 	}
 	
 	/**
@@ -725,7 +745,7 @@ class Edit extends AbstractController
 		{
 			$service = new \DedicatedManager\Services\ManagerService();
 			foreach($managers as $manager)
-				$service->revoke($this->host, $this->port, $manager);
+				$service->revoke($this->server->rpcHost, $this->server->rpcPort, $manager);
 		}
 		$this->request->redirectArgList('../managers/', 'host', 'port');
 	}
@@ -744,7 +764,7 @@ class Edit extends AbstractController
 		$service = new \DedicatedManager\Services\ManagerService();
 		try
 		{
-			$service->grant($this->host, $this->port, $login);
+			$service->grant($this->server->rpcHost, $this->server->rpcPort, $login);
 		}
 		catch(\Exception $e)
 		{
@@ -766,12 +786,13 @@ class Edit extends AbstractController
 		
 		$this->connection->stopServer();
 		$service = new \DedicatedManager\Services\ServerService();
-		$service->delete($this->host, $this->port);
+		$service->delete($this->server->rpcHost, $this->server->rpcPort);
 		$this->request->redirectArgList('/');
 	}
 
 	/**
 	 * @redirect
+	 * @norelay
 	 */
 	function restart()
 	{
@@ -781,6 +802,7 @@ class Edit extends AbstractController
 
 	/**
 	 * @redirect
+	 * @norelay
 	 */
 	function next()
 	{

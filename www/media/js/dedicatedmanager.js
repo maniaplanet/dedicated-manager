@@ -22,6 +22,9 @@ $(document).bind('pageinit', function() {
 		}, 1);
 	});
 	
+	// Checkboxes hack
+	$('.readonly-checkbox').parent().css('opacity', 1);
+	
 	/*
 	 * Formating preview
 	 */
