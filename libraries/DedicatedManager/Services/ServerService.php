@@ -11,8 +11,6 @@ namespace DedicatedManager\Services;
 
 class ServerService extends AbstractService
 {
-	protected $databaseName = 'Manager';
-
 	/**
 	 * @return Server[]
 	 */
