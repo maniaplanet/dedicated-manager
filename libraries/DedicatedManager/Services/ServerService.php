@@ -107,7 +107,7 @@ class ServerService extends AbstractService
 		$this->doStart($startCommand, 'Synchronizing...');
 	}
 	
-	function startNoautoquit()
+	function startNoautoquit($configFile=null)
 	{
 		$config = \DedicatedManager\Config::getInstance();
 
@@ -117,7 +117,7 @@ class ServerService extends AbstractService
 			$startCommand = 'START /D "'.$config->dedicatedPath.'" ManiaPlanetServer.exe';
 		else
 			$startCommand = 'cd "'.$config->dedicatedPath.'"; ./ManiaPlanetServer';
-		$startCommand .= ' /noautoquit';
+		$startCommand .= ($configFile ? sprintf(' /dedicated_cfg=%s', escapeshellarg($configFile)) : '').' /noautoquit';
 		if(!$isWindows)
 			$startCommand .= ' &';
 
