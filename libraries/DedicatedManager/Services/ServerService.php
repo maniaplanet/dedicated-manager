@@ -200,10 +200,10 @@ class ServerService extends AbstractService
 			throw new \Exception('XML-RPC port not found');
 
 		// Registering server and starting ManiaLive
-		$this->startManiaLive($port, $pid);
+		$this->startManiaLive('127.0.0.1', $port, $pid);
 	}
 
-	function startManiaLive($port, $dedicatedPid = 0)
+	function startManiaLive($host, $port, $dedicatedPid = 0)
 	{
 		$config = \DedicatedManager\Config::getInstance();
 		$isWindows = stripos(PHP_OS, 'WIN') === 0;
@@ -211,7 +211,7 @@ class ServerService extends AbstractService
 			$startCommand = 'START php.exe "'.$config->manialivePath.'bootstrapper.php"';
 		else
 			$startCommand = 'cd "'.$config->manialivePath.'"; php bootstrapper.php';
-		$startCommand .= sprintf(' --rpcport=%d', $port);
+		$startCommand .= sprintf(' --address=%s --rpcport=%d', escapeshellarg($host), $port);
 		if(!$isWindows)
 			$startCommand .= ' < /dev/null > logs/runtime.'.$dedicatedPid.'.log 2>&1 &';
 
