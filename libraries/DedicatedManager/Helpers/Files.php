@@ -46,7 +46,7 @@ abstract class Files
 							'<span>%s</span>'.
 						'</label>',
 						$id,
-						htmlentities($file->path.$file->filename, ENT_COMPAT | ENT_HTML5),
+						htmlentities($file->path.$file->filename, ENT_QUOTES | ENT_HTML5, 'utf-8'),
 						$checked ? ' checked="checked"' : '',
 						$imageURL.'thumbnails/'.$file->uid.'.jpg',
 						\ManiaLib\Utils\StyleParser::toHtml($file->name).' '._('by').' '.$file->author);
