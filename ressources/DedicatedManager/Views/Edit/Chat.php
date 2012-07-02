@@ -23,7 +23,7 @@ $r = ManiaLib\Application\Request::getInstance();
 					</li>
 					<li data-role="fieldcontain">
 						<label for="receiver"><?= _('Receiver') ?></label>
-						<select id="receiver" name="receiver" multiple="multiple" data-native-menu="false">
+						<select id="receiver" name="receiver[]" multiple="multiple" data-native-menu="false">
 							<option><?= _('All players') ?></option>
 							<?php foreach($players as $player): ?>
 								<option value="<?= $player->login ?>"><?= ManiaLib\Utils\StyleParser::toHtml($player->nickName) ?></option>

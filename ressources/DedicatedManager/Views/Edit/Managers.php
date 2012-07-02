@@ -26,7 +26,7 @@ $r = ManiaLib\Application\Request::getInstance();
 						</fieldset>
 					</li>
 					<li data-role="fieldcontain">
-						<input type="submit" name="revoke" value="<?= _('Revoke') ?>" data-icon="delete" <?= !$managers ? 'disabled="disabled"' : '' ?>/>
+						<input type="submit" name="revoke[]" value="<?= _('Revoke') ?>" data-icon="delete" <?= !$managers ? 'disabled="disabled"' : '' ?>/>
 					</li>
 				</ul>
 			</form>
