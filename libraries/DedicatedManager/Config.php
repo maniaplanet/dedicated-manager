@@ -17,5 +17,4 @@ class Config extends \ManiaLib\Utils\Singleton
 	public $admins = array();
 }
 
-
 ?>
