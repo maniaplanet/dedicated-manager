@@ -104,7 +104,7 @@ class ServerService extends AbstractService
 		if(!$isWindows)
 			$startCommand .= ' &';
 
-		$this->doStart($startCommand, 'Synchronizing...');
+		$this->doStart($startCommand, 'Synchro');
 	}
 	
 	function startNoautoquit($configFile=null)
