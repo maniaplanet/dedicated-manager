@@ -288,7 +288,7 @@ class Edit extends AbstractController
 			{
 				$gameInfo = $this->connection->getCurrentGameInfo();
 				foreach($rules as $key => $value)
-					$gameInfo->$key = $value;
+					$gameInfo->$key = (int) $value;
 				$this->connection->setGameInfos($gameInfo);
 			}
 			$this->connection->restartMap();
@@ -330,6 +330,7 @@ class Edit extends AbstractController
 
 		try
 		{
+			$optionsObj->ensureCast();
 			$this->connection->setServerOptions($optionsObj->toArray());
 			$this->session->set('success', _('Configuration successfully changed'));
 		}

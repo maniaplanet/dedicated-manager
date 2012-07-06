@@ -13,7 +13,7 @@ class ServerOptions extends \ManiaLive\DedicatedApi\Structures\ServerOptions
 {
 	public $nextMaxPlayers = 16;
 	public $nextMaxSpectators = 8;
-	public $nextLadderMode = true;
+	public $nextLadderMode = 1;
 	public $ladderServerLimitMax = 50000;
 	public $ladderServerLimitMin = 0;
 	public $nextCallVoteTimeOut = 60000;
@@ -22,6 +22,21 @@ class ServerOptions extends \ManiaLive\DedicatedApi\Structures\ServerOptions
 	public $autoSaveReplays = false;
 	public $autoSaveValidationReplays = false;
 	public $refereeMode = 0;
+	
+	function ensureCast()
+	{
+		$this->hideServer = (bool) $this->hideServer;
+		$this->nextMaxPlayers = (int) $this->nextMaxPlayers;
+		$this->nextMaxSpectators = (int) $this->nextMaxSpectators;
+		$this->nextLadderMode = (int) $this->nextLadderMode;
+		$this->nextCallVoteTimeOut = (int) $this->nextCallVoteTimeOut;
+		$this->callVoteRatio = (double) $this->callVoteRatio;
+		$this->allowMapDownload = (bool) $this->allowMapDownload;
+		$this->autoSaveReplays = (bool) $this->autoSaveReplays;
+		$this->autoSaveValidationReplays = (bool) $this->autoSaveValidationReplays;
+		$this->refereeMode = (int) $this->refereeMode;
+		$this->refereePassword = (int) $this->refereePassword;
+	}
 }
 
 ?>

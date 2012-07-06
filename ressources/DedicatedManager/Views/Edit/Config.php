@@ -157,20 +157,6 @@ $r = ManiaLib\Application\Request::getInstance();
 								<option value="1" <?= $options->nextLadderMode ? 'selected="selected"' : '' ?>><?= _('Yes') ?></option>
 							</select>
 						</li>
-						<li data-role="fieldcontain">
-							<label for="ladderServerLimitMin">
-								<strong><?= _('Ladder limit min'); ?></strong><br/>
-								<i><?= _("Enter the minimal number of ladder points required to connect to the server.") ?></i>
-							</label>
-							<input type="number" name="options[ladderServerLimitMin]" id="ladderServerLimitMin" value="<?= $options->ladderServerLimitMin; ?>" min="0" max="80000" step="10000"/>
-						</li>
-						<li data-role="fieldcontain">
-							<label for="ladderServerLimitMax">
-								<strong><?= _('Ladder limit max'); ?></strong><br/>
-								<i><?= _("Enter the maximum number of ladder points to win on the server.") ?></i>
-							</label>
-							<input type="number" name="options[ladderServerLimitMax]" id="ladderServerLimitMax" value="<?= $options->ladderServerLimitMax; ?>" min="10000" max="100000" step="10000"/>
-						</li>
 					<?php endif; ?>
 					</ul>
 				</fieldset>
