@@ -82,6 +82,7 @@ class MapService extends AbstractService
 	function getList($path, $recursive = false, $isLaps = false, array $mapTypes = array(), $environment = '', $offset = null, $length = null)
 	{
 		$workPath = DedicatedFileService::securePath($this->mapDirectory.$path);
+		$mapTypes = array_map('strtolower', $mapTypes);
 		$maps = array();
 
 		$path = str_ireplace('\\', '/', $path);
@@ -109,15 +110,19 @@ class MapService extends AbstractService
 					$maps[] = $file;
 				}
 			}
-			else if(preg_match('/map.gbx$/ui', $filename))
+			else if(preg_match('/\.map\.gbx$/ui', $filename))
 			{
-				$file = $this->getData($filename, $path);
-				if( (!$isLaps || ($isLaps && $file->nbLaps != 0))
-						&& (!$environment || ($environment && $environment == $file->environment))
-						&& (!$mapTypes || $mapTypes && in_array(strtolower($file->type), array_map('strtolower', $mapTypes), true)) )
+				try
 				{
-					$maps[] = $file;
+					$file = $this->getData($filename, $path);
+					if( (!$isLaps || ($isLaps && $file->nbLaps != 0))
+							&& (!$environment || ($environment && $environment == $file->environment))
+							&& (!$mapTypes || $mapTypes && in_array(strtolower($file->type), $mapTypes, true)) )
+					{
+						$maps[] = $file;
+					}
 				}
+				catch(\InvalidArgumentException $e){}
 			}
 		}
 		
