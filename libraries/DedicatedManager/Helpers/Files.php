@@ -14,7 +14,7 @@ abstract class Files
 	static function tree(array $files, array $selected = array(), $name = 'selected', $hideSelected = false)
 	{
 		return sprintf('<div class="sortable-container"><input type="hidden" class="sortable-result" name="%s" value="%s"/>',
-				$name, implode(',', $selected)).self::subTree($files, $selected, $hideSelected).'</div>';
+				$name, implode('|', $selected)).self::subTree($files, $selected, $hideSelected).'</div>';
 	}
 	
 	static function subTree(array $files, array $selected = array(), $hideSelected = false, $root='Maps')

@@ -173,7 +173,7 @@ class Create extends AbstractController
 		$this->fetchAndAssertConfig(_('selecting maps'));
 		$this->fetchAndAssertSettings(_('selecting maps'));
 		
-		$this->session->set('selected', explode(',', $selected));
+		$this->session->set('selected', explode('|', $selected));
 		
 		if(!$selected)
 		{
