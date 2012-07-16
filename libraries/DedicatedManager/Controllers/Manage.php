@@ -11,6 +11,7 @@ namespace DedicatedManager\Controllers;
 
 class Manage extends \ManiaLib\Application\Controller
 {
+
 	function preFilter()
 	{
 		parent::preFilter();
@@ -71,6 +72,82 @@ class Manage extends \ManiaLib\Application\Controller
 		}
 
 		$this->request->redirectArgList('../');
+	}
+
+	function maps($path = '')
+	{
+		$service = new \DedicatedManager\Services\MapService();
+		$files = $service->getList($path);
+		usort($files,
+			function (\DedicatedManager\Services\File $a, \DedicatedManager\Services\File $b)
+			{
+				$order = $b->isDirectory - $a->isDirectory;
+				if(!$order)
+				{
+					$order = strcmp($a->filename, $b->filename);
+				}
+				return $order;
+			}
+		);
+
+		$this->response->path = $path;
+		$this->response->parentPath = preg_replace('/([^\\/]*\\/)$/ixu', '', $path);
+		$this->response->files = $files;
+	}
+
+	function deleteMaps(array $maps, $path = '')
+	{
+		$service = new \DedicatedManager\Services\MapService();
+		$service->delete($maps);
+		$this->request->redirectArgList('../maps/', 'path');
+	}
+
+	function uploadMap($path = '')
+	{
+		$this->response->path = $path;
+	}
+
+	function doUploadMap()
+	{
+		if(!array_key_exists('path', $_POST))
+		{
+			$this->session->set('error', 'The path must be set');
+			$this->request->redirect('../maps');
+		}
+		$this->request->set('path', $_POST['path']);
+		if($_FILES['map']['error'])
+		{
+			switch($_FILES['map']['error'])
+			{
+				case UPLOAD_ERR_INI_SIZE:
+					$this->session->set('error', _('File is too big.'));
+					break;
+				case UPLOAD_ERR_INI_SIZE:
+					$this->session->set('error', _('File is too big.'));
+					break;
+				case UPLOAD_ERR_PARTIAL:
+					$this->session->set('error', _('File is partially uploaded.'));
+					break;
+				case UPLOAD_ERR_NO_FILE:
+					$this->session->set('error', _('No file uploaded.'));
+					break;
+				case UPLOAD_ERR_CANT_WRITE:
+					$this->session->set('error', _('Can\'t write the file on the disk.'));
+					break;
+			}
+			$this->request->redirect('../maps', 'path');
+		}
+
+		if(!preg_match('/\\.map\\.gbx$/ixu', $_FILES['map']['name']))
+		{
+			$this->session->set('error', 'The file must be a ManiaPlanet map file');
+			$this->request->set('path', $_POST['path']);
+			$this->request->redirect('../upload-map', 'path');
+		}
+		$path = $_POST['path'];
+		$service = new \DedicatedManager\Services\MapService();
+		$service->upload($_FILES['map']['tmp_name'], $_FILES['map']['name'], $path);
+		$this->request->redirectArgList('../maps', 'path');
 	}
 
 }

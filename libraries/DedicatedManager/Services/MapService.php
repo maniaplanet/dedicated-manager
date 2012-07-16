@@ -135,6 +135,25 @@ class MapService extends AbstractService
 
 		return $maps;
 	}
+	
+	function delete(array $maps)
+	{
+		foreach($maps as $map)
+		{
+			if(file_exists($this->mapDirectory.$map))
+			{
+				unlink($this->mapDirectory.$map);
+			}
+		}
+	}
+	
+	function upload($tmpFile, $filename, $path)
+	{
+		if(!move_uploaded_file($tmpFile, $this->mapDirectory.$path.$filename))
+		{
+			throw new \Exception();
+		}
+	}
 
 	static final function compareFiles(File $a, File $b)
 	{
