@@ -95,19 +95,19 @@ class Manage extends \ManiaLib\Application\Controller
 		$this->response->files = $files;
 	}
 
-	function deleteMaps(array $maps, $path = '')
+	function deleteMaps(array $maps = array(), $path = '')
 	{
+		if(!$maps)
+		{
+			$this->session->set('error',_('You have to select at least one map'));
+			$this->request->redirect('../maps','path');
+		}
 		$service = new \DedicatedManager\Services\MapService();
 		$service->delete($maps);
 		$this->request->redirectArgList('../maps/', 'path');
 	}
 
-	function uploadMap($path = '')
-	{
-		$this->response->path = $path;
-	}
-
-	function doUploadMap()
+	function uploadMap()
 	{
 		if(!array_key_exists('path', $_POST))
 		{
