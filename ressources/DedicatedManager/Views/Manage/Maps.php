@@ -43,7 +43,7 @@ require __DIR__.'/../Header.php';
 				<ul data-role="listview" data-inset="true">
 					<li data-role="list-divider"><h3><?= _('Upload in this folder') ?></h3></li>
 					<li><input type="file" name="map"/></li>
-					<li><input type="submit" value="<?=_('Upload map')?>"/></li>
+					<li><input type="submit" value="<?=_('Upload map')?>" data-icon="plus"/></li>
 				</ul>
 			</form>
 	</div>
