@@ -1,5 +1,5 @@
 <?php
-define('DEDICATED_MANAGER_VERSION', '1.1');
+define('DEDICATED_MANAGER_VERSION', '1.1.1');
 
 require_once __DIR__.'/../libraries/autoload.php';
 \ManiaLib\Application\Bootstrapper::run();
