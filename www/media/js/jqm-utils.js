@@ -21,7 +21,7 @@ $(document).bind('pageinit', function() {
 			border: 0,
 			padding: 0
 		});
-		var button = $('<input type="button" value="Choose file" data-icon="search"/>')
+		var button = $('<input type="button" data-icon="search"/>')
 			.insertAfter($(self))
 			.button()
 			.click(function () {
@@ -30,7 +30,7 @@ $(document).bind('pageinit', function() {
 		self.appendTo(button.parent());
 		self.change(function() {
 			button.prev().children('.ui-btn-text').text('Choose file' + (self.val() ? ': '+self.val() : ''));
-		})
+		}).trigger('change');
 	});
 	
 	// Alert bars close
