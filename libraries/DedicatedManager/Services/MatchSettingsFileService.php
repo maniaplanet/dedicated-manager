@@ -431,7 +431,7 @@ class MatchSettingsFileService extends DedicatedFileService
 		}
 		elseif($scriptName == 'Heroes.Script.txt' && $title == 'SMStormHeroes@nadeolabs')
 		{
-			return array('EliteArena', 'ShootMania\\EliteArena');
+			return array('HeroesArena', 'ShootMania\\HeroesArena');
 		}
 
 		$scriptDirectory = \DedicatedManager\Config::getInstance()->dedicatedPath.'UserData/Scripts/Modes/'.$game.'/';
