@@ -200,7 +200,15 @@ class ServerService extends AbstractService
 			throw new \Exception('XML-RPC port not found');
 
 		// Registering server and starting ManiaLive
-		$this->startManiaLive('127.0.0.1', $port, $pid);
+	}
+	
+	function checkConnection($host, $port)
+	{
+		
+		$this->db()->execute(
+			'INSERT INTO Servers (login, hostname, port, password,name, lastLiveDate,titleId) '.
+			'VALUES (%s,%s,%d,%s,%s,NOW(),%s)'
+			);
 	}
 
 	function startManiaLive($host, $port, $dedicatedPid = 0)

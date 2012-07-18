@@ -9,10 +9,10 @@
 
 namespace DedicatedManager\Services;
 
-class GameInfos extends \ManiaLive\DedicatedApi\Structures\GameInfos
+class GameInfos extends \DedicatedApi\Structures\GameInfos
 {
 
-	public $gameMode = \ManiaLive\DedicatedApi\Structures\GameInfos::GAMEMODE_SCRIPT;
+	public $gameMode = \DedicatedApi\Structures\GameInfos::GAMEMODE_SCRIPT;
 	public $scriptName = '';
 	public $nbMaps;
 	public $chatTime = 10000;

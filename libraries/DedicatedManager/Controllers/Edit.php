@@ -9,7 +9,7 @@
 
 namespace DedicatedManager\Controllers;
 
-use ManiaLive\DedicatedApi\Structures\GameInfos;
+use DedicatedApi\Structures\GameInfos;
 
 class Edit extends AbstractController
 {

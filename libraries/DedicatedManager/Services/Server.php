@@ -13,6 +13,7 @@ class Server extends AbstractObject
 {
 	public $login;
 	public $name;
+	public $titleId;
 	public $rpcHost;
 	public $rpcPort;
 	public $rpcPassword;
