@@ -237,7 +237,7 @@ class ServerService extends AbstractService
 
 	protected function updateServer($host, $port, $name)
 	{
-		$this->db()->execute('UPDATE Servers SET name = %s WHERE host = %s AND port = %d', $this->db()->quote($name),
+		$this->db()->execute('UPDATE Servers SET name = %s WHERE rpcHost = %s AND rpcPort = %d', $this->db()->quote($name),
 			$this->db()->quote($host), $port);
 	}
 
