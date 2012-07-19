@@ -11,7 +11,7 @@
 /*!40014 SET FOREIGN_KEY_CHECKS=0 */;
 
 -- Dumping database structure for Manager
-CREATE DATABASE IF NOT EXISTS `manager` /*!40100 DEFAULT CHARACTER SET utf8 */;
+CREATE DATABASE IF NOT EXISTS `Manager` /*!40100 DEFAULT CHARACTER SET utf8 */;
 USE `Manager`;
 
 
