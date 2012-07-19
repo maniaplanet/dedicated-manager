@@ -13,43 +13,46 @@ use DedicatedApi\Structures\GameInfos;
 
 class Edit extends AbstractController
 {
+
 	/** @var \DedicatedManager\Services\Server */
 	private $server;
-	/** @var \ManiaLive\DedicatedApi\Connection */
+
+	/** @var \DedicatedApi\Connection */
 	private $connection;
 	private $players;
 	private $options;
 	private $currentMap;
 	private $nextMap;
-	
+
 	protected function onConstruct()
 	{
 		parent::onConstruct();
-		
+
 		$header = \DedicatedManager\Helpers\Header::getInstance();
 		$header->rightText = _('Back to server home');
 		$header->rightIcon = 'back';
 		$header->rightLink = $this->request->createLinkArgList('..', 'host', 'port');
 	}
-	
+
 	function preFilter()
 	{
 		parent::preFilter();
-		
+
 		$host = $this->request->get('host');
 		$port = $this->request->get('port');
-		
+
 		$service = new \DedicatedManager\Services\ServerService();
 		try
 		{
-			$this->server = $service->get($host, $port);
+			$this->server = $service->getDetails($host, $port);
 		}
-		catch(\DedicatedManager\Services\NotFoundException $e)
+		catch(\Exception $e)
 		{
+			$service->delete($host, $port);
 			$this->session->set('error', _('Unknown server.'));
 			$this->request->redirectArgList('/');
 		}
-		
+
 		if(!$this->isAdmin)
 		{
 			$service = new \DedicatedManager\Services\ManagerService();
@@ -59,18 +62,16 @@ class Edit extends AbstractController
 				$this->request->redirectArgList('/');
 			}
 		}
-		
+
 		$this->createConnection();
-		
+
 		$rm = new \ReflectionMethod($this, $this->request->getAction('index'));
 		$comment = $rm->getDocComment();
 		if($this->server->isRelay && $comment && preg_match('/@norelay/u', $comment))
 		{
 			$this->session->set('error', _('Unauthorized action on a relay.'));
-			if($this->request->getReferer() == $this->request->createLink())
-				$this->request->redirectArgList('..');
-			else
-				$this->request->redirectToReferer();
+			if($this->request->getReferer() == $this->request->createLink()) $this->request->redirectArgList('..');
+			else $this->request->redirectToReferer();
 		}
 		if(!$comment || !preg_match('/@redirect/u', $comment))
 		{
@@ -81,22 +82,18 @@ class Edit extends AbstractController
 			$this->nextMap = $this->connection->getNextMapInfo();
 		}
 	}
-	
+
 	private function createConnection()
 	{
-		define('APP_ROOT', MANIALIB_APP_PATH);
-		\ManiaLive\Utilities\Logger::getLog('Runtime')->disableLog();
-		$config = \ManiaLive\Config\Config::getInstance();
-		$config->verbose = false;
-		$config = \ManiaLive\DedicatedApi\Config::getInstance();
-		$config->host = $this->server->rpcHost;
-		$config->port = $this->server->rpcPort;
-		$config->password = $this->server->rpcPassword;
-		$config->timeout = 3;
+		$host = $this->server->rpcHost;
+		$port = $this->server->rpcPort;
+		$password = $this->server->rpcPassword;
+		$timeout = 3;
 
+		$service = new \DedicatedManager\Services\ServerService();
 		try
 		{
-			$this->connection = \ManiaLive\DedicatedApi\Connection::getInstance();
+			$this->connection = \DedicatedApi\Connection::factory($host, $port, $timeout, 'SuperAdmin', $password);
 		}
 		catch(\Exception $e)
 		{
@@ -104,11 +101,11 @@ class Edit extends AbstractController
 			$this->request->redirectArgList('/');
 		}
 	}
-	
+
 	function postFilter()
 	{
 		parent::postFilter();
-		
+
 		$this->response->host = $this->server->rpcHost;
 		$this->response->port = $this->server->rpcPort;
 		$this->response->isRelay = $this->server->isRelay;
@@ -186,7 +183,7 @@ class Edit extends AbstractController
 
 		$this->response->files = $files;
 		$this->response->selected = $selected;
-		
+
 		$header = \DedicatedManager\Helpers\Header::getInstance();
 		$header->rightText = _('Back to maps management');
 		$header->rightLink = $this->request->createLinkArgList('../maps', 'host', 'port');
@@ -304,6 +301,7 @@ class Edit extends AbstractController
 
 	function config()
 	{
+		
 	}
 
 	/**
@@ -314,9 +312,9 @@ class Edit extends AbstractController
 		$optionsObj = \DedicatedManager\Services\ServerOptions::fromArray($options);
 		$optionsObj->callVoteRatio = $optionsObj->callVoteRatio < 0 ? $optionsObj->callVoteRatio : $optionsObj->callVoteRatio / 100;
 		$optionsObj->nextCallVoteTimeOut = $optionsObj->nextCallVoteTimeOut * 1000;
-		
+
 		$service = new \DedicatedManager\Services\ConfigFileService();
-		if( ($errors = $service->validate($optionsObj)) )
+		if(($errors = $service->validate($optionsObj)))
 		{
 			$this->session->set('error', $errors);
 			$this->request->redirectArgList('../config/', 'host', 'port');
@@ -412,7 +410,7 @@ class Edit extends AbstractController
 	{
 		$this->response->banlist = $this->connection->getBanList(-1, 0);
 		$this->response->players = $this->players;
-		
+
 		$header = \DedicatedManager\Helpers\Header::getInstance();
 		$header->rightText = _('Back to players management');
 		$header->rightLink = $this->request->createLinkArgList('../players', 'host', 'port');
@@ -461,7 +459,7 @@ class Edit extends AbstractController
 		$this->response->blacklistFiles = $service->getList();
 		$this->response->blackListedPlayers = $this->connection->getBlackList(-1, 0);
 		$this->response->players = $this->players;
-		
+
 		$header = \DedicatedManager\Helpers\Header::getInstance();
 		$header->rightText = _('Back to players management');
 		$header->rightLink = $this->request->createLinkArgList('../players', 'host', 'port');
@@ -571,7 +569,7 @@ class Edit extends AbstractController
 		$this->response->guestlistFiles = $service->getList();
 		$this->response->guestListedPlayers = $this->connection->getGuestList(-1, 0);
 		$this->response->players = $this->players;
-		
+
 		$header = \DedicatedManager\Helpers\Header::getInstance();
 		$header->rightText = _('Back to players management');
 		$header->rightLink = $this->request->createLinkArgList('../players', 'host', 'port');
@@ -689,7 +687,7 @@ class Edit extends AbstractController
 	{
 		try
 		{
-			$this->connection->chatSendServerMessage($message, $receiver ?: null);
+			$this->connection->chatSendServerMessage($message, $receiver ? : null);
 			$this->session->set('success', _('Your message has been sent'));
 		}
 		catch(\Exception $e)
@@ -706,6 +704,7 @@ class Edit extends AbstractController
 	 */
 	function teams()
 	{
+		
 	}
 
 	/**
@@ -714,11 +713,12 @@ class Edit extends AbstractController
 	 */
 	function setTeams($team1, $team2)
 	{
-		$this->connection->setTeamInfo($team1['name'], (double) $team1['color'], $team1['country'], $team2['name'], (double) $team2['color'], $team2['country']);
-		$this->session->set('success',_('Changes has been applied'));
+		$this->connection->setTeamInfo($team1['name'], (double) $team1['color'], $team1['country'], $team2['name'],
+			(double) $team2['color'], $team2['country']);
+		$this->session->set('success', _('Changes has been applied'));
 		$this->request->redirectArgList('../teams/', 'host', 'port');
 	}
-	
+
 	function managers()
 	{
 		if(!$this->isAdmin)
@@ -726,11 +726,11 @@ class Edit extends AbstractController
 			$this->session->set('error', _('You need to be an admin to do this.'));
 			$this->request->redirectToReferer();
 		}
-		
+
 		$service = new \DedicatedManager\Services\ManagerService();
 		$this->response->managers = $service->getByServer($this->server->rpcHost, $this->server->rpcPort);
 	}
-	
+
 	/**
 	 * @redirect
 	 */
@@ -741,7 +741,7 @@ class Edit extends AbstractController
 			$this->session->set('error', _('You need to be an admin to do this.'));
 			$this->request->redirectToReferer();
 		}
-		
+
 		if($revoke)
 		{
 			$service = new \DedicatedManager\Services\ManagerService();
@@ -750,7 +750,7 @@ class Edit extends AbstractController
 		}
 		$this->request->redirectArgList('../managers/', 'host', 'port');
 	}
-	
+
 	/**
 	 * @redirect
 	 */
@@ -761,7 +761,7 @@ class Edit extends AbstractController
 			$this->session->set('error', _('You need to be an admin to do this.'));
 			$this->request->redirectToReferer();
 		}
-		
+
 		$service = new \DedicatedManager\Services\ManagerService();
 		try
 		{
@@ -784,7 +784,7 @@ class Edit extends AbstractController
 			$this->session->set('error', _('You need to be an admin to do this.'));
 			$this->request->redirectToReferer();
 		}
-		
+
 		$this->connection->stopServer();
 		$service = new \DedicatedManager\Services\ServerService();
 		$service->delete($this->server->rpcHost, $this->server->rpcPort);

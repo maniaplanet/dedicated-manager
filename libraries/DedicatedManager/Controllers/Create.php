@@ -233,7 +233,7 @@ class Create extends AbstractController
 
 				$error = _('An error appeared while starting the server and ManiaLive.');
 				$service = new \DedicatedManager\Services\ServerService();
-				$service->start($configFile, $matchFile, $isLan);
+				$service->start($configFile, $matchFile, $isLan, $system->title);
 			}
 			catch(\Exception $e)
 			{
@@ -322,6 +322,22 @@ class Create extends AbstractController
 		list($options, $account, $system, $isLan) = $this->fetchAndAssertConfig(_('starting it'));
 		
 		$spectate = \DedicatedManager\Services\Spectate::fromArray($spectate);
+		if($spectate->method == \DedicatedManager\Services\Spectate::MANAGED)
+		{
+			try
+			{
+			$connection = \DedicatedApi\Connection::factory($spectate->ip, $spectate->port, 5, 'SuperAdmin', $spectate->password);
+			$info = $connection->getSystemInfo();
+			$spectate->ip = $info->publishedIp;
+			$spectate->port = $info->port;
+			$spectate->login = $info->serverLogin;
+			$spectate->password = $connection->getServerPasswordForSpectator();
+			}
+			catch(\Exception $e)
+			{
+				$errors[] = _('Cannot retrieve server connection');
+			}
+		}
 		$this->session->set('configFile', $configFile);
 		$this->session->set('spectate', $spectate);
 		
@@ -341,7 +357,7 @@ class Create extends AbstractController
 
 				$error = _('An error appeared while starting the server and ManiaLive.');
 				$service = new \DedicatedManager\Services\ServerService();
-				$service->startRelay($configFile, $spectate, $isLan);
+				$service->startRelay($configFile, $spectate, $isLan, $system->title);
 			}
 			catch(\Exception $e)
 			{

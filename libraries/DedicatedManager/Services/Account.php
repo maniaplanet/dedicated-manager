@@ -9,7 +9,7 @@
 
 namespace DedicatedManager\Services;
 
-class Account extends \ManiaLive\DedicatedApi\Structures\AbstractStructure
+class Account extends \DedicatedApi\Structures\AbstractStructure
 {
 	public $login;
 	public $password;

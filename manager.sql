@@ -1,9 +1,17 @@
+-- --------------------------------------------------------
+-- Host:                         127.0.0.1
+-- Server version:               5.5.13-log - MySQL Community Server (GPL)
+-- Server OS:                    Win32
+-- HeidiSQL version:             7.0.0.4053
+-- Date/time:                    2012-07-19 10:12:29
+-- --------------------------------------------------------
+
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET NAMES utf8 */;
 /*!40014 SET FOREIGN_KEY_CHECKS=0 */;
 
 -- Dumping database structure for Manager
-CREATE DATABASE IF NOT EXISTS `Manager` /*!40100 DEFAULT CHARACTER SET utf8 */;
+CREATE DATABASE IF NOT EXISTS `manager` /*!40100 DEFAULT CHARACTER SET utf8 */;
 USE `Manager`;
 
 
@@ -34,17 +42,11 @@ CREATE TABLE IF NOT EXISTS `manialib_cache` (
 
 -- Dumping structure for table Manager.Servers
 CREATE TABLE IF NOT EXISTS `Servers` (
-  `login` varchar(50) NOT NULL,
   `name` varchar(75) NOT NULL,
   `rpcHost` varchar(25) NOT NULL,
   `rpcPort` int(11) NOT NULL,
   `rpcPassword` varchar(50) NOT NULL,
-  `joinIp` varchar(15) NOT NULL,
-  `joinPort` int(11) NOT NULL,
-  `joinPassword` varchar(50) NOT NULL,
-  `specPassword` varchar(50) NOT NULL,
-  `isRelay` tinyint(4) NOT NULL,
-  `lastLiveDate` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `titleId` varchar(51) NOT NULL,
   PRIMARY KEY (`rpcHost`,`rpcPort`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 

@@ -27,12 +27,12 @@ class MatchSettingsFileService extends DedicatedFileService
 				switch($key)
 				{
 					case 'gameMode':
-						\ManiaLive\Utilities\Validation::int($value, 0, 6);
+						\DedicatedManager\Utils\Validation::int($value, 0, 6);
 						break;
 					case 'roundsUseNewRules':
 					case 'teamUseNewRules':
 					case 'disableRespawn':
-						\ManiaLive\Utilities\Validation::int($value, 0, 1);
+						\DedicatedManager\Utils\Validation::int($value, 0, 1);
 						break;
 					case 'forceShowAllOpponents':
 					case 'chatTime':
@@ -52,7 +52,7 @@ class MatchSettingsFileService extends DedicatedFileService
 					case 'cupRoundsPerMap':
 					case 'cupNbWinners':
 					case 'cupWarmUpDuration':
-						\ManiaLive\Utilities\Validation::int($value);
+						\DedicatedManager\Utils\Validation::int($value);
 						break;
 					case 'scriptName':
 					default:
@@ -176,14 +176,11 @@ class MatchSettingsFileService extends DedicatedFileService
 		$service = new \DedicatedManager\Services\ServerService();
 		$server = $service->get($hostname, $port);
 
-		$config = \ManiaLive\Config\Config::getInstance();
-		$config->verbose = false;
-		$config = \ManiaLive\DedicatedApi\Config::getInstance();
-		$config->host = $hostname;
-		$config->port = $port;
-		$config->password = $server->rpcPassword;
+		$host = $hostname;
+		$port = $port;
+		$password = $server->rpcPassword;
 
-		$connection = \ManiaLive\DedicatedApi\Connection::getInstance();
+		$connection = \DedicatedApi\Connection::factory($host,$port,5,'SuperAdmin',$password);
 		$gameInfo = $connection->getCurrentGameInfo();
 
 		switch($gameInfo->gameMode)

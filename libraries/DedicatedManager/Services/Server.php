@@ -26,13 +26,13 @@ class Server extends AbstractObject
 	function getJoinLink()
 	{
 		$isLan = preg_match('/_\d{1,3}.\d{1,3}.\d{1,3}.\d{1,3}_\d{1,5}/', $this->login);
-		return 'maniaplanet://#join='.($isLan ? $this->joinIp : $this->login).($this->joinPassword ? ':'.$this->joinPassword : '');
+		return 'maniaplanet://#join='.($isLan ? $this->joinIp : $this->login).($this->joinPassword ? ':'.$this->joinPassword : '').'@'.$this->titleId;
 	}
 	
 	function getSpectateLink()
 	{
 		$isLan = preg_match('/_\d{1,3}.\d{1,3}.\d{1,3}.\d{1,3}_\d{1,5}/', $this->login);
-		return 'maniaplanet://#spectate='.($isLan ? $this->joinIp : $this->login).($this->specPassword ? ':'.$this->specPassword : '');
+		return 'maniaplanet://#spectate='.($isLan ? $this->joinIp : $this->login).($this->specPassword ? ':'.$this->specPassword : '').'@'.$this->titleId;
 	}
 }
 

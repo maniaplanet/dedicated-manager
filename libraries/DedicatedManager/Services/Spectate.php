@@ -9,7 +9,7 @@
 
 namespace DedicatedManager\Services;
 
-class Spectate extends \ManiaLive\DedicatedApi\Structures\AbstractStructure
+class Spectate extends \DedicatedApi\Structures\AbstractStructure
 {
 	const MANAGED = 0;
 	const LOGIN = 1;

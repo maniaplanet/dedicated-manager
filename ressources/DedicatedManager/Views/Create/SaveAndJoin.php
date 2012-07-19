@@ -61,7 +61,7 @@ $r = ManiaLib\Application\Request::getInstance();
 						</label>
 						<select id="spectateManaged" name="spectate[managed]" data-native-menu="false">
 						<?php foreach($servers as $server): ?>
-							<?php $serverId = $server->joinIp.':'.$server->joinPort.':'.$server->specPassword; ?>
+							<?php $serverId = $server->rpcHost.':'.$server->rpcPort.':'.$server->rpcPassword; ?>
 							<option value="<?= $serverId ?>" <?= $serverId == $spectate->managed ? 'selected="selected"' : '' ?>>
 								<?= \ManiaLib\Utils\Formatting::stripStyles($server->name) ?>
 							</option>

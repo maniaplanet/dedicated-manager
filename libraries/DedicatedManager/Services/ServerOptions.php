@@ -9,7 +9,7 @@
  */
 namespace DedicatedManager\Services;
 
-class ServerOptions extends \ManiaLive\DedicatedApi\Structures\ServerOptions
+class ServerOptions extends \DedicatedApi\Structures\ServerOptions
 {
 	public $nextMaxPlayers = 16;
 	public $nextMaxSpectators = 8;

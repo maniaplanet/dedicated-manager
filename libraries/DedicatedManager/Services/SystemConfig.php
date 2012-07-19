@@ -9,7 +9,7 @@
 
 namespace DedicatedManager\Services;
 
-class SystemConfig extends \ManiaLive\DedicatedApi\Structures\AbstractStructure
+class SystemConfig extends \DedicatedApi\Structures\AbstractStructure
 {
 	public $connectionUploadrate = 2048;
 	public $connectionDownloadrate = 8192;
