@@ -45,7 +45,7 @@ class ServerService extends AbstractService
 		);
 		return Server::fromRecordSet($result);
 	}
-	
+
 	/**
 	 * 
 	 * @param string $rpcHost
@@ -55,8 +55,13 @@ class ServerService extends AbstractService
 	function getDetails($rpcHost, $rpcPort)
 	{
 		$server = $this->get($rpcHost, $rpcPort);
-		
 		$connection = \DedicatedApi\Connection::factory($rpcHost, $rpcPort, 5, 'SuperAdmin', $server->rpcPassword);
+		$serverName = $connection->getServerName();
+		if($serverName != $server->name)
+		{
+			$server->name = $serverName;
+			$this->updateServer($server->rpcHost, $server->rpcPort, $serverName);
+		}
 		$info = $connection->getSystemInfo();
 		$server->login = $info->serverLogin;
 		$server->joinIp = $info->publishedIp;
@@ -64,7 +69,7 @@ class ServerService extends AbstractService
 		$server->joinPassword = $connection->getServerPassword();
 		$server->specPassword = $connection->getServerPasswordForSpectator();
 		$server->isRelay = $connection->isRelayServer();
-		
+
 		return $server;
 	}
 
@@ -229,6 +234,12 @@ class ServerService extends AbstractService
 
 		$procHandle = proc_open($startCommand, array(), $pipes);
 		proc_close($procHandle);
+	}
+
+	protected function updateServer($host, $port, $name)
+	{
+		$this->db()->execute('UPDATE Servers SET name = %s WHERE host = %s AND port = %d', $this->db()->quote($name),
+			$this->db()->quote($host), $port);
 	}
 
 	private function getPIDs()
