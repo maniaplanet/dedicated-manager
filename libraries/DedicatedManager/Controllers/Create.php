@@ -231,7 +231,7 @@ class Create extends AbstractController
 				$service = new \DedicatedManager\Services\MatchSettingsFileService();
 				$service->save($matchFile, $gameInfos, $maps);
 
-				$error = _('An error appeared while starting the server and ManiaLive.');
+				$error = _('An error appeared while starting the server.');
 				$service = new \DedicatedManager\Services\ServerService();
 				$service->start($configFile, $matchFile, $isLan, $system->title);
 			}
@@ -355,7 +355,7 @@ class Create extends AbstractController
 				$service = new \DedicatedManager\Services\ConfigFileService();
 				$service->save($configFile, $options, $account, $system);
 
-				$error = _('An error appeared while starting the server and ManiaLive.');
+				$error = _('An error appeared while starting the server.');
 				$service = new \DedicatedManager\Services\ServerService();
 				$service->startRelay($configFile, $spectate, $isLan, $system->title);
 			}

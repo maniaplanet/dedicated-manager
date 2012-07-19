@@ -206,7 +206,6 @@ class ServerService extends AbstractService
 		if(preg_match('/Listening for xml-rpc commands on port (\d+)/um', $buffer, $matches)) $port = $matches[1];
 		else throw new \Exception('XML-RPC port not found');
 
-		// Registering server and starting ManiaLive
 		return $port;
 	}
 
