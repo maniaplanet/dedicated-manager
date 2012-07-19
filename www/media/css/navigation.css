@@ -70,11 +70,6 @@
 		margin: 0;
 		padding: 0;
 	}
-	
-	.content-secondary .ui-li-divider {
-		padding-top: 1em;
-		padding-bottom: 1em;
-	}
 }
 
 @media all and (min-width: 750px){
