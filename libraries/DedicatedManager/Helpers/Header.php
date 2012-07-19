@@ -22,7 +22,7 @@ class Header extends \ManiaLib\Utils\Singleton
 	protected function __construct()
 	{
 		$r = \ManiaLib\Application\Request::getInstance();
-		$this->title = 'Dedicated server Manager '.DEDICATED_MANAGER_VERSION;
+		$this->title = 'Dedicated server Manager '.(defined('DEDICATED_MANAGER_VERSION') ? DEDICATED_MANAGER_VERSION : '<no version>');
 		$this->leftText = _('Back to home');
 		$this->leftIcon = 'home';
 		$this->leftLink = $r->createLinkArgList('/');
