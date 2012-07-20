@@ -46,7 +46,6 @@ CREATE TABLE IF NOT EXISTS `Servers` (
   `rpcHost` varchar(25) NOT NULL,
   `rpcPort` int(11) NOT NULL,
   `rpcPassword` varchar(50) NOT NULL,
-  `titleId` varchar(51) NOT NULL,
   PRIMARY KEY (`rpcHost`,`rpcPort`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @copyright   Copyright (c) 2009-2012 NADEO (http://www.nadeo.com)
  * @license     http://www.gnu.org/licenses/lgpl.html LGPL License 3
@@ -28,8 +29,8 @@ class ServerService extends AbstractService
 	function getLivesForManager($login)
 	{
 		$result = $this->db()->execute(
-			'SELECT S.* FROM Managers M INNER JOIN Servers S USING (rpcHost,rpcPort) '.
-			'WHERE M.login = %s', $this->db()->quote($login));
+				'SELECT S.* FROM Managers M INNER JOIN Servers S USING (rpcHost,rpcPort) '.
+				'WHERE M.login = %s', $this->db()->quote($login));
 		return Server::arrayFromRecordSet($result);
 	}
 
@@ -41,7 +42,7 @@ class ServerService extends AbstractService
 	function get($rpcHost, $rpcPort)
 	{
 		$result = $this->db()->execute(
-			'SELECT * FROM Servers WHERE rpcHost=%s AND rpcPort=%d', $this->db()->quote($rpcHost), $rpcPort
+				'SELECT * FROM Servers WHERE rpcHost=%s AND rpcPort=%d', $this->db()->quote($rpcHost), $rpcPort
 		);
 		return Server::fromRecordSet($result);
 	}
@@ -64,6 +65,7 @@ class ServerService extends AbstractService
 		}
 		$info = $connection->getSystemInfo();
 		$server->login = $info->serverLogin;
+		$server->titleId = $info->titleId;
 		$server->joinIp = $info->publishedIp;
 		$server->joinPort = $info->port;
 		$server->joinPassword = $connection->getServerPassword();
@@ -87,21 +89,24 @@ class ServerService extends AbstractService
 	 * @param string $matchFile
 	 * @param bool $isLan
 	 */
-	function start($configFile, $matchFile, $isLan, $title)
+	function start($configFile, $matchFile, $isLan)
 	{
 		$config = \DedicatedManager\Config::getInstance();
 
 		// Starting dedicated
 		$isWindows = stripos(PHP_OS, 'WIN') === 0;
-		if($isWindows) $startCommand = 'START /D "'.$config->dedicatedPath.'" ManiaPlanetServer.exe';
-		else $startCommand = 'cd "'.$config->dedicatedPath.'"; ./ManiaPlanetServer';
-		$startCommand .= sprintf(' /dedicated_cfg=%s /game_settings=%s', escapeshellarg($configFile.'.txt'),
-			escapeshellarg('MatchSettings/'.$matchFile.'.txt'));
-		if($isLan) $startCommand .= ' /lan';
-		if(!$isWindows) $startCommand .= ' &';
+		if($isWindows)
+			$startCommand = 'START /D "'.$config->dedicatedPath.'" ManiaPlanetServer.exe';
+		else
+			$startCommand = 'cd "'.$config->dedicatedPath.'"; ./ManiaPlanetServer';
+		$startCommand .= sprintf(' /dedicated_cfg=%s /game_settings=%s', escapeshellarg($configFile.'.txt'), escapeshellarg('MatchSettings/'.$matchFile.'.txt'));
+		if($isLan)
+			$startCommand .= ' /lan';
+		if(!$isWindows)
+			$startCommand .= ' &';
 
 		$port = $this->doStart($startCommand);
-		$this->checkConnection('127.0.0.1', $port, 'SuperAdmin', $title);
+		$this->checkConnection('127.0.0.1', $port, 'SuperAdmin');
 	}
 
 	/**
@@ -109,37 +114,44 @@ class ServerService extends AbstractService
 	 * @param Spectate $spectate
 	 * @param bool $isLan
 	 */
-	function startRelay($configFile, Spectate $spectate, $isLan, $title)
+	function startRelay($configFile, Spectate $spectate, $isLan)
 	{
 		$config = \DedicatedManager\Config::getInstance();
 
 		// Starting dedicated
 		$isWindows = stripos(PHP_OS, 'WIN') === 0;
-		if($isWindows) $startCommand = 'START /D "'.$config->dedicatedPath.'" ManiaPlanetServer.exe';
-		else $startCommand = 'cd "'.$config->dedicatedPath.'"; ./ManiaPlanetServer';
-		$startCommand .= sprintf(' /dedicated_cfg=%s /join=%s', escapeshellarg($configFile.'.txt'),
-			escapeshellarg($spectate->getIdentifier()));
-		if(($password = $spectate->getPassword())) $startCommand .= sprintf(' /joinpassword=%s', $password);
-		if($isLan) $startCommand .= ' /lan';
-		if(!$isWindows) $startCommand .= ' &';
+		if($isWindows)
+			$startCommand = 'START /D "'.$config->dedicatedPath.'" ManiaPlanetServer.exe';
+		else
+			$startCommand = 'cd "'.$config->dedicatedPath.'"; ./ManiaPlanetServer';
+		$startCommand .= sprintf(' /dedicated_cfg=%s /join=%s', escapeshellarg($configFile.'.txt'), escapeshellarg($spectate->getIdentifier()));
+		if(($password = $spectate->getPassword()))
+			$startCommand .= sprintf(' /joinpassword=%s', $password);
+		if($isLan)
+			$startCommand .= ' /lan';
+		if(!$isWindows)
+			$startCommand .= ' &';
 
 		$port = $this->doStart($startCommand, 'Synchro');
-		$this->checkConnection('127.0.0.1', $port, 'SuperAdmin', $title);
+		$this->checkConnection('127.0.0.1', $port, 'SuperAdmin');
 	}
 
-	function startNoautoquit($configFile = null, $title)
+	function startNoautoquit($configFile = null)
 	{
 		$config = \DedicatedManager\Config::getInstance();
 
 		// Starting dedicated
 		$isWindows = stripos(PHP_OS, 'WIN') === 0;
-		if($isWindows) $startCommand = 'START /D "'.$config->dedicatedPath.'" ManiaPlanetServer.exe';
-		else $startCommand = 'cd "'.$config->dedicatedPath.'"; ./ManiaPlanetServer';
+		if($isWindows)
+			$startCommand = 'START /D "'.$config->dedicatedPath.'" ManiaPlanetServer.exe';
+		else
+			$startCommand = 'cd "'.$config->dedicatedPath.'"; ./ManiaPlanetServer';
 		$startCommand .= ($configFile ? sprintf(' /dedicated_cfg=%s', escapeshellarg($configFile)) : '').' /noautoquit';
-		if(!$isWindows) $startCommand .= ' &';
+		if(!$isWindows)
+			$startCommand .= ' &';
 
 		$port = $this->doStart($startCommand, 'Ready, waiting for commands.');
-		$this->checkConnection('127.0.0.1', $port, 'SuperAdmin', $title);
+		$this->checkConnection('127.0.0.1', $port, 'SuperAdmin');
 	}
 
 	private function doStart($commandLine, $successStr = '...Load succeeds')
@@ -156,7 +168,8 @@ class ServerService extends AbstractService
 
 		// Getting its PID
 		$diffPids = array_diff($this->getPIDs(), $currentPids);
-		if(!$diffPids) throw new \Exception('Can\'t start dedicated server.');
+		if(!$diffPids)
+			throw new \Exception('Can\'t start dedicated server.');
 		$pid = reset($diffPids);
 
 		// Reading dedicated log while it's written
@@ -168,8 +181,10 @@ class ServerService extends AbstractService
 		{
 			if(++$tries == 5)
 			{
-				if($isWindows) `TASKKILL /PID $pid`;
-				else `kill -9 $pid`;
+				if($isWindows)
+					`TASKKILL /PID $pid`;
+				else
+					`kill -9 $pid`;
 
 				throw new \Exception('Unknown error while trying to get XML-RPC port');
 			}
@@ -180,43 +195,53 @@ class ServerService extends AbstractService
 			$line = fgets($logFile);
 			if(!$line)
 			{
-				if(strpos($buffer, $successStr) !== false) break;
+				if(strpos($buffer, $successStr) !== false)
+					break;
 				if(strpos($buffer, 'Server not running, exiting.') !== false || strpos($buffer, 'This title isn\'t playable.') !== false)
-						throw new \Exception('Server stopped automatically');
+					throw new \Exception('Server stopped automatically');
 
-				if(!$buffer) fseek($logFile, 0, SEEK_SET);
-				else fseek($logFile, -1, SEEK_CUR);
+				if(!$buffer)
+					fseek($logFile, 0, SEEK_SET);
+				else
+					fseek($logFile, -1, SEEK_CUR);
 				usleep(200000);
 				continue;
 			}
-			if($line !== "\n") $buffer .= $line;
+			if($line !== "\n")
+				$buffer .= $line;
 		}
 		fclose($logFile);
 
 		// Checking for errors
 		if(preg_match_all('/ERROR:\s+([^\.$]+)/um', $buffer, $errors))
 		{
-			if($isWindows) `TASKKILL /PID $pid`;
-			else `kill -9 $pid`;
+			if($isWindows)
+				`TASKKILL /PID $pid`;
+			else
+				`kill -9 $pid`;
 
 			throw new \Exception(serialize(array_map('ucfirst', $errors[1])));
 		}
 
 		// Retrieving XML-RPC port
-		if(preg_match('/Listening for xml-rpc commands on port (\d+)/um', $buffer, $matches)) $port = $matches[1];
-		else throw new \Exception('XML-RPC port not found');
+		if(preg_match('/Listening for xml-rpc commands on port (\d+)/um', $buffer, $matches))
+			$port = $matches[1];
+		else
+			throw new \Exception('XML-RPC port not found');
 
 		return $port;
 	}
 
-	function checkConnection($host, $port, $password, $title)
+	function checkConnection($host, $port, $password)
 	{
 		$connection = \DedicatedApi\Connection::factory($host, $port, 5, 'SuperAdmin', $password);
 
 		$this->db()->execute(
-			'INSERT INTO Servers (name, rpcHost, rpcPort, rpcPassword, titleId) '.
-			'VALUES (%s,%s,%d,%s,%s)', $this->db()->quote($connection->getServerName()), $this->db()->quote($host), $port,
-			$this->db()->quote($password), $this->db()->quote($title)
+				'INSERT INTO Servers(name, rpcHost, rpcPort, rpcPassword) VALUES (%s,%s,%d,%s)',
+				$this->db()->quote($connection->getServerName()),
+				$this->db()->quote($host),
+				$port,
+				$this->db()->quote($password)
 		);
 	}
 
@@ -224,10 +249,13 @@ class ServerService extends AbstractService
 	{
 		$config = \DedicatedManager\Config::getInstance();
 		$isWindows = stripos(PHP_OS, 'WIN') === 0;
-		if($isWindows) $startCommand = 'START php.exe "'.$config->manialivePath.'bootstrapper.php"';
-		else $startCommand = 'cd "'.$config->manialivePath.'"; php bootstrapper.php';
+		if($isWindows)
+			$startCommand = 'START php.exe "'.$config->manialivePath.'bootstrapper.php"';
+		else
+			$startCommand = 'cd "'.$config->manialivePath.'"; php bootstrapper.php';
 		$startCommand .= sprintf(' --address=%s --rpcport=%d', escapeshellarg($host), $port);
-		if(!$isWindows) $startCommand .= ' < /dev/null > logs/runtime.'.$dedicatedPid.'.log 2>&1 &';
+		if(!$isWindows)
+			$startCommand .= ' < /dev/null > logs/runtime.'.$dedicatedPid.'.log 2>&1 &';
 
 		sleep(5);
 
@@ -237,8 +265,7 @@ class ServerService extends AbstractService
 
 	protected function updateServer($host, $port, $name)
 	{
-		$this->db()->execute('UPDATE Servers SET name = %s WHERE rpcHost = %s AND rpcPort = %d', $this->db()->quote($name),
-			$this->db()->quote($host), $port);
+		$this->db()->execute('UPDATE Servers SET name = %s WHERE rpcHost = %s AND rpcPort = %d', $this->db()->quote($name), $this->db()->quote($host), $port);
 	}
 
 	private function getPIDs()
@@ -246,16 +273,17 @@ class ServerService extends AbstractService
 		if(stripos(PHP_OS, 'WIN') === 0)
 		{
 			$dedicatedProc = `TASKLIST /FI "IMAGENAME eq ManiaPlanetServer.exe" /NH`;
-			if(preg_match_all('/ManiaPlanetServer\.exe\s+(\d+)/m', $dedicatedProc, $matches)) return $matches[1];
+			if(preg_match_all('/ManiaPlanetServer\.exe\s+(\d+)/m', $dedicatedProc, $matches))
+				return $matches[1];
 		}
 		else
 		{
 			$dedicatedProc = `ps -C "ManiaPlanetServer" --format pid --no-headers --sort +cputime`;
-			if(preg_match_all('/(\\d+)/', $dedicatedProc, $matches)) return $matches[1];
+			if(preg_match_all('/(\\d+)/', $dedicatedProc, $matches))
+				return $matches[1];
 		}
 		return array();
 	}
-
 }
 
 ?>

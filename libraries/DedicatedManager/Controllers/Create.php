@@ -233,7 +233,7 @@ class Create extends AbstractController
 
 				$error = _('An error appeared while starting the server.');
 				$service = new \DedicatedManager\Services\ServerService();
-				$service->start($configFile, $matchFile, $isLan, $system->title);
+				$service->start($configFile, $matchFile, $isLan);
 			}
 			catch(\Exception $e)
 			{
@@ -357,7 +357,7 @@ class Create extends AbstractController
 
 				$error = _('An error appeared while starting the server.');
 				$service = new \DedicatedManager\Services\ServerService();
-				$service->startRelay($configFile, $spectate, $isLan, $system->title);
+				$service->startRelay($configFile, $spectate, $isLan);
 			}
 			catch(\Exception $e)
 			{
