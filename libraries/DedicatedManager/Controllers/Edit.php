@@ -200,7 +200,7 @@ class Edit extends AbstractController
 			$this->session->set('error', _('You have to select at least one map'));
 			$this->request->redirectArgList('../add-maps/', 'host', 'port');
 		}
-		$selected = explode(',', $selected);
+		$selected = explode('|', $selected);
 		if($insert)
 		{
 			$this->connection->insertMapList($selected);

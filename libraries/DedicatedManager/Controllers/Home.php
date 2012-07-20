@@ -70,7 +70,6 @@ class Home extends AbstractController
 
 		$service = new \DedicatedManager\Services\ServerService();
 		$this->response->servers = $this->isAdmin ? $service->getLives() : $service->getLivesForManager($this->session->login);
-		\ManiaLib\Utils\Logger::info($this->response->servers);
 	}
 }
 
