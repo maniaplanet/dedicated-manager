@@ -6,33 +6,33 @@ $r = ManiaLib\Application\Request::getInstance();
 	<?php require __DIR__.'/Header.php'; ?>
 	<div data-role="content">
 		<div class="content-primary">
-			<form method="get" action="<?= $r->createLinkArgList('../unban') ?>" data-ajax="false">
-				<input type="hidden" name="host" value="<?= $host ?>"/>
-				<input type="hidden" name="port" value="<?= $port ?>"/>
+			<form method="get" action="<?php echo $r->createLinkArgList('../unban') ?>" data-ajax="false">
+				<input type="hidden" name="host" value="<?php echo $host ?>"/>
+				<input type="hidden" name="port" value="<?php echo $port ?>"/>
 				<ul data-role="listview" data-inset="true">
 					<li data-role="list-divider">
-						<?= _('Banned players') ?>
+						<?php echo _('Banned players') ?>
 					</li>
 					<li data-role="fieldcontain">
 						<fieldset data-role="controlgroup">
-							<legend><?= _('Banned players') ?></legend>
+							<legend><?php echo _('Banned players') ?></legend>
 							<?php if(count($banlist)): ?>
 								<?php foreach($banlist as $player): ?>
-									<label for="<?= $player->login ?>"><?= $player->login ?></label>
-									<input type="checkbox" name="players[]" id="<?= $player->login ?>" value="<?= $player->login ?>" />
+									<label for="<?php echo $player->login ?>"><?php echo $player->login ?></label>
+									<input type="checkbox" name="players[]" id="<?php echo $player->login ?>" value="<?php echo $player->login ?>" />
 								<?php endforeach; ?>
 							<?php else: ?>
-								<strong><?= _('There is not any banned player.') ?></strong>
+								<strong><?php echo _('There is not any banned player.') ?></strong>
 							<?php endif; ?>
 						</fieldset>
 					</li>
 					<li data-role="fieldcontain">
 						<div class="ui-grid-a">
 							<div class="ui-block-a">
-								<input type="submit" value="<?= _('Unban') ?>" data-icon="minus" <?= count($banlist) ? '' : 'disabled="disabled"' ?>/>
+								<input type="submit" value="<?php echo _('Unban') ?>" data-icon="minus" <?php echo count($banlist) ? '' : 'disabled="disabled"' ?>/>
 							</div>
 							<div class="ui-block-b">
-								<a href="<?= htmlentities($r->createLinkArgList('../clean-banlist', 'host', 'port'), ENT_QUOTES, 'UTF-8') ?>" data-role="button" data-icon="delete"><?= _('Clean banlist') ?></a>
+								<a href="<?php echo htmlentities($r->createLinkArgList('../clean-banlist', 'host', 'port'), ENT_QUOTES, 'UTF-8') ?>" data-role="button" data-icon="delete"><?php echo _('Clean banlist') ?></a>
 							</div>
 						</div>
 					</li>

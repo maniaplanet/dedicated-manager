@@ -6,17 +6,17 @@ $r = ManiaLib\Application\Request::getInstance();
 	<?php require __DIR__.'/Header.php'; ?>
 	<div data-role="content">
 		<div class="content-primary">
-			<p><?= _('The "Insert to map list" button will add selected maps after the current one. The "add to map list" will add selected maps at the end of the map list.') ?></p>
-			<form action="<?= $r->createLinkArgList('../insert-maps') ?>" method="get" data-ajax="false">
-				<input type="hidden" name="host" value="<?= $host ?>"/>
-				<input type="hidden" name="port" value="<?= $port ?>"/>
-				<?= DedicatedManager\Helpers\Files::tree($files, $selected, 'selected', true) ?>
+			<p><?php echo _('The "Insert to map list" button will add selected maps after the current one. The "add to map list" will add selected maps at the end of the map list.') ?></p>
+			<form action="<?php echo $r->createLinkArgList('../insert-maps') ?>" method="get" data-ajax="false">
+				<input type="hidden" name="host" value="<?php echo $host ?>"/>
+				<input type="hidden" name="port" value="<?php echo $port ?>"/>
+				<?php echo DedicatedManager\Helpers\Files::tree($files, $selected, 'selected', true) ?>
 				<div class="ui-grid-a">
 					<div class="ui-block-a">
-						<input type="submit" name="insert" value="<?= _('Insert to map list') ?>"/>
+						<input type="submit" name="insert" value="<?php echo _('Insert to map list') ?>"/>
 					</div>
 					<div class="ui-block-b">
-						<input type="submit" name="add" value="<?= _('Add to map list') ?>" />
+						<input type="submit" name="add" value="<?php echo _('Add to map list') ?>" />
 					</div>
 				</div>
 			</form>

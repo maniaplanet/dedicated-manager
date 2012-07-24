@@ -6,45 +6,45 @@ $r = ManiaLib\Application\Request::getInstance();
 	<?php require __DIR__.'/Header.php'; ?>
 	<div data-role="content">
 		<div class="content-primary">
-			<form method="get" action="<?= $r->createLinkArgList('../action-managers') ?>" data-ajax="false">
-				<input type="hidden" name="host" value="<?= $host ?>"/>
-				<input type="hidden" name="port" value="<?= $port ?>"/>
+			<form method="get" action="<?php echo $r->createLinkArgList('../action-managers') ?>" data-ajax="false">
+				<input type="hidden" name="host" value="<?php echo $host ?>"/>
+				<input type="hidden" name="port" value="<?php echo $port ?>"/>
 				<ul data-role="listview" data-inset="true">
 					<li data-role="list-divider">
-						<?= _('Select managers to interact with them') ?>
+						<?php echo _('Select managers to interact with them') ?>
 					</li>
 					<li data-role="fieldcontain">
 						<fieldset data-role="controlgroup">
 						<?php if($managers): ?>
 							<?php foreach($managers as $manager): ?>
-								<label for="manager-<?= $manager ?>"><?= $manager ?></label>
-								<input type="checkbox" name="managers[]" id="manager-<?= $manager ?>" value="<?= $manager ?>" />
+								<label for="manager-<?php echo $manager ?>"><?php echo $manager ?></label>
+								<input type="checkbox" name="managers[]" id="manager-<?php echo $manager ?>" value="<?php echo $manager ?>" />
 							<?php endforeach; ?>
 						<?php else: ?>
-							<strong><?= _('There is no manager for this server.') ?></strong>
+							<strong><?php echo _('There is no manager for this server.') ?></strong>
 						<?php endif; ?>
 						</fieldset>
 					</li>
 					<li data-role="fieldcontain">
-						<input type="submit" name="revoke[]" value="<?= _('Revoke') ?>" data-icon="delete" <?= !$managers ? 'disabled="disabled"' : '' ?>/>
+						<input type="submit" name="revoke[]" value="<?php echo _('Revoke') ?>" data-icon="delete" <?php echo !$managers ? 'disabled="disabled"' : '' ?>/>
 					</li>
 				</ul>
 			</form>
-			<form method="get" action="<?= $r->createLinkArgList('../add-manager') ?>" data-ajax="false">
-				<input type="hidden" name="host" value="<?= $host ?>"/>
-				<input type="hidden" name="port" value="<?= $port ?>"/>
+			<form method="get" action="<?php echo $r->createLinkArgList('../add-manager') ?>" data-ajax="false">
+				<input type="hidden" name="host" value="<?php echo $host ?>"/>
+				<input type="hidden" name="port" value="<?php echo $port ?>"/>
 				<ul data-role="listview" data-inset="true">
 					<li data-role="list-divider">
-						<?= _('Add a manager for this server') ?>
+						<?php echo _('Add a manager for this server') ?>
 					</li>
 					<li data-role="fieldcontain">
 						<label for="managerLogin">
 							<strong>Login</strong>
 						</label>
-						<?= DedicatedManager\Helpers\Input::text('login', 'managerLogin', '') ?>
+						<?php echo DedicatedManager\Helpers\Input::text('login', 'managerLogin', '') ?>
 					</li>
 					<li data-role="fieldcontain">
-						<input type="submit" name="add" value="<?= _('Add') ?>" data-icon="plus"/>
+						<input type="submit" name="add" value="<?php echo _('Add') ?>" data-icon="plus"/>
 					</li>
 				</ul>
 			</form>

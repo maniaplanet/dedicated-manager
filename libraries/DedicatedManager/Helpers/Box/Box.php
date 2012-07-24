@@ -58,7 +58,7 @@ abstract class Box
 	/**
 	 * Display box, or boxes, automatically depending in session vars
 	 * Usage:
-	 * <?= NadeoLib\WebUI\Helpers\Box\Box::detect() ?>
+	 * <?php echo NadeoLib\WebUI\Helpers\Box\Box::detect() ?>
 	 * @param bool $delete Delete session var after usage
 	 * @return string
 	 */
