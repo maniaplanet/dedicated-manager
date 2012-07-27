@@ -79,7 +79,9 @@ class Edit extends AbstractController
 			$this->players = $this->connection->getPlayerList(-1, 0);
 			$this->options = $this->connection->getServerOptions();
 			$this->currentMap = $this->connection->getCurrentMapInfo();
-			$this->nextMap = $this->connection->getNextMapInfo();
+			// TODO remove test when bug on dedicated is fixed
+			if(!$this->server->isRelay)
+				$this->nextMap = $this->connection->getNextMapInfo();
 		}
 	}
 
