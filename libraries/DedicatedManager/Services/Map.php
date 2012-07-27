@@ -12,14 +12,23 @@ namespace DedicatedManager\Services;
 class Map extends File
 {
 	public $isDirectory = false;
+	public $uid;
 	public $name;
-	public $author;
-	public $goldTime;
 	public $environment;
 	public $mood;
 	public $type;
+	public $displayCost;
 	public $nbLaps;
-	public $uid;
+	
+	public $authorLogin;
+	public $authorNick;
+	public $authorZone;
+	
+	public $authorTime;
+	public $goldTime;
+	public $silverTime;
+	public $bronzeTime;
+	public $authorScore;
 }
 
 ?>

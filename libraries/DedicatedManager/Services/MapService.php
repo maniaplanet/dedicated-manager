@@ -20,62 +20,73 @@ class MapService extends AbstractService
 		$this->mapDirectory = $config->dedicatedPath.'UserData/Maps/';
 		$this->cache = \ManiaLib\Cache\Cache::factory(\ManiaLib\Cache\MYSQL);
 	}
-
-	function getData($filename, $path)
+	
+	function get($filename, $path)
 	{
 		if(!file_exists($this->mapDirectory.$path.$filename))
 		{
-			$this->cache->delete($path.$filename);
-			throw new \InvalidArgumentException($this->mapDirectory.$path.$filename.' : file does not exist');
+			$this->db()->execute(
+					'DELETE FROM Maps WHERE path=%s AND filename=%s',
+					$this->db()->quote($path),
+					$this->db()->quote($filename)
+				);
+			throw new \InvalidArgumentException($this->mapDirectory.$path.$filename.': file does not exist');
 		}
-		$map = $this->cache->fetch($path.$filename);
-		if($map === false)
+		
+		$fileStats = stat($this->mapDirectory.$path.$filename);
+		$result = $this->db()->execute(
+				'SELECT * FROM Maps WHERE path=%s AND filename=%s AND size=%d AND mTime=FROM_UNIXTIME(%d)',
+				$this->db()->quote($path),
+				$this->db()->quote($filename),
+				$fileStats['size'],
+				$fileStats['mtime']
+			);
+		
+		if(!$result->recordCount())
 		{
-			$file = file_get_contents($this->mapDirectory.$path.$filename, null, null, 0, 0x10000);
-
-			if($file === false || (stristr($file, '<header type="map"') === false && stristr($file, '<header type="challenge"') === false))
-			{
-				throw new \InvalidArgumentException('file is not a map');
-			}
-
-			$search = strstr($file, '<header');
-			$header = strstr($search, '</header>', true).'</header>';
-
-			$header = simplexml_load_string($header);
-
+			$mapInfo = \DedicatedManager\Utils\GbxReader\Map::read($this->mapDirectory.$path.$filename);
 			$map = new Map();
-			$map->filename = $filename;
-			$map->path = $path;
-			$map->uid = (string) $header->ident->attributes()->uid;
-			$map->name = (string) $header->ident->attributes()->name;
-			$map->author = (string) $header->ident->attributes()->author;
-			$map->environment = (string) $header->desc->attributes()->envir;
-			$map->mood = (string) $header->desc->attributes()->mood;
-			$map->type = (string) $header->desc->attributes()->type;
-			if($map->type == 'Script')
-			{
-				$map->type = (string) $header->desc->attributes()->maptype;
-			}
-			$map->nbLaps = (int) $header->desc->attributes()->nblaps;
-			$map->goldTime = (int) $header->times->attributes()->gold;
-
-			try
-			{
-				$thumbnailBinary = substr(stristr(stristr($file, '<Thumbnail.jpg>'), '</Thumbnail.jpg>', true), strlen('<Thumbnail.jpg>'));
-				$mirroredThumbnail = imagecreatefromstring($thumbnailBinary);
-				$width = imagesx($mirroredThumbnail);
-				$height = imagesy($mirroredThumbnail);
-				$thumbnail = imagecreatetruecolor($width, $height);
-				foreach(range($height - 1, 0) as $oldY => $newY)
-					imagecopy($thumbnail, $mirroredThumbnail, 0, $newY, 0, $oldY, $width, 1);
-				imagejpeg($thumbnail, MANIALIB_APP_PATH.'/www/media/images/thumbnails/'.$map->uid.'.jpg', 100);
-			}
-			catch(\Exception $e)
-			{
-
-			}
-			$this->cache->add($path.$filename, $map, 7200 + rand(-600, 600));
+			
+			$fields = array(
+				'uid', 'name', 'environment', 'mood', 'type', 'displayCost', 'nbLaps',
+				'authorLogin', 'authorNick', 'authorZone',
+				'authorTime', 'goldTime', 'silverTime', 'bronzeTime', 'authorScore',
+				'size', 'mTime'
+			);
+			$this->db()->execute(
+					'INSERT INTO Maps(path, filename, %s) '.
+					'VALUES (%s,%s,%s,%s,%s,%s,%s,%d,%d,%s,%s,%s,%d,%d,%d,%d,%d,%d,FROM_UNIXTIME(%d)) '.
+					'ON DUPLICATE KEY UPDATE '.\ManiaLib\Database\Tools::getOnDuplicateKeyUpdateValuesString($fields),
+					implode(',', $fields),
+					$this->db()->quote($map->path = $path),
+					$this->db()->quote($map->filename = $filename),
+					$this->db()->quote($map->uid = $mapInfo->uid),
+					$this->db()->quote($map->name = $mapInfo->name),
+					$this->db()->quote($map->environment = $mapInfo->environment),
+					$this->db()->quote($map->mood = $mapInfo->mood),
+					$this->db()->quote($map->type = $mapInfo->type),
+					$map->displayCost = $mapInfo->displayCost,
+					$map->nbLaps = $mapInfo->nbLaps,
+					$this->db()->quote($map->authorLogin = $mapInfo->author->login),
+					$this->db()->quote($map->authorNick = $mapInfo->author->nickname),
+					$this->db()->quote($map->authorZone = $mapInfo->author->zone),
+					$map->authorTime = $mapInfo->authorTime,
+					$map->goldTime = $mapInfo->goldTime,
+					$map->silverTime = $mapInfo->silverTime,
+					$map->bronzeTime = $mapInfo->bronzeTime,
+					$map->authorScore = $mapInfo->authorScore,
+					$fileStats['size'],
+					$fileStats['mtime']
+				);
+			
+			if($mapInfo->thumbnail)
+				imagejpeg($mapInfo->thumbnail, MANIALIB_APP_PATH.'/www/media/images/thumbnails/'.$map->uid.'.jpg', 100);
 		}
+		else
+		{
+			$map = Map::fromRecordSet($result);
+		}
+		
 		return $map;
 	}
 
@@ -114,7 +125,7 @@ class MapService extends AbstractService
 			{
 				try
 				{
-					$file = $this->getData($filename, $path);
+					$file = $this->get($filename, $path);
 					if( (!$isLaps || ($isLaps && $file->nbLaps != 0))
 							&& (!$environment || ($environment && $environment == $file->environment))
 							&& (!$mapTypes || $mapTypes && in_array(strtolower($file->type), $mapTypes, true)) )
@@ -144,6 +155,11 @@ class MapService extends AbstractService
 			{
 				unlink($this->mapDirectory.$map);
 			}
+			$this->db()->execute(
+					'DELETE FROM Maps WHERE path=%s AND filename=%s',
+					$this->db()->quote(dirname($map).'/'),
+					$this->db()->quote(basename($map))
+				);
 		}
 	}
 	

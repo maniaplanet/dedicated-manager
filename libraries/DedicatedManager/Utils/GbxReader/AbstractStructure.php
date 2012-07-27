@@ -11,6 +11,8 @@ namespace DedicatedManager\Utils\GbxReader;
 
 abstract class AbstractStructure
 {
+	static private $lookbackStrings = array();
+	
 	abstract static function fetch($fp);
 	
 	final static function ignore($fp, $length)
@@ -18,10 +20,38 @@ abstract class AbstractStructure
 		fread($fp, $length);
 	}
 	
+	final static function fetchByte($fp)
+	{
+		$byte = unpack('C', fread($fp, 1));
+		return $byte[1];
+	}
+	
+	final static function fetchShort($fp)
+	{
+		$short = unpack('v', fread($fp, 2));
+		return $short[1];
+	}
+	
 	final static function fetchLong($fp)
 	{
 		$long = unpack('V', fread($fp, 4));
 		return $long[1];
+	}
+	
+	final static function fetchFloat($fp)
+	{
+		$float = unpack('f', fread($fp, 4));
+		return $float[1];
+	}
+	
+	final static function fetchFloat2($fp)
+	{
+		return array(self::fetchFloat($fp), self::fetchFloat($fp));
+	}
+	
+	final static function fetchFloat3($fp)
+	{
+		return array(self::fetchFloat($fp), self::fetchFloat($fp), self::fetchFloat($fp));
 	}
 	
 	final static function fetchChecksum($fp)
@@ -34,6 +64,25 @@ abstract class AbstractStructure
 	{
 		$length = self::fetchLong($fp);
 		return $length ? fread($fp, $length) : '';
+	}
+	
+	final static function fetchLookbackString($fp)
+	{
+		// Ignoring version for first lookback string
+		if(empty(self::$lookbackStrings))
+			self::ignore($fp, 4);
+		
+		$index = self::fetchLong($fp) & 0x3fffffff;
+		if($index)
+			return self::$lookbackStrings[$index - 1];
+		
+		self::$lookbackStrings[] = $string = self::fetchString($fp);
+		return $string;
+	}
+	
+	final static function clearLookbackStrings()
+	{
+		self::$lookbackStrings = array();
 	}
 	
 	final static function fetchDate($fp)

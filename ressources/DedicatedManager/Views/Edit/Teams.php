@@ -34,15 +34,15 @@ $r = ManiaLib\Application\Request::getInstance();
 					</li>
 					<li data-role="fieldcontain">
 						<label for="color2"><?php echo _('Color:') ?></label>
-						<input id="color2" type="text" name="team2[color]" value="0" data-role="huepicker"/>
+						<input type="text" id="color2" name="team2[color]" value="0" data-role="huepicker"/>
 					</li>
 				</ul>
 				<div class="ui-grid-a">
 					<div class="ui-block-a">
-						<input type="reset" value="<?php echo_('Restore')?>"/>
+						<input type="reset" value="<?php echo _('Restore'); ?>"/>
 					</div>
 					<div class="ui-block-b">
-						<input type="submit" value="<?php echo_('Apply') ?>"/>
+						<input type="submit" value="<?php echo _('Apply'); ?>"/>
 					</div>
 				</div>
 			</form>

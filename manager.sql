@@ -1,9 +1,9 @@
 -- --------------------------------------------------------
 -- Host:                         127.0.0.1
--- Server version:               5.5.13-log - MySQL Community Server (GPL)
+-- Server version:               5.5.20-log - MySQL Community Server (GPL)
 -- Server OS:                    Win32
 -- HeidiSQL version:             7.0.0.4053
--- Date/time:                    2012-07-19 10:12:29
+-- Date/time:                    2012-07-27 12:34:45
 -- --------------------------------------------------------
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
@@ -28,13 +28,30 @@ CREATE TABLE IF NOT EXISTS `Managers` (
 -- Data exporting was unselected.
 
 
--- Dumping structure for table Manager.manialib_cache
-CREATE TABLE IF NOT EXISTS `manialib_cache` (
-  `name` varchar(255) NOT NULL,
-  `value` longtext NOT NULL,
-  `ttl` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  PRIMARY KEY (`name`),
-  KEY `ttl` (`ttl`)
+-- Dumping structure for table Manager.Maps
+CREATE TABLE IF NOT EXISTS `Maps` (
+  `path` varchar(255) NOT NULL DEFAULT '',
+  `filename` varchar(255) NOT NULL DEFAULT '',
+  `uid` char(27) NOT NULL,
+  `name` varchar(75) NOT NULL,
+  `environment` varchar(15) NOT NULL,
+  `mood` varchar(15) NOT NULL,
+  `type` varchar(50) NOT NULL,
+  `displayCost` int(10) unsigned NOT NULL,
+  `nbLaps` int(10) unsigned NOT NULL DEFAULT '0',
+  `authorLogin` varchar(25) NOT NULL,
+  `authorNick` varchar(75) DEFAULT NULL,
+  `authorZone` varchar(255) DEFAULT NULL,
+  `authorTime` int(11) DEFAULT NULL,
+  `goldTime` int(11) DEFAULT NULL,
+  `silverTime` int(11) DEFAULT NULL,
+  `bronzeTime` int(11) DEFAULT NULL,
+  `authorScore` int(11) DEFAULT NULL,
+  `size` int(10) unsigned NOT NULL,
+  `mTime` datetime NOT NULL,
+  PRIMARY KEY (`path`,`filename`),
+  KEY `mTime` (`mTime`),
+  KEY `size` (`size`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- Data exporting was unselected.

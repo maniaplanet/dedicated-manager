@@ -10,7 +10,7 @@ $r = ManiaLib\Application\Request::getInstance();
 			<form action="<?php echo $r->createLinkArgList('../insert-maps') ?>" method="get" data-ajax="false">
 				<input type="hidden" name="host" value="<?php echo $host ?>"/>
 				<input type="hidden" name="port" value="<?php echo $port ?>"/>
-				<?php echo DedicatedManager\Helpers\Files::tree($files, $selected, 'selected', true) ?>
+				<?php echo DedicatedManager\Helpers\Files::sortableTree($files, $selected, 'selected', true) ?>
 				<div class="ui-grid-a">
 					<div class="ui-block-a">
 						<input type="submit" name="insert" value="<?php echo _('Insert to map list') ?>"/>

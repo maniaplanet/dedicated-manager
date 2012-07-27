@@ -9,40 +9,36 @@
 
 namespace DedicatedManager\Utils\GbxReader;
 
-class Pack extends AbstractStructure
+class Pack extends FileStructure
 {
-	public $version;
+	public $type;
+	public $uid;
 	public $author;
 	public $manialink;
 	public $creationDate;
-	public $comment;
-	public $directory;
+	public $description;
 	public $creationBuildInfo;
 	public $includedPacks = array();
 	public $checksum;
 	public $flags;
-	
-	final static function read($filename)
-	{
-		$fp = fopen($filename, 'rb');
-		$pack = self::fetch($fp);
-		fclose($fp);
-		
-		return $pack;
-	}
 
 	static function fetch($fp)
 	{
 		$pack = new self;
 		self::ignore($fp, 8);
-		$pack->version = self::fetchLong($fp);
+		$version = self::fetchLong($fp);
 		$pack->checksum = self::fetchChecksum($fp);
 		$pack->flags = self::fetchLong($fp);
 		$pack->author = Author::fetch($fp);
 		$pack->manialink = self::fetchString($fp);
 		$pack->creationDate = self::fetchDate($fp);
-		$pack->comment = self::fetchString($fp);
-		$pack->directory = self::fetchString($fp);
+		$pack->description = self::fetchString($fp);
+		if($version >= 12)
+		{
+			$header = self::fetchString($fp);
+			$pack->uid = self::fetchString($fp);
+		}
+		$pack->type = self::fetchString($fp);
 		$pack->creationBuildInfo = self::fetchString($fp);
 		self::ignore($fp, 16);
 		

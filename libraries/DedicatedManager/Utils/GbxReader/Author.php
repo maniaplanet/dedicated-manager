@@ -18,7 +18,7 @@ class Author extends AbstractStructure
 	
 	final static function fetch($fp)
 	{
-		fread($fp, 4);
+		self::ignore($fp, 4);
 		$author = new self;
 		$author->login = self::fetchString($fp);
 		$author->nickname = self::fetchString($fp);

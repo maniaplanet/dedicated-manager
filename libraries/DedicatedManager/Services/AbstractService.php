@@ -21,10 +21,6 @@ abstract class AbstractService
 	 */
 	private $db;
 
-	function __construct()
-	{
-	}
-
 	/**
 	 * Returns an DB instance. Only instanciate the DB if needed, so if you have
 	 * caching layer it will avoid creating DB connections for nothing.
@@ -38,16 +34,6 @@ abstract class AbstractService
 			$this->db = \ManiaLib\Database\Connection::getInstance();
 		}
 		return $this->db;
-	}
-
-	protected function __getSeveral($callback, array $data)
-	{
-		$result = array();
-		foreach($data as $value)
-		{
-			$result[] = call_user_func_array($callback, (array)$value);
-		}
-		return $result;
 	}
 }
 

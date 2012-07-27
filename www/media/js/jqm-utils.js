@@ -7,11 +7,11 @@ $(document).bind('pageinit', function() {
 		}, 1);
 	});
 	
-	// Checkboxes hack
+	// Checkboxes hack for readonly style
 	$('.readonly-checkbox').parent().css('opacity', 1);
 	
-	// Input file hack
-	$('input:file').each(function () {
+	// Input file hack for custom style
+	$('input:file[customized!=customized]').each(function () {
 		var self = $(this);
 		self.css({
 			display: 'block',
@@ -27,7 +27,7 @@ $(document).bind('pageinit', function() {
 			.click(function () {
 				self.trigger('click');
 			});
-		self.appendTo(button.parent());
+		self.appendTo(button.parent()).attr('customized', 'customized');
 		self.change(function() {
 			button.prev().children('.ui-btn-text').text('Choose file' + (self.val() ? ': '+self.val() : ''));
 		}).trigger('change');

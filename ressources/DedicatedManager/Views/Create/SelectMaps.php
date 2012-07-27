@@ -13,7 +13,7 @@ $r = ManiaLib\Application\Request::getInstance();
 	<?php echo DedicatedManager\Helpers\Box\Box::detect() ?>
     <div data-role="content">
 		<form action="<?php echo $r->createLinkArgList('../save-maps') ?>" data-ajax="false" method="get">
-			<?php echo DedicatedManager\Helpers\Files::tree($files, $selected, 'selected') ?>
+			<?php echo DedicatedManager\Helpers\Files::sortableTree($files, $selected, 'selected') ?>
 			<div class="ui-grid-a">
 				<div class="ui-block-a">
 					<input type="reset" id="reset" value="<?php echo _('Restore') ?>"/>
