@@ -80,8 +80,7 @@ class Edit extends AbstractController
 			$this->options = $this->connection->getServerOptions();
 			$this->currentMap = $this->connection->getCurrentMapInfo();
 			// TODO remove test when bug on dedicated is fixed
-			if(!$this->server->isRelay)
-				$this->nextMap = $this->connection->getNextMapInfo();
+			if(!$this->server->isRelay) $this->nextMap = $this->connection->getNextMapInfo();
 		}
 	}
 
@@ -340,6 +339,28 @@ class Edit extends AbstractController
 			$this->session->set('error', _('An error occured while changing server configuration'));
 		}
 		$this->request->redirectArgList('../config/', 'host', 'port');
+	}
+
+	function votes()
+	{
+		$tmpRatios = $this->connection->getCallVoteRatios();
+		$ratios = array();
+		foreach($tmpRatios as $ratio)
+		{
+			$ratios[$ratio['Command']] = ($ratio['Ratio'] >= 0 ? $ratio['Ratio'] * 100 : $ratio['Ratio']);
+		}
+		$this->response->ratios = $ratios;
+	}
+
+	function updateVotes(array $ratios)
+	{
+		$finalRatios = array();
+		foreach($ratios as $command => $ratio)
+		{
+			$finalRatios[] = array('Command' => $command, 'Ratio' => (double)($ratio >= 0 ? $ratio / 100. : $ratio));
+		}
+		$this->connection->setCallVoteRatios($finalRatios);
+		$this->request->redirectArgList('../votes', 'host', 'port');
 	}
 
 	function players()

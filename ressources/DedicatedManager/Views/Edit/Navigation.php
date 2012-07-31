@@ -16,6 +16,9 @@
 			<li data-icon="gear" <?php echo $currentAction == 'config' ? 'data-theme="e"' : '' ?>>
 				<a href="<?php echo htmlentities($r->createLinkArgList('../config', 'host', 'port'), ENT_QUOTES, 'UTF-8') ?>" data-ajax="false"><?php echo _('Server configuration') ?></a>
 			</li>
+			<li data-icon="gear" <?php echo $currentAction == 'votes' ? 'data-theme="e"' : '' ?>>
+				<a href="<?php echo htmlentities($r->createLinkArgList('../votes', 'host', 'port'), ENT_QUOTES, 'UTF-8') ?>" data-ajax="false"><?php echo _('Votes ratios') ?></a>
+			</li>
 			<li data-icon="grid" <?php echo in_array($currentAction, array('players', 'banlist', 'blacklist', 'guestlist')) ? 'data-theme="e"' : '' ?>>
 				<a href="<?php echo htmlentities($r->createLinkArgList('../players', 'host', 'port'), ENT_QUOTES, 'UTF-8') ?>" data-ajax="false"><?php echo _('Players') ?></a>
 			</li>
