@@ -31,7 +31,7 @@ $r = ManiaLib\Application\Request::getInstance();
 					<li data-role="fieldcontain">
 						<label for="autobalance">
 							<strong><?php echo _('Team balance'); ?></strong><br/>
-							<i><?php echo _('Ratio in % to reach to balance teams automatically'); ?></i>
+							<i><?php echo _('Ratio in % to reach to balance teams'); ?></i>
 						</label>
 						<input type="range" id="autobalance" name="ratios[AutoTeamBalance]" value="<?php echo $ratios['AutoTeamBalance'] ?: $ratios['*']; ?>" min="-1" max="100" step="1" data-highlight="true"/>
 					</li>
