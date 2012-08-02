@@ -340,24 +340,27 @@ class Edit extends AbstractController
 		}
 		$this->request->redirectArgList('../config/', 'host', 'port');
 	}
-
+	
 	function votes()
 	{
 		$tmpRatios = $this->connection->getCallVoteRatios();
 		$ratios = array();
 		foreach($tmpRatios as $ratio)
 		{
-			$ratios[$ratio['Command']] = ($ratio['Ratio'] >= 0 ? $ratio['Ratio'] * 100 : $ratio['Ratio']);
+			$ratios[$ratio['Command']] = $ratio['Ratio'] < 0 ? -1 : $ratio['Ratio'] * 100;
 		}
 		$this->response->ratios = $ratios;
 	}
-
+	
+	/**
+	 * @redirect
+	 */
 	function updateVotes(array $ratios)
 	{
 		$finalRatios = array();
 		foreach($ratios as $command => $ratio)
 		{
-			$finalRatios[] = array('Command' => $command, 'Ratio' => (double)($ratio >= 0 ? $ratio / 100. : $ratio));
+			$finalRatios[] = array('Command' => $command, 'Ratio' => (double)($ratio < 0 ? -1 : $ratio / 100));
 		}
 		$this->connection->setCallVoteRatios($finalRatios);
 		$this->request->redirectArgList('../votes', 'host', 'port');
@@ -371,8 +374,14 @@ class Edit extends AbstractController
 	/**
 	 * @redirect
 	 */
-	function actionPlayers(array $players, $kick = '', $ban = '', $blacklist = '', $guestlist = '')
+	function actionPlayers(array $players = array(), $kick = '', $ban = '', $blacklist = '', $guestlist = '')
 	{
+		if(!$players)
+		{
+			$this->session->set('error', _('You have to select at least one player.'));
+			$this->request->redirectArgList('../players/', 'host', 'port');
+		}
+		
 		if($kick)
 		{
 			try
@@ -442,8 +451,13 @@ class Edit extends AbstractController
 	/**
 	 * @redirect
 	 */
-	function unban(array $players)
+	function unban(array $players = array())
 	{
+		if(!$players)
+		{
+			$this->session->set('error', _('You have to select at least one player.'));
+			$this->request->redirectArgList('../banlist/', 'host', 'port');
+		}
 		try
 		{
 			array_map(array($this->connection, 'unBan'), $players);
@@ -493,6 +507,12 @@ class Edit extends AbstractController
 	 */
 	function unblacklist(array $players)
 	{
+		if(!$players)
+		{
+			$this->session->set('error', _('You have to select at least one player.'));
+			$this->request->redirectArgList('../blacklist/', 'host', 'port');
+		}
+		
 		try
 		{
 			array_map(array($this->connection, 'unBlackList'), $players);
@@ -603,6 +623,12 @@ class Edit extends AbstractController
 	 */
 	function unguestlist(array $players)
 	{
+		if(!$players)
+		{
+			$this->session->set('error', _('You have to select at least one player.'));
+			$this->request->redirectArgList('../guestlist/', 'host', 'port');
+		}
+		
 		try
 		{
 			array_map(array($this->connection, 'removeGuest'), $players);
@@ -811,6 +837,7 @@ class Edit extends AbstractController
 		$this->connection->stopServer();
 		$service = new \DedicatedManager\Services\ServerService();
 		$service->delete($this->server->rpcHost, $this->server->rpcPort);
+		$this->session->set('success', _('Server has been stopped.'));
 		$this->request->redirectArgList('/');
 	}
 
@@ -821,6 +848,7 @@ class Edit extends AbstractController
 	function restart()
 	{
 		$this->connection->restartMap();
+		$this->session->set('success', _('Current map has been restarted.'));
 		$this->request->redirectToReferer();
 	}
 
@@ -831,9 +859,20 @@ class Edit extends AbstractController
 	function next()
 	{
 		$this->connection->nextMap();
+		$this->session->set('success', _('Server is going to the next map.'));
 		$this->request->redirectToReferer();
 	}
 
+	/**
+	 * @redirect
+	 * @norelay
+	 */
+	function balance()
+	{
+		$this->connection->autoTeamBalance();
+		$this->session->set('success', _('Teams has been balanced.'));
+		$this->request->redirectToReferer();
+	}
 }
 
 ?>

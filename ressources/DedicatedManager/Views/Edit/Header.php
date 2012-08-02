@@ -26,8 +26,8 @@
 	<?php else: ?>
 		<li><a href="<?php echo htmlentities($r->createLinkArgList('../restart', 'host', 'port'), ENT_QUOTES, 'UTF-8') ?>" data-theme="b" data-role="button" data-icon="refresh" data-ajax="false"><?php echo _('Restart map') ?></a></li>
 		<li><a href="<?php echo htmlentities($r->createLinkArgList('../next', 'host', 'port'), ENT_QUOTES, 'UTF-8') ?>" data-theme="b" data-role="button" data-icon="forward" data-ajax="false"><?php echo _('Next map') ?></a></li>
+		<li><a href="<?php echo htmlentities($r->createLinkArgList('../balance', 'host', 'port'), ENT_QUOTES, 'UTF-8') ?>" data-theme="b" data-role="button" data-icon="gear" data-ajax="false"><?php echo _('Balance teams') ?></a></li>
 		<li><a href="<?php echo $maniaplanetJoin ?>" data-theme="b" data-role="button" data-icon="arrow-r" data-ajax="false"><?php echo _('Join') ?></a></li>
-		<li><a href="<?php echo $maniaplanetSpectate?>" data-theme="b" data-role="button" data-icon="arrow-r" data-ajax="false"><?php echo _('Spectate') ?></a></li>
 	<?php endif; ?>
 	</ul>
 </div>
