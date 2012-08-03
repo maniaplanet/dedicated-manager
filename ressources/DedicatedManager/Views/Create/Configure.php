@@ -256,7 +256,7 @@ $r = ManiaLib\Application\Request::getInstance();
 							<strong><?php echo _('SuperAdmin password'); ?></strong><br/>
 							<i><?php echo _('Enter the password of the SuperAdmin user in remote control.') ?></i>
 						</label>
-						<?php echo DedicatedManager\Helpers\Input::text('authLevel[superadmin]', 'superadmin', $authLevel->superAdminPassword) ?>
+						<?php echo DedicatedManager\Helpers\Input::text('authLevel[superAdmin]', 'superadmin', $authLevel->superAdmin) ?>
 					</li>
 					<li data-role="fieldcontain">
 						<label for="useProxy">

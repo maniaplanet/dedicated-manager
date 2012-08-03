@@ -18,7 +18,7 @@ class ConfigFileService extends DedicatedFileService
 		$this->rootTag = '<dedicated>';
 	}
 
-	function validate(ServerOptions $options, Account $account = null, SystemConfig $system = null, $isLan = true, AuthorizationLevels $auth = null)
+	function validate(ServerOptions $options, Account $account = null, SystemConfig $system = null, AuthorizationLevels $auth = null, $isLan = true)
 	{
 		$errors = array();
 		if($system && !$system->title)
@@ -56,17 +56,20 @@ class ConfigFileService extends DedicatedFileService
 				$errors[] = _('The password entered is invalid, please check it.');
 			}
 		}
-		if(!$auth->superAdminPassword)
+		if($auth)
 		{
-			$errors[] = _('SuperAdmin password can\'t be empty');
-		}
-		if(!$auth->adminPassword)
-		{
-			$errors[] = _('Admin password can\'t be empty');
-		}
-		if(!$auth->userPassword)
-		{
-			$errors[] = _('User password can\'t be empty');
+			if(!$auth->superAdmin)
+			{
+				$errors[] = _('SuperAdmin password can\'t be empty');
+			}
+			if(!$auth->admin)
+			{
+				$errors[] = _('Admin password can\'t be empty');
+			}
+			if(!$auth->user)
+			{
+				$errors[] = _('User password can\'t be empty');
+			}
 		}
 
 		return $errors;
@@ -86,11 +89,14 @@ class ConfigFileService extends DedicatedFileService
 		{
 			switch($level->name)
 			{
-				case 'SuperAdmin':$authLevel->superAdminPassword = (string) $level->password;
+				case 'SuperAdmin':
+					$authLevel->superAdmin = (string) $level->password;
 					break;
-				case 'Admin':$authLevel->adminPassword = (string) $level->password;
+				case 'Admin':
+					$authLevel->admin = (string) $level->password;
 					break;
-				case 'User':$authLevel->userPassword = (string) $level->password;
+				case 'User':
+					$authLevel->user = (string) $level->password;
 					break;
 			}
 		}
@@ -125,7 +131,7 @@ class ConfigFileService extends DedicatedFileService
 
 		$system = new SystemConfig();
 		$system->connectionUploadrate = (int) $configObj->system_config->connection_uploadrate;
-		$system->connectionDownloadrate = (int) $configObj->system_config->connection->downnloadrate;
+		$system->connectionDownloadrate = (int) $configObj->system_config->connection->downloadrate;
 		$system->allowSpectatorRelays = self::toBool($configObj->system_config->allow_spectator_relays);
 		$system->p2pCacheSize = (int) $configObj->system_config->p2p_cache_size;
 		$system->forceIpAddress = (string) $configObj->system_config->force_ip_address;
@@ -162,13 +168,13 @@ class ConfigFileService extends DedicatedFileService
 		$authLevel = $dedicated->addChild('authorization_levels');
 		$level = $authLevel->addChild('level');
 		$level->addChild('name', 'SuperAdmin');
-		$level->addChild('password', $auth->superAdminPassword);
+		$level->addChild('password', (string) $auth->superAdmin);
 		$level = $authLevel->addChild('level');
 		$level->addChild('name', 'Admin');
-		$level->addChild('password', $auth->adminPassword);
+		$level->addChild('password', (string) $auth->admin);
 		$level = $authLevel->addChild('level');
 		$level->addChild('name', 'User');
-		$level->addChild('password', $auth->userPassword);
+		$level->addChild('password', (string) $auth->user);
 
 		if(!$account)
 		{

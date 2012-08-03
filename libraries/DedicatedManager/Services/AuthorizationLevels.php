@@ -11,9 +11,9 @@ namespace DedicatedManager\Services;
 
 class AuthorizationLevels extends \DedicatedApi\Structures\AbstractStructure
 {
-	public $superAdminPassword = 'SuperAdmin';
-	public $adminPassword = 'Admin';
-	public $userPassword = 'User';
+	public $superAdmin = 'SuperAdmin';
+	public $admin = 'Admin';
+	public $user = 'User';
 }
 
 ?>

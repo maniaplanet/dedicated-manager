@@ -89,9 +89,11 @@ class ServerService extends AbstractService
 	 * @param string $matchFile
 	 * @param bool $isLan
 	 */
-	function start($configFile, $matchFile, $isLan)
+	function start($configFile, $matchFile, $isLan = false)
 	{
 		$config = \DedicatedManager\Config::getInstance();
+		$service = new ConfigFileService();
+		list(,,,$auth) = $service->get($configFile);
 
 		// Starting dedicated
 		$isWindows = stripos(PHP_OS, 'WIN') === 0;
@@ -106,7 +108,7 @@ class ServerService extends AbstractService
 			$startCommand .= ' &';
 
 		$port = $this->doStart($startCommand);
-		$this->checkConnection('127.0.0.1', $port, 'SuperAdmin');
+		$this->checkConnection('127.0.0.1', $port, $auth->superAdmin);
 	}
 
 	/**
@@ -114,9 +116,11 @@ class ServerService extends AbstractService
 	 * @param Spectate $spectate
 	 * @param bool $isLan
 	 */
-	function startRelay($configFile, Spectate $spectate, $isLan)
+	function startRelay($configFile, Spectate $spectate, $isLan = false)
 	{
 		$config = \DedicatedManager\Config::getInstance();
+		$service = new ConfigFileService();
+		list(,,,$auth) = $service->get($configFile);
 
 		// Starting dedicated
 		$isWindows = stripos(PHP_OS, 'WIN') === 0;
@@ -133,12 +137,14 @@ class ServerService extends AbstractService
 			$startCommand .= ' &';
 
 		$port = $this->doStart($startCommand, 'Synchro');
-		$this->checkConnection('127.0.0.1', $port, 'SuperAdmin');
+		$this->checkConnection('127.0.0.1', $port, $auth->superAdmin);
 	}
 
-	function startNoautoquit($configFile = null)
+	function startNoautoquit($configFile, $isLan = false)
 	{
 		$config = \DedicatedManager\Config::getInstance();
+		$service = new ConfigFileService();
+		list(,,,$auth) = $service->get($configFile);
 
 		// Starting dedicated
 		$isWindows = stripos(PHP_OS, 'WIN') === 0;
@@ -146,12 +152,14 @@ class ServerService extends AbstractService
 			$startCommand = 'START /D "'.$config->dedicatedPath.'" ManiaPlanetServer.exe';
 		else
 			$startCommand = 'cd "'.$config->dedicatedPath.'"; ./ManiaPlanetServer';
-		$startCommand .= ($configFile ? sprintf(' /dedicated_cfg=%s', escapeshellarg($configFile)) : '').' /noautoquit';
+		$startCommand .= sprintf(' /dedicated_cfg=%s /noautoquit', escapeshellarg($configFile));
+		if($isLan)
+			$startCommand .= ' /lan';
 		if(!$isWindows)
 			$startCommand .= ' &';
 
 		$port = $this->doStart($startCommand, 'Ready, waiting for commands.');
-		$this->checkConnection('127.0.0.1', $port, 'SuperAdmin');
+		$this->checkConnection('127.0.0.1', $port, $auth->superAdmin);
 	}
 
 	private function doStart($commandLine, $successStr = '...Load succeeds')
@@ -245,7 +253,7 @@ class ServerService extends AbstractService
 		);
 	}
 
-	function startManiaLive($host, $port, $dedicatedPid = 0)
+	function startManiaLive($host, $port, $password, $dedicatedPid = 0)
 	{
 		$config = \DedicatedManager\Config::getInstance();
 		$isWindows = stripos(PHP_OS, 'WIN') === 0;
@@ -253,7 +261,7 @@ class ServerService extends AbstractService
 			$startCommand = 'START php.exe "'.$config->manialivePath.'bootstrapper.php"';
 		else
 			$startCommand = 'cd "'.$config->manialivePath.'"; php bootstrapper.php';
-		$startCommand .= sprintf(' --address=%s --rpcport=%d', escapeshellarg($host), $port);
+		$startCommand .= sprintf(' --address=%s --rpcport=%d --password=%s', escapeshellarg($host), $port, escapeshellarg($password));
 		if(!$isWindows)
 			$startCommand .= ' < /dev/null > logs/runtime.'.$dedicatedPid.'.log 2>&1 &';
 
