@@ -11,13 +11,14 @@ namespace DedicatedManager\Services;
 
 class ConfigFileService extends DedicatedFileService
 {
+
 	function __construct()
 	{
 		$this->directory = \DedicatedManager\Config::getInstance()->dedicatedPath.'UserData/Config/';
 		$this->rootTag = '<dedicated>';
 	}
-	
-	function validate(ServerOptions $options, Account $account = null, SystemConfig $system = null, $isLan = true)
+
+	function validate(ServerOptions $options, Account $account = null, SystemConfig $system = null, $isLan = true, AuthorizationLevels $auth = null)
 	{
 		$errors = array();
 		if($system && !$system->title)
@@ -55,10 +56,22 @@ class ConfigFileService extends DedicatedFileService
 				$errors[] = _('The password entered is invalid, please check it.');
 			}
 		}
+		if(!$auth->superAdminPassword)
+		{
+			$errors[] = _('SuperAdmin password can\'t be empty');
+		}
+		if(!$auth->adminPassword)
+		{
+			$errors[] = _('Admin password can\'t be empty');
+		}
+		if(!$auth->userPassword)
+		{
+			$errors[] = _('User password can\'t be empty');
+		}
 
 		return $errors;
 	}
-	
+
 	function get($filename)
 	{
 		if(!file_exists($this->directory.$filename.'.txt'))
@@ -68,6 +81,20 @@ class ConfigFileService extends DedicatedFileService
 
 		$configObj = simplexml_load_file($this->directory.$filename.'.txt');
 
+		$authLevel = new AuthorizationLevels();
+		foreach($configObj->authorization_levels->level as $level)
+		{
+			switch($level->name)
+			{
+				case 'SuperAdmin':$authLevel->superAdminPassword = (string) $level->password;
+					break;
+				case 'Admin':$authLevel->adminPassword = (string) $level->password;
+					break;
+				case 'User':$authLevel->userPassword = (string) $level->password;
+					break;
+			}
+		}
+		
 		$config = new ServerOptions();
 		$config->name = (string) $configObj->server_options->name;
 		$config->comment = (string) $configObj->server_options->comment;
@@ -95,9 +122,9 @@ class ConfigFileService extends DedicatedFileService
 		$account->login = (string) $configObj->masterserver_account->login;
 		$account->password = (string) $configObj->masterserver_account->password;
 		$account->validationKey = (string) $configObj->masterserver_account->validation_key;
-		
+
 		$system = new SystemConfig();
-		$system->connectionUploadrate = (int)$configObj->system_config->connection_uploadrate;
+		$system->connectionUploadrate = (int) $configObj->system_config->connection_uploadrate;
 		$system->connectionDownloadrate = (int) $configObj->system_config->connection->downnloadrate;
 		$system->allowSpectatorRelays = self::toBool($configObj->system_config->allow_spectator_relays);
 		$system->p2pCacheSize = (int) $configObj->system_config->p2p_cache_size;
@@ -119,34 +146,38 @@ class ConfigFileService extends DedicatedFileService
 		$system->proxyLogin = (string) $configObj->system_config->proxy_login;
 		$system->proxyPassword = (string) $configObj->system_config->proxyPassword;
 
-		return array($config, $account, $system);
+		return array($config, $account, $system, $authLevel);
 	}
-	
-	function save($filename, ServerOptions $config, Account $account = null, SystemConfig $system = null)
+
+	function save($filename, ServerOptions $config, Account $account = null, SystemConfig $system = null, AuthorizationLevels $auth = null)
 	{
 		$dom = new \DOMDocument('1.0', 'utf-8');
 		$dedicated = simplexml_import_dom($dom->createElement('dedicated'));
 
+		
+		if(!$auth)
+		{
+			$auth = new AuthorizationLevels();
+		}
 		$authLevel = $dedicated->addChild('authorization_levels');
 		$level = $authLevel->addChild('level');
 		$level->addChild('name', 'SuperAdmin');
-		$level->addChild('password', 'SuperAdmin');
+		$level->addChild('password', $auth->superAdminPassword);
 		$level = $authLevel->addChild('level');
 		$level->addChild('name', 'Admin');
-		$level->addChild('password', 'Admin');
+		$level->addChild('password', $auth->adminPassword);
 		$level = $authLevel->addChild('level');
 		$level->addChild('name', 'User');
-		$level->addChild('password', 'User');
+		$level->addChild('password', $auth->userPassword);
 
-		//TODO Find a way to handle internet server
 		if(!$account)
 		{
 			$account = new Account();
 		}
 		$masterAccount = $dedicated->addChild('masterserver_account');
-		$masterAccount->addChild('login', (string)$account->login);
-		$masterAccount->addChild('password', (string)$account->password);
-		$masterAccount->addChild('validation_key', (string)$account->validationKey);
+		$masterAccount->addChild('login', (string) $account->login);
+		$masterAccount->addChild('password', (string) $account->password);
+		$masterAccount->addChild('validation_key', (string) $account->validationKey);
 
 		$serverOptions = $dedicated->addChild('server_options');
 		$serverOptions->addChild('name', (string) $config->name);
@@ -201,6 +232,7 @@ class ConfigFileService extends DedicatedFileService
 
 		$dedicated->asXML($this->directory.$filename.'.txt');
 	}
+
 }
 
 ?>

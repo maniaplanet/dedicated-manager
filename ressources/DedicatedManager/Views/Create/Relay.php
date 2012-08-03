@@ -200,6 +200,13 @@ $r = ManiaLib\Application\Request::getInstance();
 						<?php echo DedicatedManager\Helpers\Input::text('system[xmlrpcAllowremote]', 'allowremote', $system->xmlrpcAllowremote) ?>
 					</li>
 					<li data-role="fieldcontain">
+						<label for="superadmin">
+							<strong><?php echo _('SuperAdmin password'); ?></strong><br/>
+							<i><?php echo _('Enter the password of the SuperAdmin user in remote control.') ?></i>
+						</label>
+						<?php echo DedicatedManager\Helpers\Input::text('authLevel[superadmin]', 'superadmin', $authLevel->superAdminPassword) ?>
+					</li>
+					<li data-role="fieldcontain">
 						<label for="useProxy">
 							<strong><?php echo _('Use Proxy'); ?></strong><br/>
 							<i><?php echo _("Select yes if you are connected to a proxy.") ?></i>

@@ -38,7 +38,7 @@ class Create extends AbstractController
 
 		if($configFile)
 		{
-			list($options, $account, $system) = $service->get($configFile);
+			list($options, $account, $system, $authLevel) = $service->get($configFile);
 			$this->session->set('configFile', $configFile);
 			$this->session->set('options', $options);
 			$this->session->set('account', $account);
@@ -49,29 +49,33 @@ class Create extends AbstractController
 			$options = new \DedicatedManager\Services\ServerOptions();
 			$account = new \DedicatedManager\Services\Account();
 			$system = new \DedicatedManager\Services\SystemConfig();
+			$authLevel = new \DedicatedManager\Services\AuthorizationLevels();
 		}
 		
 		$this->response->configList = $service->getList();
+		$this->response->authLevel = $this->session->get('authLevel',$authLevel);
 		$this->response->options = $this->session->get('options', $options);
 		$this->response->account = $this->session->get('account', $account);
 		$this->response->system = $this->session->get('system', $system);
 	}
 
-	function saveServerConfig(array $options, array $account, array $system, $isOnline = 0)
+	function saveServerConfig(array $options, array $account, array $system,array $authLevel, $isOnline = 0)
 	{
 		$options = \DedicatedManager\Services\ServerOptions::fromArray($options);
 		$options->callVoteRatio = $options->callVoteRatio < 0 ? -1 : $options->callVoteRatio / 100;
 		$options->nextCallVoteTimeOut = $options->nextCallVoteTimeOut * 1000;
 		$account = \DedicatedManager\Services\Account::fromArray($account);
 		$system = \DedicatedManager\Services\SystemConfig::fromArray($system);
+		$authLevel = \DedicatedManager\Services\AuthorizationLevels::fromArray($authLevel);
 		
+		$this->session->set('authLevel', $authLevel);
 		$this->session->set('options', $options);
 		$this->session->set('account', $account);
 		$this->session->set('system', $system);
 		$this->session->set('isLan', !$isOnline);
 
 		$service = new \DedicatedManager\Services\ConfigFileService();
-		if( ($errors = $service->validate($options, $account, $system, !$isOnline)) )
+		if( ($errors = $service->validate($options, $account, $system, !$isOnline, $authLevel)) )
 		{
 			$this->session->set('error', $errors);
 			$this->request->redirectArgList('../configure');
@@ -202,7 +206,7 @@ class Create extends AbstractController
 
 	function startServer($configFile, $matchFile)
 	{
-		list($options, $account, $system, $isLan) = $this->fetchAndAssertConfig(_('starting it'));
+		list($options, $account, $system, $isLan, $authLevel) = $this->fetchAndAssertConfig(_('starting it'));
 		$gameInfos = $this->fetchAndAssertSettings(_('starting server'));
 		$maps = $this->fetchAndAssertMaps(_('starting server'));
 		
@@ -225,7 +229,7 @@ class Create extends AbstractController
 			{
 				$error = _('An error appeared while writing the server configuration file.');
 				$service = new \DedicatedManager\Services\ConfigFileService();
-				$service->save($configFile, $options, $account, $system);
+				$service->save($configFile, $options, $account, $system, $authLevel);
 
 				$error = _('An error appeared while writing the MatchSettings file.');
 				$service = new \DedicatedManager\Services\MatchSettingsFileService();
@@ -258,7 +262,7 @@ class Create extends AbstractController
 
 		if($configFile)
 		{
-			list($options, $account, $system) = $service->get($configFile);
+			list($options, $account, $system, $authLevel) = $service->get($configFile);
 			$this->session->set('configFile', $configFile);
 		}
 		else
@@ -266,12 +270,14 @@ class Create extends AbstractController
 			$options = new \DedicatedManager\Services\ServerOptions();
 			$account = new \DedicatedManager\Services\Account();
 			$system = new \DedicatedManager\Services\SystemConfig();
+			$authLevel = new \DedicatedManager\Services\AuthorizationLevels();
 		}
 		
 		$this->response->configList = $service->getList();
 		$this->response->options = $this->session->get('options', $options);
 		$this->response->account = $this->session->get('account', $account);
 		$this->response->system = $this->session->get('system', $system);
+		$this->response->system = $this->session->get('authLevel', $authLevel);
 	}
 
 	function saveRelayConfig(array $options, array $account, array $system, $isOnline = 0)
@@ -285,6 +291,7 @@ class Create extends AbstractController
 		$this->session->set('options', $options);
 		$this->session->set('account', $account);
 		$this->session->set('system', $system);
+		$this->session->set('authLevel', $authLevel);
 		$this->session->set('isLan', !$isOnline);
 
 		$service = new \DedicatedManager\Services\ConfigFileService();
@@ -319,7 +326,7 @@ class Create extends AbstractController
 
 	function startRelay($configFile, $spectate)
 	{
-		list($options, $account, $system, $isLan) = $this->fetchAndAssertConfig(_('starting it'));
+		list($options, $account, $system, $isLan, $authLevel) = $this->fetchAndAssertConfig(_('starting it'));
 		
 		$spectate = \DedicatedManager\Services\Spectate::fromArray($spectate);
 		if($spectate->method == \DedicatedManager\Services\Spectate::MANAGED)
@@ -353,7 +360,7 @@ class Create extends AbstractController
 			{
 				$error = _('An error appeared while writing the server configuration file.');
 				$service = new \DedicatedManager\Services\ConfigFileService();
-				$service->save($configFile, $options, $account, $system);
+				$service->save($configFile, $options, $account, $system, $authLevel);
 
 				$error = _('An error appeared while starting the server.');
 				$service = new \DedicatedManager\Services\ServerService();
@@ -397,8 +404,9 @@ class Create extends AbstractController
 			$options = $this->session->getStrict('options');
 			$account = $this->session->getStrict('account');
 			$system = $this->session->getStrict('system');
+			$authLevel = $this->session->getStrict('authLevel');
 			$isLan = $this->session->get('isLan');
-			return array($options, $account, $system, $isLan);
+			return array($options, $account, $system, $isLan, $authLevel);
 		}
 		catch(\Exception $e)
 		{
