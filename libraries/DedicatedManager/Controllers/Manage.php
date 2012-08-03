@@ -9,6 +9,8 @@
 
 namespace DedicatedManager\Controllers;
 
+use DedicatedManager\Utils\GbxReader\Map;
+
 class Manage extends \ManiaLib\Application\Controller
 {
 
@@ -109,19 +111,17 @@ class Manage extends \ManiaLib\Application\Controller
 
 	function uploadMap()
 	{
-		if(!array_key_exists('path', $_POST))
+		if(!isset($_POST['path']))
 		{
-			$this->session->set('error', 'The path must be set');
+			$this->session->set('error', _('The path must be set.'));
 			$this->request->redirect('../maps');
 		}
 		$this->request->set('path', $_POST['path']);
+		
 		if($_FILES['map']['error'])
 		{
 			switch($_FILES['map']['error'])
 			{
-				case UPLOAD_ERR_INI_SIZE:
-					$this->session->set('error', _('File is too big.'));
-					break;
 				case UPLOAD_ERR_INI_SIZE:
 					$this->session->set('error', _('File is too big.'));
 					break;
@@ -138,18 +138,16 @@ class Manage extends \ManiaLib\Application\Controller
 			$this->request->redirect('../maps', 'path');
 		}
 
-		if(!preg_match('/\\.map\\.gbx$/ixu', $_FILES['map']['name']))
+		if(!preg_match('/\\.map\\.gbx$/ixu', $_FILES['map']['name']) || !Map::check($_FILES['map']['tmp_name']))
 		{
-			$this->session->set('error', 'The file must be a ManiaPlanet map file');
-			$this->request->set('path', $_POST['path']);
-			$this->request->redirect('../upload-map', 'path');
+			$this->session->set('error', _('The file must be a ManiaPlanet map.'));
+			$this->request->redirect('../maps', 'path');
 		}
-		$path = $_POST['path'];
+		
 		$service = new \DedicatedManager\Services\MapService();
-		$service->upload($_FILES['map']['tmp_name'], $_FILES['map']['name'], $path);
+		$service->upload($_FILES['map']['tmp_name'], $_FILES['map']['name'], $_POST['path']);
 		$this->request->redirectArgList('../maps', 'path');
 	}
-
 }
 
 ?>

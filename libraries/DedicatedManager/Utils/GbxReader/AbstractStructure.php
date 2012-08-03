@@ -20,6 +20,11 @@ abstract class AbstractStructure
 		fread($fp, $length);
 	}
 	
+	final static function fetchRaw($fp, $length)
+	{
+		return fread($fp, $length);
+	}
+	
 	final static function fetchByte($fp)
 	{
 		$byte = unpack('C', fread($fp, 1));

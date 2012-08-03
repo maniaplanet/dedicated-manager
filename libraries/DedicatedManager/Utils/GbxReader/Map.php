@@ -44,7 +44,7 @@ class Map extends FileStructure
 		);
 		$classId = self::fetchLong($fp);
 		if($classId != 0x03043000)
-			throw new \Exception('File is not a map');
+			throw new \InvalidArgumentException('File is not a map');
 		$headerSize = self::fetchLong($fp);
 		$nbChunks = self::fetchLong($fp);
 		$chunkInfos = array();
@@ -69,6 +69,19 @@ class Map extends FileStructure
 		}
 		
 		return $map;
+	}
+	
+	final static function check($filename)
+	{
+		$fp = fopen($filename, 'rb');
+		
+		$magic = self::fetchRaw($fp, 3);
+		self::ignore($fp, 6);
+		$classId = self::fetchLong($fp);
+		
+		fclose($fp);
+		
+		return $magic == 'GBX' && $classId == 0x03043000;
 	}
 	
 	private static function fetchChunk005(Map $map, $fp)
