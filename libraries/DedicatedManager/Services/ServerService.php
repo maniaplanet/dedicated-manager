@@ -245,7 +245,8 @@ class ServerService extends AbstractService
 		$connection = \DedicatedApi\Connection::factory($host, $port, 5, 'SuperAdmin', $password);
 
 		$this->db()->execute(
-				'INSERT INTO Servers(name, rpcHost, rpcPort, rpcPassword) VALUES (%s,%s,%d,%s)',
+				'INSERT INTO Servers(name, rpcHost, rpcPort, rpcPassword) VALUES (%s,%s,%d,%s) '.
+				'ON DUPLICATE KEY UPDATE name=VALUES(name), rpcPassword=VALUES(rpcPassword)',
 				$this->db()->quote($connection->getServerName()),
 				$this->db()->quote($host),
 				$port,

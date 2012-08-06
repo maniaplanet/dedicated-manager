@@ -302,13 +302,13 @@ class Edit extends AbstractController
 
 	function config()
 	{
-		
+		$this->response->rpcPassword = $this->server->rpcPassword;
 	}
 
 	/**
 	 * @redirect
 	 */
-	function saveConfig($options)
+	function saveConfig($options, $rpcPassword)
 	{
 		$optionsObj = \DedicatedManager\Services\ServerOptions::fromArray($options);
 		$optionsObj->callVoteRatio = $optionsObj->callVoteRatio < 0 ? $optionsObj->callVoteRatio : $optionsObj->callVoteRatio / 100;
@@ -331,6 +331,12 @@ class Edit extends AbstractController
 		{
 			$optionsObj->ensureCast();
 			$this->connection->setServerOptions($optionsObj->toArray());
+			if($rpcPassword != $this->server->rpcPassword)
+			{
+				$this->connection->changeAuthPassword('SuperAdmin', $rpcPassword);
+				$service = new \DedicatedManager\Services\ServerService();
+				$service->checkConnection($this->server->rpcHost, $this->server->rpcPort, $rpcPassword);
+			}
 			$this->session->set('success', _('Configuration successfully changed'));
 		}
 		catch(\Exception $e)

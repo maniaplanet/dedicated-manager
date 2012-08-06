@@ -160,6 +160,18 @@ $r = ManiaLib\Application\Request::getInstance();
 					<?php endif; ?>
 					</ul>
 				</fieldset>
+				<fieldset data-role="collapsible" data-theme="b">
+					<legend><?php echo _('Advanced Network Settings'); ?></legend>
+					<ul data-role="listview">
+						<li data-role="fieldcontain">
+							<label for="superadmin">
+								<strong><?php echo _('SuperAdmin password'); ?></strong><br/>
+								<i><?php echo _('Enter the password of the SuperAdmin user in remote control.') ?></i>
+							</label>
+							<?php echo DedicatedManager\Helpers\Input::text('rpcPassword', 'superadmin', $rpcPassword) ?>
+						</li>
+					</ul>
+				</fieldset>
 				<div class="ui-grid-a">
 					<div class="ui-block-a">
 						<input type="reset" value="<?php echo _('Restore') ?>" data-icon="refresh"/>
