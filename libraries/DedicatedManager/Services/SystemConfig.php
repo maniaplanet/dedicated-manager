@@ -11,8 +11,8 @@ namespace DedicatedManager\Services;
 
 class SystemConfig extends \DedicatedApi\Structures\AbstractStructure
 {
-	public $connectionUploadrate = 2048;
-	public $connectionDownloadrate = 8192;
+	public $connectionUploadrate = 2000;
+	public $connectionDownloadrate = 32000;
 	public $allowSpectatorRelays = false;
 	public $p2pCacheSize = 600;
 	public $forceIpAddress;

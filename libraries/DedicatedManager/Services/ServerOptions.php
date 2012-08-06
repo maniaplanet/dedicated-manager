@@ -22,12 +22,16 @@ class ServerOptions extends \DedicatedApi\Structures\ServerOptions
 	public $autoSaveReplays = false;
 	public $autoSaveValidationReplays = false;
 	public $refereeMode = 0;
+	public $clientInputsMaxLatency = 0;
+	public $disableHorns = false;
 	
 	function ensureCast()
 	{
 		$this->hideServer = (bool) $this->hideServer;
 		$this->nextMaxPlayers = (int) $this->nextMaxPlayers;
 		$this->nextMaxSpectators = (int) $this->nextMaxSpectators;
+		$this->isP2PUpload = (bool) $this->isP2PUpload;
+		$this->isP2PDownload = (bool) $this->isP2PDownload;
 		$this->nextLadderMode = (int) $this->nextLadderMode;
 		$this->nextCallVoteTimeOut = (int) $this->nextCallVoteTimeOut;
 		$this->callVoteRatio = (double) $this->callVoteRatio;
@@ -36,6 +40,8 @@ class ServerOptions extends \DedicatedApi\Structures\ServerOptions
 		$this->autoSaveValidationReplays = (bool) $this->autoSaveValidationReplays;
 		$this->refereeMode = (int) $this->refereeMode;
 		$this->refereePassword = (int) $this->refereePassword;
+		$this->clientInputsMaxLatency = (int) $this->clientInputsMaxLatency;
+		$this->disableHorns = (bool) $this->disableHorns;
 	}
 }
 

@@ -302,41 +302,47 @@ class Edit extends AbstractController
 
 	function config()
 	{
+		$this->options->disableHorns = $this->connection->areHornsDisabled();
 		$this->response->rpcPassword = $this->server->rpcPassword;
+		$systemInfo = $this->connection->getSystemInfo();
+		$this->response->connectionRates = array(
+			'download' => $systemInfo->connectionDownloadRate,
+			'upload' => $systemInfo->connectionUploadRate
+		);
 	}
 
 	/**
 	 * @redirect
 	 */
-	function saveConfig($options, $rpcPassword)
+	function saveConfig($options, $rpcPassword, $connectionRates)
 	{
-		$optionsObj = \DedicatedManager\Services\ServerOptions::fromArray($options);
-		$optionsObj->callVoteRatio = $optionsObj->callVoteRatio < 0 ? $optionsObj->callVoteRatio : $optionsObj->callVoteRatio / 100;
-		$optionsObj->nextCallVoteTimeOut = $optionsObj->nextCallVoteTimeOut * 1000;
+		$options = \DedicatedManager\Services\ServerOptions::fromArray($options);
+		$options->callVoteRatio = $options->callVoteRatio < 0 ? $options->callVoteRatio : $options->callVoteRatio / 100;
+		$options->nextCallVoteTimeOut = $options->nextCallVoteTimeOut * 1000;
 
 		$service = new \DedicatedManager\Services\ConfigFileService();
-		if(($errors = $service->validate($optionsObj)))
+		if(($errors = $service->validate($options)))
 		{
 			$this->session->set('error', $errors);
 			$this->request->redirectArgList('../config/', 'host', 'port');
 		}
 
 		$optionsCur = $this->connection->getServerOptions();
-		$optionsObj->isP2PDownload = $optionsCur->isP2PDownload;
-		$optionsObj->isP2PUpload = $optionsCur->isP2PUpload;
-		$optionsObj->nextVehicleNetQuality = $optionsCur->nextVehicleNetQuality;
-		$optionsObj->nextUseChangingValidationSeed = $optionsCur->nextUseChangingValidationSeed;
+		$options->nextVehicleNetQuality = $optionsCur->nextVehicleNetQuality;
+		$options->nextUseChangingValidationSeed = $optionsCur->nextUseChangingValidationSeed;
 
 		try
 		{
-			$optionsObj->ensureCast();
-			$this->connection->setServerOptions($optionsObj->toArray());
+			$options->ensureCast();
+			$this->connection->setServerOptions($options->toArray());
+			$this->connection->disableHorns($options->disableHorns);
 			if($rpcPassword != $this->server->rpcPassword)
 			{
 				$this->connection->changeAuthPassword('SuperAdmin', $rpcPassword);
 				$service = new \DedicatedManager\Services\ServerService();
 				$service->checkConnection($this->server->rpcHost, $this->server->rpcPort, $rpcPassword);
 			}
+			$this->connection->setConnectionRates((int) $connectionRates['download'], (int) $connectionRates['upload']);
 			$this->session->set('success', _('Configuration successfully changed'));
 		}
 		catch(\Exception $e)

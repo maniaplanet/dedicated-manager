@@ -157,6 +157,22 @@ $r = ManiaLib\Application\Request::getInstance();
 						</fieldset>
 					</li>
 					<li data-role="fieldcontain">
+						<label for="disableHorns">
+							<strong><?php echo _('Disable horns'); ?></strong><br/>
+						</label>
+						<select id="disableHorns" name="options[disableHorns]" data-role="slider">
+							<option value="0" <?php echo !$options->disableHorns ? 'selected="selected"' : '' ?>><?php echo _('No') ?></option>
+							<option value="1" <?php echo $options->disableHorns ? 'selected="selected"' : '' ?>><?php echo _('Yes') ?></option>
+						</select>
+					</li>
+					<li data-role="fieldcontain">
+						<label for="inputsMaxLatency">
+							<strong><?php echo _('Inputs max latency (in ms)'); ?></strong><br/>
+							<i><?php echo _('How long the server waits for player inputs, or 0 for automatic adjustement'); ?></i>
+						</label>
+						<?php echo DedicatedManager\Helpers\Input::text('options[clientInputsMaxLatency]', 'inputsMaxLatency', $options->clientInputsMaxLatency) ?>
+					</li>
+					<li data-role="fieldcontain">
 						<label for="autosaveReplays">
 							<strong><?php echo _('Autosave replays'); ?></strong><br/>
 							<i><?php echo _('If "yes" every a replay will be saved on each map.') ?></i>
@@ -203,7 +219,7 @@ $r = ManiaLib\Application\Request::getInstance();
 					</li>
 					<li data-role="fieldcontain">
 						<label for="masterValidationKey">
-							<strong><?php echo _('Validation key (optionnal)'); ?></strong><br/>
+							<strong><?php echo _('Validation key (optional)'); ?></strong><br/>
 							<i><?php echo _("Enter the dedicated server's validation key.") ?></i>
 						</label>
 						<?php echo DedicatedManager\Helpers\Input::text('account[validationKey]', 'masterValidationKey', $account->validationKey) ?>
@@ -281,6 +297,20 @@ $r = ManiaLib\Application\Request::getInstance();
 							<i><?php echo _('Enter your proxy password.') ?></i>
 						</label>
 						<?php echo DedicatedManager\Helpers\Input::text('system[proxyPassword]', 'proxyPassword', $system->proxyPassword) ?>
+					</li>
+					<li data-role="fieldcontain">
+						<label for="downloadRate">
+							<strong><?php echo _('Download rate'); ?></strong><br/>
+							<i><?php echo _('In KB/s'); ?></i>
+						</label>
+						<?php echo DedicatedManager\Helpers\Input::text('sytem[connectionDownloadrate]', 'downloadRate', $system->connectionDownloadrate); ?>
+					</li>
+					<li data-role="fieldcontain">
+						<label for="uploadRate">
+							<strong><?php echo _('Upload rate'); ?></strong><br/>
+							<i><?php echo _('In KB/s'); ?></i>
+						</label>
+						<?php echo DedicatedManager\Helpers\Input::text('sytem[connectionUploadrate]', 'uploadRate', $system->connectionUploadrate); ?>
 					</li>
 				</ul>
 			</fieldset>

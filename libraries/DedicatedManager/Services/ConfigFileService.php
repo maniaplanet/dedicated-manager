@@ -159,7 +159,6 @@ class ConfigFileService extends DedicatedFileService
 	{
 		$dom = new \DOMDocument('1.0', 'utf-8');
 		$dedicated = simplexml_import_dom($dom->createElement('dedicated'));
-
 		
 		if(!$auth)
 		{
@@ -206,6 +205,8 @@ class ConfigFileService extends DedicatedFileService
 		$serverOptions->addChild('referee_password', (string) $config->refereePassword);
 		$serverOptions->addChild('referee_validation_mode', (string) $config->refereeMode);
 		$serverOptions->addChild('use_changing_validation_seed', (string) $config->nextUseChangingValidationSeed);
+		$serverOptions->addChild('disable_horns', $config->disableHorns ? 'True' : 'False');
+		$serverOptions->addChild('clientinputs_maxlatency', (int) $config->clientInputsMaxLatency);
 
 		//TODO find a wat to change system settings if needed
 		if(!$system)
@@ -214,27 +215,27 @@ class ConfigFileService extends DedicatedFileService
 		}
 		// TODO add casts
 		$systemConfig = $dedicated->addChild('system_config');
-		$systemConfig->addChild('connection_uploadrate', $system->connectionUploadrate);
-		$systemConfig->addChild('connection_downloadrate', $system->connectionDownloadrate);
+		$systemConfig->addChild('connection_uploadrate', (int) $system->connectionUploadrate);
+		$systemConfig->addChild('connection_downloadrate', (int) $system->connectionDownloadrate);
 		$systemConfig->addChild('allow_spectator_relays', $system->allowSpectatorRelays ? 'True' : 'False');
-		$systemConfig->addChild('p2p_cache_size', $system->p2pCacheSize);
-		$systemConfig->addChild('force_ip_address', $system->forceIpAddress);
-		$systemConfig->addChild('server_port', $system->serverPort);
-		$systemConfig->addChild('server_p2p_port', $system->serverP2pPort);
-		$systemConfig->addChild('client_port', $system->clientPort);
-		$systemConfig->addChild('bind_ip_address', $system->bindIpAddress);
+		$systemConfig->addChild('p2p_cache_size', (int) $system->p2pCacheSize);
+		$systemConfig->addChild('force_ip_address', (string) $system->forceIpAddress);
+		$systemConfig->addChild('server_port', (int) $system->serverPort);
+		$systemConfig->addChild('server_p2p_port', (int) $system->serverP2pPort);
+		$systemConfig->addChild('client_port', (int) $system->clientPort);
+		$systemConfig->addChild('bind_ip_address', (string) $system->bindIpAddress);
 		$systemConfig->addChild('use_nat_upnp', $system->useNatUpnp ? 'True' : 'False');
-		$systemConfig->addChild('xmlrpc_port', $system->xmlrpcPort);
-		$systemConfig->addChild('xmlrpc_allowremote', $system->xmlrpcAllowremote);
-		$systemConfig->addChild('blacklist_url', $system->blacklistUrl);
-		$systemConfig->addChild('guestlist_filename', $system->guestlistFilename);
-		$systemConfig->addChild('blacklist_filename', $system->blacklistFilename);
-		$systemConfig->addChild('title', $system->title);
-		$systemConfig->addChild('minimum_client_build', $system->minimumClientBuild);
+		$systemConfig->addChild('xmlrpc_port', (int) $system->xmlrpcPort);
+		$systemConfig->addChild('xmlrpc_allowremote', (string) $system->xmlrpcAllowremote);
+		$systemConfig->addChild('blacklist_url', (string) $system->blacklistUrl);
+		$systemConfig->addChild('guestlist_filename', (string) $system->guestlistFilename);
+		$systemConfig->addChild('blacklist_filename', (string) $system->blacklistFilename);
+		$systemConfig->addChild('title', (string) $system->title);
+		$systemConfig->addChild('minimum_client_build', (string) $system->minimumClientBuild);
 		$systemConfig->addChild('disable_coherence_checks', $system->disableCoherenceChecks ? 'True' : 'False');
 		$systemConfig->addChild('use_proxy', $system->useProxy ? 'True' : 'False');
-		$systemConfig->addChild('proxy_login', $system->proxyLogin);
-		$systemConfig->addChild('proxy_password', $system->proxyPassword);
+		$systemConfig->addChild('proxy_login', (string) $system->proxyLogin);
+		$systemConfig->addChild('proxy_password', (string) $system->proxyPassword);
 
 		$dedicated->asXML($this->directory.$filename.'.txt');
 	}
