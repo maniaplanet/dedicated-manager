@@ -16,7 +16,7 @@ abstract class AbstractController extends \ManiaLib\Application\Controller imple
 	protected function onConstruct()
 	{
 		$config = \DedicatedManager\Config::getInstance();
-		if($config->lanMode)
+		if(!$config->maniaConnect)
 			$this->isAdmin = true;
 		else
 			$this->addFilter(new \ManiaLib\WebServices\ManiaConnectFilter());
@@ -26,7 +26,7 @@ abstract class AbstractController extends \ManiaLib\Application\Controller imple
 	public function preFilter()
 	{
 		$config = \DedicatedManager\Config::getInstance();
-		if(!$config->lanMode)
+		if($config->maniaConnect)
 			$this->isAdmin = in_array($this->session->login, $config->admins);
 	}
 

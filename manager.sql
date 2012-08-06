@@ -3,7 +3,7 @@
 -- Server version:               5.5.20-log - MySQL Community Server (GPL)
 -- Server OS:                    Win32
 -- HeidiSQL version:             7.0.0.4053
--- Date/time:                    2012-07-27 12:34:45
+-- Date/time:                    2012-08-06 13:11:27
 -- --------------------------------------------------------
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
@@ -19,7 +19,7 @@ USE `Manager`;
 CREATE TABLE IF NOT EXISTS `Managers` (
   `login` varchar(25) NOT NULL,
   `rpcHost` varchar(25) NOT NULL,
-  `rpcPort` int(11) NOT NULL,
+  `rpcPort` smallint(5) unsigned NOT NULL,
   UNIQUE KEY `login_rpcHost_rpcPort` (`login`,`rpcHost`,`rpcPort`),
   KEY `managerServer` (`rpcHost`,`rpcPort`),
   CONSTRAINT `managerServer` FOREIGN KEY (`rpcHost`, `rpcPort`) REFERENCES `Servers` (`rpcHost`, `rpcPort`) ON DELETE CASCADE ON UPDATE CASCADE
@@ -61,7 +61,7 @@ CREATE TABLE IF NOT EXISTS `Maps` (
 CREATE TABLE IF NOT EXISTS `Servers` (
   `name` varchar(75) NOT NULL,
   `rpcHost` varchar(25) NOT NULL,
-  `rpcPort` int(11) NOT NULL,
+  `rpcPort` smallint(5) unsigned NOT NULL,
   `rpcPassword` varchar(50) NOT NULL,
   PRIMARY KEY (`rpcHost`,`rpcPort`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
