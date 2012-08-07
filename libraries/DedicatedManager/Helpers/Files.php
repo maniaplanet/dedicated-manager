@@ -16,12 +16,13 @@ use ManiaLib\Utils\StyleParser;
 
 abstract class Files
 {
-	static function map(Map $map, $name='maps[]', $checked=false, $withThumbnail=true)
+	static function map(Map $map, $name='maps[]', $checked=false, $withThumbnail=true, $disabled=false, $readonly=false)
 	{
 		$id = uniqid('maps-');
 		$str = sprintf(
-				'<input type="checkbox" id="%s" name="%s" value="%s"%s/>',
-				$id, $name, htmlentities($map->path.$map->filename, ENT_QUOTES | ENT_HTML5, 'utf-8'), $checked ? ' checked="checked"' : ''
+				'<input type="checkbox" id="%s" name="%s" value="%s"%s%s%s/>',
+				$id, $name, htmlentities($map->path.$map->filename, ENT_QUOTES | ENT_HTML5, 'utf-8'),
+				$checked ? ' checked="checked"' : '', $disabled ? ' disabled="disabled"' : '', $readonly ? ' class="readonly-checkbox"' : ''
 			);
 		
 		$label = sprintf(_('%s by %s'), StyleParser::toHtml($map->name), $map->authorNick ? StyleParser::toHtml($map->authorNick) : $map->authorLogin);
@@ -36,6 +37,27 @@ abstract class Files
 			);
 		else
 			$str .= sprintf('<label for="%s">%s</label>',$id, $label);
+		
+		return $str;
+	}
+	
+	static function rawMap(\DedicatedApi\Structures\Map $map, $name='maps[]', $checked=false, $disabled=false, $readonly=false)
+	{
+		$id = uniqid('maps-');
+		$str = sprintf(
+				'<input type="checkbox" id="%s" name="%s" value="%s"%s%s%s/>',
+				$id, $name, htmlentities($map->fileName, ENT_QUOTES | ENT_HTML5, 'utf-8'),
+				$checked ? ' checked="checked"' : '', $disabled ? ' disabled="disabled"' : '', $readonly ? ' class="readonly-checkbox"' : ''
+			);
+		
+		$label = sprintf(_('%s by %s'), StyleParser::toHtml($map->name), $map->author);
+		$str .= sprintf(
+			'<label for="%s">'.
+				'<img src="%s" class="map-thumbnail" alt="thumbnail"/>'.
+				'<span>%s</span>'.
+			'</label>',
+			$id, Config::getInstance()->getImagesURL().'thumbnails/'.$map->uId.'.jpg', $label
+		);
 		
 		return $str;
 	}

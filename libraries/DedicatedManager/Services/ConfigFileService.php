@@ -131,7 +131,7 @@ class ConfigFileService extends DedicatedFileService
 
 		$system = new SystemConfig();
 		$system->connectionUploadrate = (int) $configObj->system_config->connection_uploadrate;
-		$system->connectionDownloadrate = (int) $configObj->system_config->connection->downloadrate;
+		$system->connectionDownloadrate = (int) $configObj->system_config->connection_downloadrate;
 		$system->allowSpectatorRelays = self::toBool($configObj->system_config->allow_spectator_relays);
 		$system->p2pCacheSize = (int) $configObj->system_config->p2p_cache_size;
 		$system->forceIpAddress = (string) $configObj->system_config->force_ip_address;

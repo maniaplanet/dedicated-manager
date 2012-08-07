@@ -80,7 +80,8 @@ class Edit extends AbstractController
 			$this->options = $this->connection->getServerOptions();
 			$this->currentMap = $this->connection->getCurrentMapInfo();
 			// TODO remove test when bug on dedicated is fixed
-			if(!$this->server->isRelay) $this->nextMap = $this->connection->getNextMapInfo();
+			if(!$this->server->isRelay)
+				$this->nextMap = $this->connection->getNextMapInfo();
 		}
 	}
 
@@ -126,8 +127,7 @@ class Edit extends AbstractController
 
 	function maps()
 	{
-		$maps = $this->connection->getMapList(-1, 0);
-		$this->response->maps = $maps;
+		$this->response->maps = $this->connection->getMapList(-1, 0);
 	}
 
 	/**

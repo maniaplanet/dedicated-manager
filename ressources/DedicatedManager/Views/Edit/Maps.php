@@ -16,16 +16,9 @@ $r = ManiaLib\Application\Request::getInstance();
 					<li data-role="fieldcontain">
 						<fieldset data-role="controlgroup">
 							<legend><?php echo _('Current map list:') ?></legend>
-							<?php foreach($maps as $key => $map): ?>
-								<?php $id = uniqid() ?>
-								<input type="checkbox" name="maps[]" id="<?php echo $id ?>" value="<?php echo $map->fileName ?>"
-									<?php echo !$isRelay && $currentMap->fileName != $map->fileName ? '' : 'disabled="disabled"' ?>
-									<?php echo $isRelay ? 'class="readonly-checkbox"' : '' ?>/>
-								<label for="<?php echo $id ?>">
-									<img src="<?php echo $mediaURL ?>/images/thumbnails/<?php echo $map->uId ?>.jpg" class="map-thumbnail" alt="thumbnail"/>
-									<?php echo \ManiaLib\Utils\StyleParser::toHtml($map->name).' '._('by').' '.$map->author ?>
-								</label>
-							<?php endforeach ?>
+						<?php foreach($maps as $map): ?>
+							<?php echo DedicatedManager\Helpers\Files::rawMap($map, 'maps[]', false, $currentMap->fileName == $map->fileName, $isRelay); ?>
+						<?php endforeach ?>
 						</fieldset>
 					</li>
 				<?php if(!$isRelay): ?>

@@ -138,7 +138,7 @@ $r = ManiaLib\Application\Request::getInstance();
 						<li data-role="fieldcontain">
 							<label for="inputsMaxLatency">
 								<strong><?php echo _('Inputs max latency (in ms)'); ?></strong><br/>
-								<i><?php echo _('How long the server waits for player inputs, or 0 for automatic adjustement'); ?></i>
+								<i><?php echo _('How long the server waits for player inputs, or 0 for automatic adjustment'); ?></i>
 							</label>
 							<?php echo DedicatedManager\Helpers\Input::text('options[clientInputsMaxLatency]', 'inputsMaxLatency', $options->clientInputsMaxLatency) ?>
 						</li>

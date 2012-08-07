@@ -37,17 +37,19 @@ class Manage extends \ManiaLib\Application\Controller
 
 	function delete(array $configFiles = array(), array $matchFiles = array())
 	{
-		$error = array();
+		$errors = array();
+		$success = array();
 		if($configFiles)
 		{
 			try
 			{
 				$service = new \DedicatedManager\Services\ConfigFileService();
 				$service->deleteList($configFiles);
+				$success[] = _('Configuration files successfully deleted.');
 			}
 			catch(\Exception $e)
 			{
-				$error[] = 'configuration files';
+				$errors[] = _('Error while deleting configuration files.');
 			}
 		}
 
@@ -56,21 +58,22 @@ class Manage extends \ManiaLib\Application\Controller
 			try
 			{
 				$service = new \DedicatedManager\Services\MatchSettingsFileService();
-				$service->deleteList($configFiles);
+				$service->deleteList($matchFiles);
+				$success[] = _('Match settings files successfully deleted.');
 			}
 			catch(\Exception $e)
 			{
-				$error[] = 'matchSettings files';
+				$errors[] = _('Error while deleting match settings files.');
 			}
 		}
 
-		if($error)
+		if($errors)
 		{
-			$this->session->set('error', sprintf(_('Error while deleting %s'), implode(',', $error)));
+			$this->session->set('error', $errors);
 		}
-		else
+		if($success)
 		{
-			$this->session->set('success', _('Files successfully deleted'));
+			$this->session->set('success', $success);
 		}
 
 		$this->request->redirectArgList('../');
@@ -93,7 +96,7 @@ class Manage extends \ManiaLib\Application\Controller
 		);
 
 		$this->response->path = $path;
-		$this->response->parentPath = preg_replace('/([^\\/]*\\/)$/ixu', '', $path);
+		$this->response->parentPath = preg_replace('/([^\/]*\/)$/iu', '', $path);
 		$this->response->files = $files;
 	}
 
@@ -138,7 +141,7 @@ class Manage extends \ManiaLib\Application\Controller
 			$this->request->redirect('../maps', 'path');
 		}
 
-		if(!preg_match('/\\.map\\.gbx$/ixu', $_FILES['map']['name']) || !Map::check($_FILES['map']['tmp_name']))
+		if(!preg_match('/\.map\.gbx$/iu', $_FILES['map']['name']) || !Map::check($_FILES['map']['tmp_name']))
 		{
 			$this->session->set('error', _('The file must be a ManiaPlanet map.'));
 			$this->request->redirect('../maps', 'path');
