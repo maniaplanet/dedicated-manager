@@ -42,8 +42,7 @@ $(document).bind('pageinit', function() {
 			$('#ladderServerLimitMin').textinput('disable');
 			$('#ladderServerLimitMax').textinput('disable');
 		}
-	});
-	$('#nextLadderMode').trigger('change');
+	}).trigger('change');
 	
 	$('#useProxy').change(function () {
 		if($(this).val() == '1') {
@@ -54,8 +53,7 @@ $(document).bind('pageinit', function() {
 			$('#proxyLogin').textinput('disable');
 			$('#proxyPassword').textinput('disable');
 		}
-	});
-	$('#useProxy').trigger('change');
+	}).trigger('change');
 	
 	$('#roundsUseNewRules').change(function() {
 		if($(this).val() == '1') {
@@ -66,8 +64,7 @@ $(document).bind('pageinit', function() {
 			$('#roundsPointsLimitNewRules').textinput('disable').parent().hide();
 			$('#roundsPointsLimit').textinput('enable').parent().show();
 		}
-	});
-	$('#roundsUseNewRules').trigger('change');
+	}).trigger('change');
 	
 	$('#teamUseNewRules').change(function() {
 		if($(this).val() == '1') {
@@ -78,8 +75,7 @@ $(document).bind('pageinit', function() {
 			$('#teamPointsLimitNewRules').textinput('disable').parent().hide();
 			$('#teamPointsLimit').textinput('enable').parent().show();
 		}
-	});
-	$('#teamUseNewRules').trigger('change');
+	}).trigger('change');
 
 	$('#gameMode').change(function() {
 		$('fieldset.gamemode').trigger('collapse');
@@ -104,28 +100,26 @@ $(document).bind('pageinit', function() {
 				$('#fieldset-gamemode-cup').trigger('expand');
 				break;
 		}
-	});
-	$('#gameMode').trigger('change');
+	}).trigger('change');
 	
 	$('#relayMethod').change(function() {
-		switch($(this).val())
+		if($(this).val() == 'managed')
 		{
-			case '0':
-				$('#fieldset-spectate-managed').show().find('select').select('enable');
-				$('#fieldset-spectate-login').hide().find('input').textinput('disable');
-				$('#fieldset-spectate-ipAndPort').hide().find('input').textinput('disable');
-				break;
-			case '1':
-				$('#fieldset-spectate-managed').hide().find('select').select('disable');
-				$('#fieldset-spectate-login').show().find('input').textinput('enable');
-				$('#fieldset-spectate-ipAndPort').hide().find('input').textinput('disable');
-				break;
-			case '2':
-				$('#fieldset-spectate-managed').hide().find('select').select('disable');
-				$('#fieldset-spectate-login').hide().find('input').textinput('disable');
-				$('#fieldset-spectate-ipAndPort').show().find('input').textinput('enable');
-				break;
+			$('#fieldset-spectate-managed').show().find('select').select('enable');
+			$('#fieldset-spectate-login').hide().find('input').textinput('disable');
+			$('#fieldset-spectate-ipAndPort').hide().find('input').textinput('disable');
 		}
-	});
-	$('#relayMethod').trigger('change');
+		else if($(this).val() == 'login')
+		{
+			$('#fieldset-spectate-managed').hide().find('select').select('disable');
+			$('#fieldset-spectate-login').show().find('input').textinput('enable');
+			$('#fieldset-spectate-ipAndPort').hide().find('input').textinput('disable');
+		}
+		else if($(this).val() == 'ip')
+		{
+			$('#fieldset-spectate-managed').hide().find('select').select('disable');
+			$('#fieldset-spectate-login').hide().find('input').textinput('disable');
+			$('#fieldset-spectate-ipAndPort').show().find('input').textinput('enable');
+		}
+	}).trigger('change');
 });

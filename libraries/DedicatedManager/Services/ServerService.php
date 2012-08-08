@@ -43,7 +43,7 @@ class ServerService extends AbstractService
 	{
 		$result = $this->db()->execute(
 				'SELECT * FROM Servers WHERE rpcHost=%s AND rpcPort=%d', $this->db()->quote($rpcHost), $rpcPort
-		);
+			);
 		return Server::fromRecordSet($result);
 	}
 
@@ -113,10 +113,11 @@ class ServerService extends AbstractService
 
 	/**
 	 * @param string $configFile
-	 * @param Spectate $spectate
+	 * @param string $server
+	 * @param string $password
 	 * @param bool $isLan
 	 */
-	function startRelay($configFile, Spectate $spectate, $isLan = false)
+	function startRelay($configFile, $server, $password=null, $isLan=false)
 	{
 		$config = \DedicatedManager\Config::getInstance();
 		$service = new ConfigFileService();
@@ -128,13 +129,14 @@ class ServerService extends AbstractService
 			$startCommand = 'START /D "'.$config->dedicatedPath.'" ManiaPlanetServer.exe';
 		else
 			$startCommand = 'cd "'.$config->dedicatedPath.'"; ./ManiaPlanetServer';
-		$startCommand .= sprintf(' /dedicated_cfg=%s /join=%s', escapeshellarg($configFile.'.txt'), escapeshellarg($spectate->getIdentifier()));
-		if(($password = $spectate->getPassword()))
-			$startCommand .= sprintf(' /joinpassword=%s', $password);
+		$startCommand .= sprintf(' /dedicated_cfg=%s /join=%s', escapeshellarg($configFile.'.txt'), escapeshellarg($server));
+		if($password)
+			$startCommand .= sprintf(' /joinpassword=%s', escapeshellarg($password));
 		if($isLan)
 			$startCommand .= ' /lan';
 		if(!$isWindows)
 			$startCommand .= ' &';
+		\ManiaLib\Utils\Logger::info($startCommand);
 
 		$port = $this->doStart($startCommand, 'Synchro');
 		$this->checkConnection('127.0.0.1', $port, $auth->superAdmin);

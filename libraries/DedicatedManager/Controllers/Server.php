@@ -11,9 +11,8 @@ namespace DedicatedManager\Controllers;
 
 use DedicatedApi\Structures\GameInfos;
 
-class Edit extends AbstractController
+class Server extends AbstractController
 {
-
 	/** @var \DedicatedManager\Services\Server */
 	private $server;
 
@@ -45,11 +44,12 @@ class Edit extends AbstractController
 		try
 		{
 			$this->server = $service->getDetails($host, $port);
+			$this->connection = \DedicatedApi\Connection::factory($this->server->rpcHost, $this->server->rpcPort, 5, 'SuperAdmin', $this->server->rpcPassword);
 		}
 		catch(\Exception $e)
 		{
 			$service->delete($host, $port);
-			$this->session->set('error', _('Unknown server.'));
+			$this->session->set('error', _('The server cannot be reached, it seems to be closed'));
 			$this->request->redirectArgList('/');
 		}
 
@@ -62,8 +62,6 @@ class Edit extends AbstractController
 				$this->request->redirectArgList('/');
 			}
 		}
-
-		$this->createConnection();
 
 		$rm = new \ReflectionMethod($this, $this->request->getAction('index'));
 		$comment = $rm->getDocComment();
@@ -79,28 +77,8 @@ class Edit extends AbstractController
 			$this->players = $this->connection->getPlayerList(-1, 0);
 			$this->options = $this->connection->getServerOptions();
 			$this->currentMap = $this->connection->getCurrentMapInfo();
-			// TODO remove test when bug on dedicated is fixed
 			if(!$this->server->isRelay)
 				$this->nextMap = $this->connection->getNextMapInfo();
-		}
-	}
-
-	private function createConnection()
-	{
-		$host = $this->server->rpcHost;
-		$port = $this->server->rpcPort;
-		$password = $this->server->rpcPassword;
-		$timeout = 3;
-
-		$service = new \DedicatedManager\Services\ServerService();
-		try
-		{
-			$this->connection = \DedicatedApi\Connection::factory($host, $port, $timeout, 'SuperAdmin', $password);
-		}
-		catch(\Exception $e)
-		{
-			$this->session->set('error', _('The server cannot be reached, maybe it\'s closed.'));
-			$this->request->redirectArgList('/');
 		}
 	}
 
@@ -125,6 +103,9 @@ class Edit extends AbstractController
 		$header->rightLink = null;
 	}
 
+	/**
+	 * @norelay
+	 */
 	function maps()
 	{
 		$this->response->maps = $this->connection->getMapList(-1, 0);
@@ -134,23 +115,23 @@ class Edit extends AbstractController
 	 * @redirect
 	 * @norelay
 	 */
-	function mapAction(array $maps = array(), $nextMapIndex = '', $deleteFilenames = '')
+	function doMaps(array $maps = array(), $nextList = null, $delete = null)
 	{
 		if(!$maps)
 		{
 			$this->session->set('error', _('You have to select at least one map'));
-			$this->request->redirectArgList('../maps/', 'host', 'port');
+			$this->request->redirectArgList('../maps', 'host', 'port');
 		}
 
-		if($deleteFilenames)
+		if($delete)
 		{
 			$this->connection->removeMapList($maps);
 		}
-		elseif($nextMapIndex)
+		elseif($nextList)
 		{
 			$this->connection->chooseNextMapList($maps);
 		}
-		$this->request->redirectArgList('../maps/', 'host', 'port');
+		$this->request->redirectArgList('../maps', 'host', 'port');
 	}
 
 	/**
@@ -165,7 +146,7 @@ class Edit extends AbstractController
 				return str_replace('\\', '/', $s);
 			}, $selected);
 
-		$matchSettings = $this->connection->getCurrentGameInfo();
+		$matchSettings = $this->connection->getNextGameInfo();
 
 		if($matchSettings->gameMode == GameInfos::GAMEMODE_SCRIPT)
 		{
@@ -186,7 +167,7 @@ class Edit extends AbstractController
 		$this->response->selected = $selected;
 
 		$header = \DedicatedManager\Helpers\Header::getInstance();
-		$header->rightText = _('Back to maps management');
+		$header->rightText = _('Back to maps list');
 		$header->rightLink = $this->request->createLinkArgList('../maps', 'host', 'port');
 	}
 
@@ -194,7 +175,7 @@ class Edit extends AbstractController
 	 * @redirect
 	 * @norelay
 	 */
-	function insertMaps($selected = '', $insert = '', $add = '')
+	function doAddMaps($selected = '', $insert = '', $add = '')
 	{
 		if(!$selected)
 		{
@@ -314,7 +295,7 @@ class Edit extends AbstractController
 	/**
 	 * @redirect
 	 */
-	function saveConfig($options, $rpcPassword, $connectionRates)
+	function setConfig($options, $rpcPassword, $connectionRates)
 	{
 		$options = \DedicatedManager\Services\ServerOptions::fromArray($options);
 		$options->callVoteRatio = $options->callVoteRatio < 0 ? $options->callVoteRatio : $options->callVoteRatio / 100;
@@ -375,6 +356,7 @@ class Edit extends AbstractController
 			$finalRatios[] = array('Command' => $command, 'Ratio' => (double)($ratio < 0 ? -1 : $ratio / 100));
 		}
 		$this->connection->setCallVoteRatios($finalRatios);
+		$this->session->set('success', _('Vote ratios successfully changed'));
 		$this->request->redirectArgList('../votes', 'host', 'port');
 	}
 
@@ -386,7 +368,7 @@ class Edit extends AbstractController
 	/**
 	 * @redirect
 	 */
-	function actionPlayers(array $players = array(), $kick = '', $ban = '', $blacklist = '', $guestlist = '')
+	function doPlayers(array $players = array(), $kick = '', $ban = '', $blacklist = '', $guestlist = '')
 	{
 		if(!$players)
 		{
@@ -795,7 +777,7 @@ class Edit extends AbstractController
 	/**
 	 * @redirect
 	 */
-	function actionManagers(array $managers, $revoke = '')
+	function doManagers(array $managers, $revoke = '')
 	{
 		if(!$this->isAdmin)
 		{
