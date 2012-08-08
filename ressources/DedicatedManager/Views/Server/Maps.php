@@ -7,7 +7,7 @@ $r = ManiaLib\Application\Request::getInstance();
 	<div data-role="content">
 		<div class="content-primary">
 		<?php if(!$isRelay): ?>
-			<form action="<?php echo $r->createLinkArgList('../map-action') ?>" method="get" data-ajax="false">
+			<form action="<?php echo $r->createLinkArgList('../do-maps') ?>" method="get" data-ajax="false">
 				<input type="hidden" name="host" value="<?php echo $host ?>"/>
 				<input type="hidden" name="port" value="<?php echo $port ?>"/>
 		<?php endif; ?>
@@ -25,10 +25,10 @@ $r = ManiaLib\Application\Request::getInstance();
 					<li data-role="fieldcontain">
 						<div class="ui-grid-a">
 							<div class="ui-block-a">
-								<input data-theme="d" type="submit" name="nextMapIndex" value="<?php echo _('Set as next map') ?>" data-icon="check"/>
+								<input data-theme="d" type="submit" name="nextList" value="<?php echo _('Set as next map') ?>" data-icon="check"/>
 							</div>
 							<div class="ui-block-b">
-								<input data-theme="d" type="submit" name="deleteFilenames" value="<?php echo _('Delete from map list') ?>" data-icon="delete"/>
+								<input data-theme="d" type="submit" name="delete" value="<?php echo _('Delete from map list') ?>" data-icon="delete"/>
 							</div>
 						</div>
 					</li>

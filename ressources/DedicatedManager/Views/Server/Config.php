@@ -6,7 +6,7 @@ $r = ManiaLib\Application\Request::getInstance();
 	<?php require __DIR__.'/Header.php'; ?>
 	<div data-role="content">
 		<div class="content-primary">
-			<form action="<?php echo $r->createLinkArgList('../save-config') ?>" method="get" data-ajax="false">
+			<form action="<?php echo $r->createLinkArgList('../set-config') ?>" method="get" data-ajax="false">
 				<input type="hidden" name="host" value="<?php echo $host ?>"/>
 				<input type="hidden" name="port" value="<?php echo $port ?>"/>
 				<fieldset data-role="collapsible" data-collapsed="false" data-theme="b">
@@ -91,7 +91,6 @@ $r = ManiaLib\Application\Request::getInstance();
 								<option value="1" <?php echo $options->allowMapDownload ? 'selected="selected"' : '' ?>><?php echo _('Yes') ?></option>
 							</select>
 						</li>
-					<?php if(!$isRelay): ?>
 						<li data-role="fieldcontain">
 							<label for="callVoteRatio">
 								<strong><?php echo _('Call vote ratio (in %)'); ?></strong><br/>
@@ -106,7 +105,6 @@ $r = ManiaLib\Application\Request::getInstance();
 							</label>
 							<input type="number" name="options[nextCallVoteTimeOut]" id="callVoteTimeOut" value="<?php echo $options->nextCallVoteTimeOut / 1000; ?>"/>
 						</li>
-					<?php endif; ?>
 						<li data-role="fieldcontain">
 							<label for="refereePassword">
 								<strong><?php echo _('Referee password'); ?></strong><br/>

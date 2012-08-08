@@ -6,7 +6,7 @@ $r = ManiaLib\Application\Request::getInstance();
 	<?php require __DIR__.'/Header.php'; ?>
 	<div data-role="content">
 		<div class="content-primary">
-			<form method="get" action="<?php echo $r->createLinkArgList('../action-managers') ?>" data-ajax="false">
+			<form method="get" action="<?php echo $r->createLinkArgList('../do-managers') ?>" data-ajax="false">
 				<input type="hidden" name="host" value="<?php echo $host ?>"/>
 				<input type="hidden" name="port" value="<?php echo $port ?>"/>
 				<ul data-role="listview" data-inset="true">

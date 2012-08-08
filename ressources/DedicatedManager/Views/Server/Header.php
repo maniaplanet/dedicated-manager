@@ -11,9 +11,11 @@
 		<div class="ui-block-a">
 			<?php echo _('Current map:') ?>&nbsp;<?php echo ManiaLib\Utils\StyleParser::toHtml($currentMap->name) ?>&nbsp;(<?php echo $currentMap->author ?>)
 		</div>
+	<?php if(!$isRelay): ?>
 		<div class="ui-block-b">
 			<?php echo _('Next map:') ?>&nbsp;<?php echo ManiaLib\Utils\StyleParser::toHtml($nextMap->name) ?>&nbsp;(<?php echo $nextMap->author ?>)
 		</div>
+	<?php endif; ?>
 	</div>
 </div>
 <div data-role="navbar" data-iconpos="left">
