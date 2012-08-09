@@ -22,20 +22,20 @@ class Home extends AbstractController
 	{
 		$this->request->registerReferer();
 		$config = \DedicatedManager\Config::getInstance();
+		$currentDir = getcwd();
 		
 		$errors = array();
 		$writables[] = $config->dedicatedPath;
-		$currentDir = getcwd();
+		$writables[] = $config->dedicatedPath.'Logs/';
+		$writables[] = $config->dedicatedPath.'UserData/Config/';
+		$writables[] = $config->dedicatedPath.'UserData/Maps/MatchSettings/';
 		if(file_exists($config->dedicatedPath.'UserData/Maps/MatchSettings/'))
 		{
-			$writables[] = $config->dedicatedPath.'UserData/Maps/MatchSettings/';
 			chdir($config->dedicatedPath.'UserData/Maps/MatchSettings/');
 			$tmp = glob('*.[tT][xX][tT]');
-			$tmp = array_map(function ($a) use ($config) { return $config->dedicatedPath.'UserData/Maps/MatchSettings/'.$a; }, $tmp);
+			$tmp = array_map(function ($f) use ($config) { return $config->dedicatedPath.'UserData/Maps/MatchSettings/'.$f; }, $tmp);
 			$writables = array_merge($writables, $tmp);
 		}
-		$writables[] = $config->dedicatedPath.'UserData/Config/';
-		$writables[] = $config->dedicatedPath.'Logs/';
 		if(file_exists($config->dedicatedPath.'UserData/Config/'))
 		{
 			chdir($config->dedicatedPath.'UserData/Config/');
@@ -43,11 +43,20 @@ class Home extends AbstractController
 			$tmp = array_map(function ($f) use ($config) { return $config->dedicatedPath.'UserData/Config/'.$f; }, $tmp);
 			$writables = array_merge($writables, $tmp);
 		}
-		$writables[] = $config->manialivePath.'logs/';
-		$writables[] = $config->manialivePath.'data/';
+		
+//		$writables[] = $config->manialivePath;
+//		$writables[] = $config->manialivePath.'logs/';
+//		$writables[] = $config->manialivePath.'data/';
 		chdir($currentDir);
 
 		$executables[] = stripos(PHP_OS, 'win') !== false ? $config->dedicatedPath.'ManiaPlanetServer.exe' : $config->dedicatedPath.'ManiaPlanetServer';
+		
+		$failed = array_filter(array_merge($writables, $executables), function ($f) { return !file_exists($f); });
+		if($failed)
+		{
+			$errors[] = _('The following files does not exist.').' '._('Contact the admin to check this.').'<br/>'.
+					_('File list: ').'<ul>'.implode('', array_map(function ($f) { return '<li>'.$f.'</li>'; }, $failed)).'</ul>';
+		}
 
 		$failed = array_filter($writables, function ($f) { return file_exists($f) && !is_writable($f); });
 		if($failed)
