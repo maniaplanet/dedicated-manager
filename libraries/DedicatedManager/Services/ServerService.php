@@ -273,7 +273,7 @@ class ServerService extends AbstractService
 		$procHandle = proc_open($startCommand, array(), $pipes);
 		proc_close($procHandle);
 	}
-
+	
 	protected function updateServer($host, $port, $name)
 	{
 		$this->db()->execute('UPDATE Servers SET name = %s WHERE rpcHost = %s AND rpcPort = %d', $this->db()->quote($name), $this->db()->quote($host), $port);

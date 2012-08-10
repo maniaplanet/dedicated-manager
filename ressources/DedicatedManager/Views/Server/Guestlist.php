@@ -27,20 +27,26 @@ $r = ManiaLib\Application\Request::getInstance();
 						</fieldset>
 					</li>
 					<li data-role="fieldcontain">
-						<div class="ui-grid-d">
+						<div class="<?php echo ($isLocal
+									? 'ui-grid-d' : 'ui-grid-c') ?>">
 							<div class="ui-block-a">
 								<a href="#add" data-role="button" data-icon="plus" data-rel="dialog" data-transition="pop"><?php echo _('Add a guest') ?></a>
 							</div>
 							<div class="ui-block-b">
-								<input type="submit" value="<?php echo _('Remove from list') ?>" data-icon="minus" <?php echo count($guestListedPlayers) ? '' : 'disabled="disabled"' ?>/>
+								<input type="submit" value="<?php echo _('Remove from list') ?>" data-icon="minus" <?php echo count($guestListedPlayers)
+									? '' : 'disabled="disabled"' ?>/>
 							</div>
 							<div class="ui-block-c">
-								<a href="<?php echo htmlentities($r->createLinkArgList('../clean-guestlist', 'host', 'port'), ENT_QUOTES, 'UTF-8') ?>" data-role="button" data-icon="delete" data-ajax="false"><?php echo _('Clean the list') ?></a>
+								<a href="<?php echo htmlentities($r->createLinkArgList('../clean-guestlist',
+									'host', 'port'), ENT_QUOTES, 'UTF-8') ?>" data-role="button" data-icon="delete" data-ajax="false"><?php echo _('Clean the list') ?></a>
 							</div>
-							<div class="ui-block-d">
-								<a href="#load" data-role="button" data-icon="gear" data-rel="dialog" data-transition="pop"><?php echo _('Load a guest list') ?></a>
-							</div>
-							<div class="ui-block-e">
+							<?php if($isLocal): ?>
+								<div class="ui-block-d">
+									<a href="#load" data-role="button" data-icon="gear" data-rel="dialog" data-transition="pop"><?php echo _('Load a guest list') ?></a>
+								</div>
+<?php endif; ?>
+							<div class="<?php echo ($isLocal
+		? 'ui-block-e' : 'ui-block-d') ?>">
 								<a href="#save" data-role="button" data-icon="check" data-rel="dialog" data-transition="pop"><?php echo _('Save a guest list') ?></a>
 							</div>
 						</div>
@@ -48,7 +54,7 @@ $r = ManiaLib\Application\Request::getInstance();
 				</ul>
 			</form>
 		</div>
-		<?php require __DIR__.'/Navigation.php'; ?>
+<?php require __DIR__.'/Navigation.php'; ?>
 	</div>
 </div>
 <div data-role="dialog" id="load">
@@ -61,10 +67,10 @@ $r = ManiaLib\Application\Request::getInstance();
 			<input type="hidden" name="host" value="<?php echo $host ?>"/>
 			<fieldset data-role="controlgroup">
 				<legend><?php echo _('Available guestlist') ?></legend>
-				<?php foreach($guestlistFiles as $file): ?>
+<?php foreach($guestlistFiles as $file): ?>
 					<input type="radio" name="filename" id="<?php echo $file ?>" value="<?php echo $file ?>"/>
 					<label for="<?php echo $file ?>"><?php echo $file ?></label>
-				<?php endforeach; ?>
+<?php endforeach; ?>
 			</fieldset>
 			<div class="ui-grid-a">
 				<div class="ui-block-a">

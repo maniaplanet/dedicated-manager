@@ -13,6 +13,7 @@ use DedicatedApi\Structures\GameInfos;
 
 class Server extends AbstractController
 {
+
 	/** @var \DedicatedManager\Services\Server */
 	private $server;
 
@@ -44,7 +45,8 @@ class Server extends AbstractController
 		try
 		{
 			$this->server = $service->getDetails($host, $port);
-			$this->connection = \DedicatedApi\Connection::factory($this->server->rpcHost, $this->server->rpcPort, 5, 'SuperAdmin', $this->server->rpcPassword);
+			$this->connection = \DedicatedApi\Connection::factory($this->server->rpcHost, $this->server->rpcPort, 5,
+					'SuperAdmin', $this->server->rpcPassword);
 		}
 		catch(\Exception $e)
 		{
@@ -71,14 +73,30 @@ class Server extends AbstractController
 			if($this->request->getReferer() == $this->request->createLink()) $this->request->redirectArgList('..');
 			else $this->request->redirectToReferer();
 		}
+
+		$mapDirectory = \DedicatedManager\Config::getInstance()->dedicatedPath.'UserData/Maps/';
+		if(!in_array($this->server->rpcHost, array('127.0.0.1', 'localhost')) && $this->connection->getMapsDirectory() != $mapDirectory)
+		{
+			if(preg_match('/@local/u', $comment))
+			{
+				$this->session->set('error', _('Unauthorized action on a distant server.'));
+				if($this->request->getReferer() == $this->request->createLink()) $this->request->redirectArgList('..');
+				else $this->request->redirectToReferer();
+			}
+			$this->response->isLocal = false;
+		}
+		else
+		{
+			$this->response->isLocal = true;
+		}
+
 		if(!$comment || !preg_match('/@redirect/u', $comment))
 		{
 			$this->request->registerReferer();
 			$this->players = $this->connection->getPlayerList(-1, 0);
 			$this->options = $this->connection->getServerOptions();
 			$this->currentMap = $this->connection->getCurrentMapInfo();
-			if(!$this->server->isRelay)
-				$this->nextMap = $this->connection->getNextMapInfo();
+			if(!$this->server->isRelay) $this->nextMap = $this->connection->getNextMapInfo();
 		}
 	}
 
@@ -136,6 +154,7 @@ class Server extends AbstractController
 
 	/**
 	 * @norelay
+	 * @local
 	 */
 	function addMaps()
 	{
@@ -174,6 +193,7 @@ class Server extends AbstractController
 	/**
 	 * @redirect
 	 * @norelay
+	 * @local
 	 */
 	function doAddMaps($selected = '', $insert = '', $add = '')
 	{
@@ -333,7 +353,7 @@ class Server extends AbstractController
 		}
 		$this->request->redirectArgList('../config/', 'host', 'port');
 	}
-	
+
 	function votes()
 	{
 		$tmpRatios = $this->connection->getCallVoteRatios();
@@ -344,7 +364,7 @@ class Server extends AbstractController
 		}
 		$this->response->ratios = $ratios;
 	}
-	
+
 	/**
 	 * @redirect
 	 */
@@ -353,7 +373,7 @@ class Server extends AbstractController
 		$finalRatios = array();
 		foreach($ratios as $command => $ratio)
 		{
-			$finalRatios[] = array('Command' => $command, 'Ratio' => (double)($ratio < 0 ? -1 : $ratio / 100));
+			$finalRatios[] = array('Command' => $command, 'Ratio' => (double) ($ratio < 0 ? -1 : $ratio / 100));
 		}
 		$this->connection->setCallVoteRatios($finalRatios);
 		$this->session->set('success', _('Vote ratios successfully changed'));
@@ -375,7 +395,7 @@ class Server extends AbstractController
 			$this->session->set('error', _('You have to select at least one player.'));
 			$this->request->redirectArgList('../players/', 'host', 'port');
 		}
-		
+
 		if($kick)
 		{
 			try
@@ -487,7 +507,14 @@ class Server extends AbstractController
 	function blacklist()
 	{
 		$service = new \DedicatedManager\Services\BlacklistFileService();
-		$this->response->blacklistFiles = $service->getList();
+		if($this->response->isLocal)
+		{
+			$this->response->blacklistFiles = $service->getList();
+		}
+		else
+		{
+			$this->response->blacklistFiles = array();
+		}
 		$this->response->blackListedPlayers = $this->connection->getBlackList(-1, 0);
 		$this->response->players = $this->players;
 
@@ -506,7 +533,7 @@ class Server extends AbstractController
 			$this->session->set('error', _('You have to select at least one player.'));
 			$this->request->redirectArgList('../blacklist/', 'host', 'port');
 		}
-		
+
 		try
 		{
 			array_map(array($this->connection, 'unBlackList'), $players);
@@ -559,6 +586,7 @@ class Server extends AbstractController
 
 	/**
 	 * @redirect
+	 * @local
 	 */
 	function loadBlacklist($filename)
 	{
@@ -603,7 +631,14 @@ class Server extends AbstractController
 	function guestlist()
 	{
 		$service = new \DedicatedManager\Services\GuestlistFileService();
-		$this->response->guestlistFiles = $service->getList();
+		if($this->response->isLocal)
+		{
+			$this->response->guestlistFiles = $service->getList();
+		}
+		else
+		{
+			$this->response->guestlistFiles = array();
+		}
 		$this->response->guestListedPlayers = $this->connection->getGuestList(-1, 0);
 		$this->response->players = $this->players;
 
@@ -622,7 +657,7 @@ class Server extends AbstractController
 			$this->session->set('error', _('You have to select at least one player.'));
 			$this->request->redirectArgList('../guestlist/', 'host', 'port');
 		}
-		
+
 		try
 		{
 			array_map(array($this->connection, 'removeGuest'), $players);
@@ -657,6 +692,7 @@ class Server extends AbstractController
 
 	/**
 	 * @redirect
+	 * @local
 	 */
 	function loadGuestlist($filename)
 	{
@@ -867,6 +903,7 @@ class Server extends AbstractController
 		$this->session->set('success', _('Teams has been balanced.'));
 		$this->request->redirectToReferer();
 	}
+
 }
 
 ?>

@@ -17,7 +17,7 @@ $r = ManiaLib\Application\Request::getInstance();
 						<fieldset data-role="controlgroup">
 							<legend><?php echo _('Current map list:') ?></legend>
 						<?php foreach($maps as $map): ?>
-							<?php echo DedicatedManager\Helpers\Files::rawMap($map, 'maps[]', false, true, $currentMap->fileName == $map->fileName, $isRelay); ?>
+							<?php echo DedicatedManager\Helpers\Files::rawMap($map, 'maps[]', false, $isLocal, $currentMap->fileName == $map->fileName, $isRelay); ?>
 						<?php endforeach ?>
 						</fieldset>
 					</li>
@@ -34,7 +34,7 @@ $r = ManiaLib\Application\Request::getInstance();
 					</li>
 				<?php endif; ?>
 				</ul>
-		<?php if(!$isRelay): ?>
+		<?php if(!$isRelay && $isLocal): ?>
 			</form>
 			<a href="<?php echo htmlentities($r->createLinkArgList('../add-maps', 'host', 'port'), ENT_QUOTES, 'UTF-8') ?>" data-role="button" data-icon="plus" data-ajax="false"><?php echo _('Add new maps') ?></a>
 		<?php endif; ?>
