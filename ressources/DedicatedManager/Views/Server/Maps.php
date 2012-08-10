@@ -17,7 +17,7 @@ $r = ManiaLib\Application\Request::getInstance();
 						<fieldset data-role="controlgroup">
 							<legend><?php echo _('Current map list:') ?></legend>
 						<?php foreach($maps as $map): ?>
-							<?php echo DedicatedManager\Helpers\Files::rawMap($map, 'maps[]', false, $currentMap->fileName == $map->fileName, $isRelay); ?>
+							<?php echo DedicatedManager\Helpers\Files::rawMap($map, 'maps[]', false, true, $currentMap->fileName == $map->fileName, $isRelay); ?>
 						<?php endforeach ?>
 						</fieldset>
 					</li>

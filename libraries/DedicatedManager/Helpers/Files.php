@@ -36,12 +36,12 @@ abstract class Files
 				$id, Config::getInstance()->getImagesURL().'thumbnails/'.$map->uid.'.jpg', $label
 			);
 		else
-			$str .= sprintf('<label for="%s">%s</label>',$id, $label);
+			$str .= sprintf('<label for="%s">%s</label>', $id, $label);
 		
 		return $str;
 	}
 	
-	static function rawMap(\DedicatedApi\Structures\Map $map, $name='maps[]', $checked=false, $disabled=false, $readonly=false)
+	static function rawMap(\DedicatedApi\Structures\Map $map, $name='maps[]', $checked=false, $withThumbnail=true, $disabled=false, $readonly=false)
 	{
 		$id = uniqid('maps-');
 		$str = sprintf(
@@ -51,18 +51,22 @@ abstract class Files
 			);
 		
 		$label = sprintf(_('%s by %s'), StyleParser::toHtml($map->name), $map->author);
-		$str .= sprintf(
-			'<label for="%s">'.
-				'<img src="%s" class="map-thumbnail" alt="thumbnail"/>'.
-				'<span>%s</span>'.
-			'</label>',
-			$id, Config::getInstance()->getImagesURL().'thumbnails/'.$map->uId.'.jpg', $label
-		);
+		
+		if($withThumbnail)
+			$str .= sprintf(
+				'<label for="%s">'.
+					'<img src="%s" class="map-thumbnail" alt="thumbnail"/>'.
+					'<span>%s</span>'.
+				'</label>',
+				$id, Config::getInstance()->getImagesURL().'thumbnails/'.$map->uId.'.jpg', $label
+			);
+		else
+			$str .= sprintf('<label for="%s">%s</label>', $id, $label);
 		
 		return $str;
 	}
 	
-	static function folder(array $files, $path='', $parentPath='', $name = 'maps[]', array $selected = array())
+	static function folder(array $files, $path='', $parentPath='', $name = 'maps[]', array $selected = array(), $withThumbnail=false)
 	{
 		$r = \ManiaLib\Application\Request::getInstance();
 		$displayedDirs = '';
@@ -82,7 +86,7 @@ abstract class Files
 			else if($file instanceof Map)
 			{
 				$checked = in_array($file->path.$file->filename, $selected);
-				$displayedFiles .= self::map($file, $name, $checked, false);
+				$displayedFiles .= self::map($file, $name, $checked, $withThumbnail);
 			}
 		}
 		
@@ -98,13 +102,13 @@ abstract class Files
 		return $str;
 	}
 	
-	static function sortableTree(array $files, array $selected = array(), $name = 'selected', $hideSelected = false)
+	static function sortableTree(array $files, array $selected = array(), $name = 'selected', $hideSelected = false, $withThumbnail=true)
 	{
 		return sprintf('<div class="sortable-container"><input type="hidden" class="sortable-result" name="%s" value="%s"/>',
-				$name, implode('|', $selected)).self::subTree($files, $selected, $hideSelected).'</div>';
+				$name, implode('|', $selected)).self::subTree($files, $selected, $hideSelected, $withThumbnail).'</div>';
 	}
 	
-	private static function subTree(array $files, array $selected = array(), $hideSelected = false, $root='Maps')
+	private static function subTree(array $files, array $selected = array(), $hideSelected = false, $withThumbnail=true, $root='Maps')
 	{
 		$displayedFiles = '';
 		$displayedDirs = '';
@@ -113,7 +117,7 @@ abstract class Files
 			if($file instanceof Directory)
 			{
 				/* @var $file Directory */
-				$displayedDirs .= self::subTree($file->children, $selected, $hideSelected, $file->filename);
+				$displayedDirs .= self::subTree($file->children, $selected, $hideSelected, $withThumbnail, $file->filename);
 			}
 			else if($file instanceof Map)
 			{
@@ -124,7 +128,7 @@ abstract class Files
 					continue;
 				}
 				
-				$displayedFiles .= self::map($file, '', $checked);
+				$displayedFiles .= self::map($file, '', $checked, $withThumbnail);
 			}
 		}
 		
