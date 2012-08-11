@@ -393,6 +393,10 @@ class MatchSettingsFileService extends DedicatedFileService
 		{
 			return array('Heroes.Script.txt');
 		}
+		else if($title == 'Platform@nadeolive')
+		{
+			return array('PlatformMulti.Script.txt');
+		}
 
 		$scriptDirectory = \DedicatedManager\Config::getInstance()->dedicatedPath.'UserData/Scripts/Modes/'.$game.'/';
 		if(!file_exists($scriptDirectory))
@@ -420,7 +424,7 @@ class MatchSettingsFileService extends DedicatedFileService
 		}
 		elseif($scriptName == 'Elite.Script.txt' && $title == 'SMStormElite@nadeolabs')
 		{
-			return array('EliteArena', 'ShootMania\\EliteArena');
+			return array('EliteArena', 'ShootMania\\EliteArena', 'HeroesArena', 'ShootMania\\HeroesArena');
 		}
 		elseif($scriptName == 'Joust.Script.txt' && $title == 'SMStormJoust@nadeolabs')
 		{
@@ -429,6 +433,10 @@ class MatchSettingsFileService extends DedicatedFileService
 		elseif($scriptName == 'Heroes.Script.txt' && $title == 'SMStormHeroes@nadeolabs')
 		{
 			return array('HeroesArena', 'ShootMania\\HeroesArena', 'EliteArena', 'ShootMania\\EliteArena');
+		}
+		elseif($scriptName == 'PlatformMulti.Script.txt' && $title == 'Platform@nadeolive')
+		{
+			return array('Platform', 'TrackMania\\Platform');
 		}
 
 		$scriptDirectory = \DedicatedManager\Config::getInstance()->dedicatedPath.'UserData/Scripts/Modes/'.$game.'/';

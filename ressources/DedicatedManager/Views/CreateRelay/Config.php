@@ -31,6 +31,7 @@ $r = ManiaLib\Application\Request::getInstance();
 								<option value="SMStormElite@nadeolabs" <?php echo $system->title == 'SMStormElite@nadeolabs' ? 'selected="selected"' : '' ?>>ShootMania Storm Elite</option>
 								<option value="SMStormJoust@nadeolabs" <?php echo $system->title == 'SMStormJoust@nadeolabs' ? 'selected="selected"' : '' ?>>ShootMania Storm Joust</option>
 								<option value="SMStormHeroes@nadeolabs" <?php echo $system->title == 'SMStormHeroes@nadeolabs' ? 'selected="selected"' : '' ?>>ShootMania Storm Heroes</option>
+								<option value="Platform@nadeolive" <?php echo $system->title == 'Platform@nadeolive' ? 'selected="selected"' : '' ?>>TrackMania Canyon Platform</option>
 							</optgroup>
 						</select>
 					</li>

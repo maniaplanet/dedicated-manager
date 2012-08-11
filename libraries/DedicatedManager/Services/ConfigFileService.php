@@ -213,7 +213,6 @@ class ConfigFileService extends DedicatedFileService
 		{
 			$system = new SystemConfig();
 		}
-		// TODO add casts
 		$systemConfig = $dedicated->addChild('system_config');
 		$systemConfig->addChild('connection_uploadrate', (int) $system->connectionUploadrate);
 		$systemConfig->addChild('connection_downloadrate', (int) $system->connectionDownloadrate);

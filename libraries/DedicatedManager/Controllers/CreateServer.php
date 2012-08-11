@@ -83,7 +83,7 @@ class CreateServer extends Create
 		$gameInfos = $this->fetchAndAssertSettings(_('selecting maps'));
 
 		//TODO Find a way to clean this mess
-		$environment = $system->title == 'TMCanyon' ? 'Canyon' : 'Storm';
+		$environment = in_array($system->title, array('TMCanyon', 'Platform@nadeolive')) ? 'Canyon' : 'Storm';
 
 		if($gameInfos->gameMode == GameInfos::GAMEMODE_SCRIPT)
 		{
