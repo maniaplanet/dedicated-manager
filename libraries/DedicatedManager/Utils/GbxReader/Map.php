@@ -120,12 +120,17 @@ class Map extends FileStructure
 			self::ignore($fp, strlen('<Thumbnail.jpg>'));
 			if($thumbsize)
 			{
-				$mirroredThumbnail = imagecreatefromstring(fread($fp, $thumbsize));
-				$width = imagesx($mirroredThumbnail);
-				$height = imagesy($mirroredThumbnail);
-				$map->thumbnail = imagecreatetruecolor($width, $height);
-				foreach(range($height - 1, 0) as $oldY => $newY)
-					imagecopy($map->thumbnail, $mirroredThumbnail, 0, $newY, 0, $oldY, $width, 1);
+				if(!extension_loaded('gd'))
+					self::ignore($fp, $thumbsize);
+				else
+				{
+					$mirroredThumbnail = imagecreatefromstring(fread($fp, $thumbsize));
+					$width = imagesx($mirroredThumbnail);
+					$height = imagesy($mirroredThumbnail);
+					$map->thumbnail = imagecreatetruecolor($width, $height);
+					foreach(range($height - 1, 0) as $oldY => $newY)
+						imagecopy($map->thumbnail, $mirroredThumbnail, 0, $newY, 0, $oldY, $width, 1);
+				}
 			}
 			self::ignore($fp, strlen('</Thumbnail.jpg>'));
 			self::ignore($fp, strlen('<Comments>'));

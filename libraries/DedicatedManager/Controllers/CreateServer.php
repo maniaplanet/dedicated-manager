@@ -50,24 +50,24 @@ class CreateServer extends Create
 		$header->rightLink = $this->request->createLinkArgList('../config');
 	}
 
-	function setRules($gameInfos)
+	function setRules($rules)
 	{
 		$this->fetchAndAssertConfig(_('setting game options'));
 
-		$gameInfosObj = GameInfos::fromArray($gameInfos);
-		$gameInfosObj->chatTime *= isset($gameInfos['chatTime']) ? 1000 : 1;
-		$gameInfosObj->finishTimeout = $gameInfosObj->finishTimeout < 0 ? 1 :
-				(isset($gameInfos['finishTimeout']) ? $gameInfosObj->finishTimeout * 1000 : $gameInfosObj->finishTimeout);
-		$gameInfosObj->timeAttackLimit = $gameInfosObj->timeAttackLimit < 0 ? 1 :
-				(isset($gameInfos['timeAttackLimit']) ? $gameInfosObj->timeAttackLimit * 1000 : $gameInfosObj->timeAttackLimit);
-		$gameInfosObj->timeAttackSynchStartPeriod *= isset($gameInfos['timeAttackSynchStartPeriod']) ? 1000 : 1;
-		$gameInfosObj->lapsTimeLimit = $gameInfosObj->lapsTimeLimit < 0 ? 1 :
-				(isset($gameInfos['lapsTimeLimit']) ? $gameInfosObj->lapsTimeLimit * 1000 : $gameInfosObj->lapsTimeLimit);
+		$gameInfos = GameInfos::fromArray($rules);
+		$gameInfos->chatTime *= isset($rules['chatTime']) ? 1000 : 1;
+		$gameInfos->finishTimeout = $gameInfos->finishTimeout < 0 ? 1 :
+				(isset($rules['finishTimeout']) ? $gameInfos->finishTimeout * 1000 : $gameInfos->finishTimeout);
+		$gameInfos->timeAttackLimit = $gameInfos->timeAttackLimit < 0 ? 1 :
+				(isset($rules['timeAttackLimit']) ? $gameInfos->timeAttackLimit * 1000 : $gameInfos->timeAttackLimit);
+		$gameInfos->timeAttackSynchStartPeriod *= isset($rules['timeAttackSynchStartPeriod']) ? 1000 : 1;
+		$gameInfos->lapsTimeLimit = $gameInfos->lapsTimeLimit < 0 ? 1 :
+				(isset($rules['lapsTimeLimit']) ? $gameInfos->lapsTimeLimit * 1000 : $gameInfos->lapsTimeLimit);
 		
-		$this->session->set('gameInfos', $gameInfosObj);
+		$this->session->set('gameInfos', $gameInfos);
 
 		$service = new \DedicatedManager\Services\MatchSettingsFileService();
-		if( ($errors = $service->validate($gameInfosObj)) )
+		if( ($errors = $service->validate($gameInfos)) )
 		{
 			$this->session->set('error', $errors);
 			$this->request->redirectArgList('../rules');

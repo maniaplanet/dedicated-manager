@@ -181,30 +181,56 @@ class MatchSettingsFileService extends DedicatedFileService
 		$password = $server->rpcPassword;
 
 		$connection = \DedicatedApi\Connection::factory($host,$port,5,'SuperAdmin',$password);
-		$gameInfo = $connection->getCurrentGameInfo();
+		$gameInfo = $connection->getNextGameInfo();
+		$matchRules = array();
 
 		switch($gameInfo->gameMode)
 		{
 			case GameInfos::GAMEMODE_SCRIPT:
 				$info = $connection->getModeScriptInfo();
-				$matchRules = array();
 				foreach($info->paramDescs as $value)
 				{
-					$rule = new RuleDisplayable;
-					$rule->label = ($value->desc ? : $value->name);
+					$rule = new RuleDisplayable();
 					$rule->name = $value->name;
 					$rule->value = $value->default;
+					$rule->label = ($value->desc ? : $value->name);
+					if($value->type == 'boolean')
+					{
+						$rule->value = $rule->value == 'True';
+						$rule->inputType = 'switch';
+						$rule->inputValues = array(
+							array('label' => _('No'), 'value' => 0),
+							array('label' => _('Yes'), 'value' => 1)
+						);
+					}
 					$matchRules[] = $rule;
 				}
 				break;
+				
 			case GameInfos::GAMEMODE_ROUNDS:
-				$matchRules = array();
-
 				$rule = new RuleDisplayable();
 				$rule->name = 'roundsPointsLimit';
 				$rule->value = (int) $gameInfo->roundsPointsLimit;
 				$rule->label = _('Points limit');
 				$rule->documentation = _('Limit of points required to win the match.');
+				$matchRules[] = $rule;
+
+				$rule = new RuleDisplayable();
+				$rule->name = 'roundsPointsLimitNewRules';
+				$rule->value = (int) $gameInfo->roundsPointsLimitNewRules;
+				$rule->label = _('Points limit with new rules');
+				$rule->documentation = _('Limit of points required to win the match.');
+				$matchRules[] = $rule;
+
+				$rule = new RuleDisplayable();
+				$rule->name = 'roundsUseNewRules';
+				$rule->value = (int) $gameInfo->roundsUseNewRules;
+				$rule->label = _('Use new rules');
+				$rule->inputType = 'switch';
+				$rule->inputValues = array(
+					array('label' => _('No'), 'value' => 0),
+					array('label' => _('Yes'), 'value' => 1)
+				);
 				$matchRules[] = $rule;
 
 				$rule = new RuleDisplayable();
@@ -215,33 +241,10 @@ class MatchSettingsFileService extends DedicatedFileService
 				$matchRules[] = $rule;
 
 				$rule = new RuleDisplayable();
-				$rule->name = 'roundsUseNewRules';
-				$rule->value = (int) $gameInfo->roundsUseNewRules;
-				$rule->label = _('Use new rules');
-				$rule->documentation = '';
-				$matchRules[] = $rule;
-
-				$rule = new RuleDisplayable();
-				$rule->name = 'roundsPointsLimitNewRules';
-				$rule->value = (int) $gameInfo->roundsPointsLimitNewRules;
-				$rule->label = _('Points limit with New Rules');
-				$rule->documentation = _('Limit of points required to win the match if new Rules are enabled.');
-				$matchRules[] = $rule;
-
-				$rule = new RuleDisplayable();
 				$rule->name = 'roundCustomPoints';
 				$rule->value = implode(',', $connection->getRoundCustomPoints());
 				$rule->label = _('Custom points');
 				$rule->documentation = _('Points that will be given to players in order of arrival.');
-				$matchRules[] = $rule;
-
-				$rule = new RuleDisplayable();
-				$rule->name = 'roundsUseNewRules';
-				$rule->value = (int) $gameInfo->roundsUseNewRules;
-				$rule->label = _('Use new rules');
-				$rule->inputType = 'radio';
-				$rule->inputValues = array(array('label' => _('Yes'), 'value' => 1),
-					array('label' => _('No'), 'value' => 0));
 				$matchRules[] = $rule;
 
 				$rule = new RuleDisplayable();
@@ -255,15 +258,15 @@ class MatchSettingsFileService extends DedicatedFileService
 			case GameInfos::GAMEMODE_TIMEATTACK:
 				$rule = new RuleDisplayable();
 				$rule->name = 'timeAttackLimit';
-				$rule->value = (int) $gameInfo->timeAttackLimit / 1000;
-				$rule->label = _('Time limit in seconds');
+				$rule->value = (int) $gameInfo->timeAttackLimit;
+				$rule->label = _('Time limit in millisecs');
 				$rule->documentation = _('Map duration.');
 				$matchRules[] = $rule;
 
 				$rule = new RuleDisplayable();
 				$rule->name = 'timeAttackSynchStartPeriod';
-				$rule->value = (int) $gameInfo->timeAttackSynchStartPeriod / 1000;
-				$rule->label = _('Synchronisation period at start in seconds');
+				$rule->value = (int) $gameInfo->timeAttackSynchStartPeriod;
+				$rule->label = _('Synchronisation period at start in millisecs');
 				$rule->documentation = _('Time of player synchronisation at the beginning of the map.');
 				$matchRules[] = $rule;
 
@@ -284,6 +287,13 @@ class MatchSettingsFileService extends DedicatedFileService
 				$matchRules[] = $rule;
 
 				$rule = new RuleDisplayable();
+				$rule->name = 'teamPointsLimitNewRules';
+				$rule->value = (int) $gameInfo->teamPointsLimitNewRules;
+				$rule->label = _('Points limit with new rules');
+				$rule->documentation = _('Limit of points required to win the match.');
+				$matchRules[] = $rule;
+
+				$rule = new RuleDisplayable();
 				$rule->name = 'teamMaxPoints';
 				$rule->value = (int) $gameInfo->teamMaxPoints;
 				$rule->label = _('Max points');
@@ -294,16 +304,11 @@ class MatchSettingsFileService extends DedicatedFileService
 				$rule->name = 'teamUseNewRules';
 				$rule->value = (int) $gameInfo->teamUseNewRules;
 				$rule->label = _('Max points');
-				$rule->inputType = 'radio';
-				$rule->inputValues = array(array('label' => _('Yes'), 'value' => 1),
-					array('label' => _('No'), 'value' => 0));
-				$matchRules[] = $rule;
-
-				$rule = new RuleDisplayable();
-				$rule->name = 'teamPointsLimitNewRules';
-				$rule->value = (int) $gameInfo->teamPointsLimitNewRules;
-				$rule->label = _('Points limit with New Rules');
-				$rule->documentation = _('Limit of points required to win the match if new Rules are enabled.');
+				$rule->inputType = 'switch';
+				$rule->inputValues = array(
+					array('label' => _('No'), 'value' => 0),
+					array('label' => _('Yes'), 'value' => 1)
+				);
 				$matchRules[] = $rule;
 
 				$rule = new RuleDisplayable();
@@ -319,13 +324,13 @@ class MatchSettingsFileService extends DedicatedFileService
 				$rule->name = 'lapsNbLaps';
 				$rule->value = (int) $gameInfo->lapsNbLaps;
 				$rule->label = _('Laps number');
-				$rule->documentation = _('Number of laps to do before finnishing the race.').' '._("If set to 0, the number laps of the map is used.");
+				$rule->documentation = _('Number of laps to do before finishing the race, or 0 to use map default.');
 				$matchRules[] = $rule;
 
 				$rule = new RuleDisplayable();
 				$rule->name = 'lapsTimeLimit';
-				$rule->value = (int) $gameInfo->lapsTimeLimit / 1000;
-				$rule->label = _('Time limit in seconds');
+				$rule->value = (int) $gameInfo->lapsTimeLimit;
+				$rule->label = _('Time limit in millisecs');
 				$rule->documentation = _('Time allowed for player to do this number of laps.');
 				$matchRules[] = $rule;
 
@@ -336,6 +341,7 @@ class MatchSettingsFileService extends DedicatedFileService
 				$rule->documentation = _('0 will disable warm-up, otherwise it\'s the number of times the gold medal time.');
 				$matchRules[] = $rule;
 				break;
+			
 			case GameInfos::GAMEMODE_CUP:
 				$rule = new RuleDisplayable();
 				$rule->name = 'cupPointsLimit';

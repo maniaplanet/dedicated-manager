@@ -223,12 +223,11 @@ class Server extends AbstractController
 		$service = new \DedicatedManager\Services\MatchSettingsFileService();
 		$matchRules = $service->getCurrentMatchRules($this->server->rpcHost, $this->server->rpcPort);
 
-		$matchInfo = $this->connection->getCurrentGameInfo();
+		$matchInfo = $this->connection->getNextGameInfo();
 		switch($matchInfo->gameMode)
 		{
 			case GameInfos::GAMEMODE_SCRIPT:
-				$tmp = $this->connection->getModeScriptInfo();
-				$gameMode = $tmp->name;
+				$gameMode = $this->connection->getModeScriptInfo()->name;
 				break;
 			case GameInfos::GAMEMODE_ROUNDS:
 				$gameMode = _('Round');

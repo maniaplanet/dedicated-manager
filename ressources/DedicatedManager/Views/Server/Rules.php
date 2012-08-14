@@ -20,23 +20,22 @@ $r = ManiaLib\Application\Request::getInstance();
 								<fieldset data-role="controlgroup">
 									<legend>
 										<strong><?php echo $rule->label ?><br/>
-											<i><?php echo $rule->documentation ?></i>
+										<i><?php echo $rule->documentation ?></i>
 									</legend>
 									<?php foreach($rule->inputValues as $inputValue): ?>
-										<?php $id = uniqid() ?>
-										<input type="radio" name="<?php echo 'rules['.$rule->name.']' ?>" value="<?php echo $inputValue['value'] ?>" id="<?php echo $id ?>"
-												<?php echo $inputValue['value'] == $rule->value ? 'checked="checked"' : '' ?>/>
-										<label for = "<?php echo $id ?>"><?php echo $inputValue['label'] ?></label>
+										<input type="radio" name="rules[<?php echo $rule->name ?>]" value="<?php echo $inputValue['value'] ?>"
+											   id="<?php echo $rule->name.'-'.$rule->value; ?>" <?php echo $inputValue['value'] == $rule->value ? 'checked="checked"' : '' ?>/>
+										<label for="<?php echo $rule->name.'-'.$rule->value; ?>"><?php echo $inputValue['label'] ?></label>
 									<?php endforeach; ?>
 								</fieldset>
 								<?php break; ?>
 							<?php case 'select': ?>
-								<?php $id = uniqid(); ?>
-								<label for="<?php echo $id ?>">
+							<?php case 'switch': ?>
+								<label for="<?php echo $rule->name ?>">
 									<strong><?php echo $rule->label ?></strong><br/>
 									<i><?php echo $rule->documentation ?></i>
 								</label>
-								<select name="<?php echo 'rules['.$rule->name.']' ?>">
+								<select id="<?php echo $rule->name; ?>" name="rules[<?php echo $rule->name; ?>]" <?php echo $rule->inputType == 'switch' ? 'data-role="slider"' : ''; ?>>
 								<?php foreach($rule->inputValues as $inputValue): ?>
 									<?php $checked = is_array($rule->value) ? in_array($inputValue['value'], $rule->value) : $inputValue['value'] == $rule->value; ?>
 									<option value="<?php echo $inputValue['value'] ?>" <?php echo $checked ? 'selected="selected"' : '' ?>><?php echo $inputValue['label'] ?></option>
@@ -50,21 +49,19 @@ $r = ManiaLib\Application\Request::getInstance();
 										<i><?php echo $rule->documentation ?></i>
 									</legend>
 									<?php foreach($rule->inputValues as $inputValue): ?>
-										<?php $id = uniqid(); ?>
 										<?php $checked = is_array($rule->value) ? in_array($inputValue['value'], $rule->value) : $inputValue['value'] == $rule->value; ?>
-										<input type="checkbox" name="<?php echo 'rules['.$rule->name.']' ?>" value="<?php echo $inputValue['value'] ?>" id="<?php echo $id ?>"
-												<?php echo $checked ? 'checked="checked"' : '' ?>/>
-										<label for = "<?php echo $id ?>"><?php echo $inputValue['label'] ?></label>
+										<input type="checkbox" name="rules[<?php echo $rule->name ?>]" value="<?php echo $inputValue['value'] ?>"
+											   id="<?php echo $rule->name.'-'.$rule->value; ?>" <?php echo $checked ? 'checked="checked"' : '' ?>/>
+										<label for = "<?php echo $rule->name.'-'.$rule->value; ?>"><?php echo $inputValue['label'] ?></label>
 									<?php endforeach; ?>
 								</fieldset>
 								<?php break; ?>
 							<?php case 'text': ?>
-								<?php $id = uniqid(); ?>
-								<label for="<?php echo $id ?>">
+								<label for="<?php echo $rule->name ?>">
 									<strong><?php echo $rule->label ?></strong><br/>
 									<i><?php echo $rule->documentation ?></i>
 								</label>
-								<input type="text" value="<?php echo $rule->value ?>" id="<?php echo $id ?>" name="rules[<?php echo $rule->name ?>]"/>
+								<input type="text" value="<?php echo $rule->value ?>" id="<?php echo $rule->name ?>" name="rules[<?php echo $rule->name ?>]"/>
 						<?php endswitch; ?>
 						</li>
 					<?php endforeach; ?>
