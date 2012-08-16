@@ -215,6 +215,29 @@ class Server extends AbstractController
 		$this->request->redirectArgList('../add-maps/', 'host', 'port');
 	}
 
+	function saveMatchSettings()
+	{
+		
+	}
+
+	/**
+	 * @redirect
+	 */
+	function doSaveMatchSettings($filename)
+	{
+		try
+		{
+			$this->connection->saveMatchSettings('MatchSettings/'.$filename.'.txt');
+			$this->session->set('success','Match settings successfully saved');
+		}
+		catch(\Exception $e)
+		{
+			\ManiaLib\Application\ErrorHandling::logException($e);
+			$this->session->set('error','Error while saving match settings');
+		}
+		$this->request->redirectArgList('../maps','host','port');
+	}
+
 	/**
 	 * @norelay 
 	 */
