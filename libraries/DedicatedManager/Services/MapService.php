@@ -133,7 +133,10 @@ class MapService extends AbstractService
 						$maps[] = $file;
 					}
 				}
-				catch(\InvalidArgumentException $e){}
+				catch(\Exception $e)
+				{
+					\ManiaLib\Utils\Logger::user('Cannot parse `'.$path.$filename.'`');
+				}
 			}
 		}
 		
