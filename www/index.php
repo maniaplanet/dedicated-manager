@@ -1,5 +1,5 @@
 <?php
-define('DEDICATED_MANAGER_VERSION', '1.3');
+define('DEDICATED_MANAGER_VERSION', '1.4');
 
 require_once __DIR__.'/../libraries/autoload.php';
 I18n\Functions::LOAD;
