@@ -39,10 +39,10 @@ $r = ManiaLib\Application\Request::getInstance();
 				</ul>
 				<div class="ui-grid-a">
 					<div class="ui-block-a">
-						<input type="reset" value="<?php echo _('Restore'); ?>"/>
+						<input type="reset" value="<?php echo _('Restore'); ?>" data-icon="refresh"/>
 					</div>
 					<div class="ui-block-b">
-						<input type="submit" value="<?php echo _('Apply'); ?>"/>
+						<input type="submit" value="<?php echo _('Apply'); ?>" data-icon="check" data-theme="b"/>
 					</div>
 				</div>
 			</form>
