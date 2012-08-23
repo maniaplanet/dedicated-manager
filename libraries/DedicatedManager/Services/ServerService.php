@@ -256,24 +256,6 @@ class ServerService extends AbstractService
 		);
 	}
 
-	function startManiaLive($host, $port, $password, $dedicatedPid = 0)
-	{
-		$config = \DedicatedManager\Config::getInstance();
-		$isWindows = stripos(PHP_OS, 'WIN') === 0;
-		if($isWindows)
-			$startCommand = 'START php.exe "'.$config->manialivePath.'bootstrapper.php"';
-		else
-			$startCommand = 'cd "'.$config->manialivePath.'"; php bootstrapper.php';
-		$startCommand .= sprintf(' --address=%s --rpcport=%d --password=%s', escapeshellarg($host), $port, escapeshellarg($password));
-		if(!$isWindows)
-			$startCommand .= ' < /dev/null > logs/runtime.'.$dedicatedPid.'.log 2>&1 &';
-
-		sleep(5);
-
-		$procHandle = proc_open($startCommand, array(), $pipes);
-		proc_close($procHandle);
-	}
-	
 	protected function updateServer($host, $port, $name)
 	{
 		$this->db()->execute('UPDATE Servers SET name = %s WHERE rpcHost = %s AND rpcPort = %d', $this->db()->quote($name), $this->db()->quote($host), $port);
