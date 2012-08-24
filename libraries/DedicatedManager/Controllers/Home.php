@@ -29,13 +29,6 @@ class Home extends AbstractController
 		$writables[] = $config->dedicatedPath.'Logs/';
 		$writables[] = $config->dedicatedPath.'UserData/Config/';
 		$writables[] = $config->dedicatedPath.'UserData/Maps/MatchSettings/';
-		if(file_exists($config->dedicatedPath.'UserData/Maps/MatchSettings/'))
-		{
-			chdir($config->dedicatedPath.'UserData/Maps/MatchSettings/');
-			$tmp = glob('*.[tT][xX][tT]');
-			$tmp = array_map(function ($f) use ($config) { return $config->dedicatedPath.'UserData/Maps/MatchSettings/'.$f; }, $tmp);
-			$writables = array_merge($writables, $tmp);
-		}
 		if(file_exists($config->dedicatedPath.'UserData/Config/'))
 		{
 			chdir($config->dedicatedPath.'UserData/Config/');
@@ -43,10 +36,24 @@ class Home extends AbstractController
 			$tmp = array_map(function ($f) use ($config) { return $config->dedicatedPath.'UserData/Config/'.$f; }, $tmp);
 			$writables = array_merge($writables, $tmp);
 		}
+		if(file_exists($config->dedicatedPath.'UserData/Maps/MatchSettings/'))
+		{
+			chdir($config->dedicatedPath.'UserData/Maps/MatchSettings/');
+			$tmp = glob('*.[tT][xX][tT]');
+			$tmp = array_map(function ($f) use ($config) { return $config->dedicatedPath.'UserData/Maps/MatchSettings/'.$f; }, $tmp);
+			$writables = array_merge($writables, $tmp);
+		}
 		
-//		$writables[] = $config->manialivePath;
-//		$writables[] = $config->manialivePath.'logs/';
-//		$writables[] = $config->manialivePath.'data/';
+		$writables[] = $config->manialivePath;
+		$writables[] = $config->manialivePath.'config/';
+		$writables[] = $config->manialivePath.'logs/';
+		if(file_exists($config->manialivePath.'config/'))
+		{
+			chdir($config->manialivePath.'config/');
+			$tmp = glob('*.[iI][nN][iI]');
+			$tmp = array_map(function ($f) use ($config) { return $config->manialivePath.'config/'.$f; }, $tmp);
+			$writables = array_merge($writables, $tmp);
+		}
 		chdir($currentDir);
 
 		$executables[] = stripos(PHP_OS, 'win') !== false ? $config->dedicatedPath.'ManiaPlanetServer.exe' : $config->dedicatedPath.'ManiaPlanetServer';
@@ -54,7 +61,7 @@ class Home extends AbstractController
 		$failed = array_filter(array_merge($writables, $executables), function ($f) { return !file_exists($f); });
 		if($failed)
 		{
-			$errors[] = _('The following files does not exist.').' '._('Contact the admin to check this.').'<br/>'.
+			$errors[] = _('The following files do not exist.').' '._('Contact the admin to check this.').'<br/>'.
 					_('File list: ').'<ul>'.implode('', array_map(function ($f) { return '<li>'.$f.'</li>'; }, $failed)).'</ul>';
 		}
 

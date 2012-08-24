@@ -3,19 +3,10 @@ require __DIR__.'/../Header.php';
 $r = ManiaLib\Application\Request::getInstance();
 ?>
 <div data-role="page" id="content">
-	<?php
-	$header = \DedicatedManager\Helpers\Header::getInstance();
-	$header->rightText = _('Back to configuration');
-	$header->rightIcon = 'back';
-	$header->rightLink = $backLink;
-	echo DedicatedManager\Helpers\Header::save()
-	?>
+	<?php echo DedicatedManager\Helpers\Header::save(); ?>
     <div class="ui-bar ui-bar-b">
-		<h2><?php
-	echo sprintf(_('Step %d on %d'), 2, 4)
-	?></h2><br/>
-		<h3><?php echo _('Plugin selection of manialive') ?></h3><br/>
-		<?php echo _('During the whole process, feel free to leave default values.') ?>
+		<h2><?php echo sprintf(_('Step %d on %d'), 2, 3); ?></h2><br/>
+		<h3><?php echo _('Plugin selection') ?></h3><br/>
     </div>
 	<?php echo DedicatedManager\Helpers\Box\Box::detect(); ?>
     <div data-role="content">
@@ -24,14 +15,17 @@ $r = ManiaLib\Application\Request::getInstance();
 				<li data-role="list-divider"><?php echo _('Select your plugins') ?></li>
 				<li data-role="fieldcontain">
 					<fieldset data-role="controlgroup">
-						<?php foreach($plugins as $plugin): ?>
-							<?php $id = uniqid() ?>
-							<label for="<?php echo $id ?>">
-								<strong><?php echo $plugin ?></strong>
-							</label>
-							<input type="checkbox" id="<?php echo $id ?>" name="plugins[<?php echo $plugin ?>]" />
-						<?php endforeach; ?>
+					<?php foreach($plugins as $plugin): ?>
+						<?php $id = uniqid('plugin-'); ?>
+						<input type="checkbox" id="<?php echo $id; ?>" name="plugins[]" value="<?php echo $plugin; ?>"
+							<?php echo in_array($plugin, $config->plugins) ? 'checked="checked"' : ''; ?>/>
+						<label for="<?php echo $id; ?>"><?php echo $plugin; ?></label>
+					<?php endforeach; ?>
 					</fieldset>
+				</li>
+				<li data-role="list-divider"><?php echo _('Configure plugins') ?></li>
+				<li data-role="fieldcontain">
+					<textarea name="other"><?php echo $config->__other; ?></textarea>
 				</li>
 			</ul>
 			<div class="ui-grid-a">

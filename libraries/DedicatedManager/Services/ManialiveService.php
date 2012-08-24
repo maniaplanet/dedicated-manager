@@ -11,7 +11,6 @@ namespace DedicatedManager\Services;
 
 class ManialiveService extends AbstractService
 {
-
 	function getPlugins()
 	{
 		$manialivePath = \DedicatedManager\Config::getInstance()->manialivePath;
@@ -20,7 +19,8 @@ class ManialiveService extends AbstractService
 		$availablePlugins = array();
 
 		foreach($this->searchFolderForPlugin($manialivePath.'libraries/ManiaLivePlugins') as $plugin)
-			if(($class = $this->validatePlugin($plugin)) !== false) $availablePlugins[] = $class;
+			if(($class = $this->validatePlugin($plugin)) !== false)
+				$availablePlugins[] = $class;
 
 		return $availablePlugins;
 	}
@@ -29,26 +29,44 @@ class ManialiveService extends AbstractService
 	{
 		$config = \DedicatedManager\Config::getInstance();
 		$isWindows = stripos(PHP_OS, 'WIN') === 0;
-		if($isWindows) $startCommand = 'START php.exe "'.$config->manialivePath.'bootstrapper.php"';
-		else $startCommand = 'cd "'.$config->manialivePath.'"; php bootstrapper.php';
-		$startCommand .= ' --manialive_cfg='.escapeshellarg($configFile);
-		$cmd = array();
+		if($isWindows)
+			$startCommand = 'START php.exe "'.$config->manialivePath.'bootstrapper.php"';
+		else
+			$startCommand = 'cd "'.$config->manialivePath.'"; php bootstrapper.php';
+		$startCommand .= ' --manialive_cfg='.escapeshellarg($configFile.'.ini');
+		
+		$cmdOptions = array();
 		foreach($options as $key => $value)
 		{
-			$cmd[] = '--'.$key.'='.escapeshellarg($value);
+			$cmdOptions[] = '--'.$key.'='.escapeshellarg($value);
 		}
-		$startCommand .= ' '.implode(' ', $cmd);
+		$startCommand .= ' '.implode(' ', $cmdOptions);
+		if(!$isWindows)
+			$startCommand .= '&';
+		
 		$procHandle = proc_open($startCommand, array(), $pipes);
-		sleep(3);
 		$status = proc_get_status($procHandle);
 		proc_close($procHandle);
 		return $status['pid'];
 	}
+	
+	function stop($pid)
+	{
+		$isWindows = stripos(PHP_OS, 'WIN') === 0;
+		if($isWindows)
+			`TASKKILL /PID $pid`;
+		else
+			`kill -9 $pid`;
+	}
 
 	function register($host, $port, $pid)
 	{
-		$this->db()->execute('UPDATE Servers SET manialivePID = %d WHERE rpcHost = %s AND rpcPort = %d', $pid,
-			$this->db()->quote($host), $port);
+		$this->db()->execute(
+				'UPDATE Servers SET manialivePID=%d WHERE rpcHost=%s AND rpcPort=%d',
+				$pid,
+				$this->db()->quote($host),
+				$port
+			);
 	}
 
 	private function validatePlugin($plugin)
@@ -58,7 +76,7 @@ class ManialiveService extends AbstractService
 		{
 			$class = '\\'.str_replace('/', '\\', $matches[1]);
 			if(class_exists($class) && is_subclass_of($class, '\ManiaLive\PluginHandler\Plugin'))
-					return implode('\\', array_slice(explode('\\', $class), 2, 2));
+				return implode('\\', array_slice(explode('\\', $class), 2, 2));
 			else return false;
 		}
 	}
@@ -72,23 +90,42 @@ class ManialiveService extends AbstractService
 
 		foreach(scandir($folder) as $file)
 		{
-			if($file == '.' || $file == '..') continue;
+			if($file == '.' || $file == '..')
+				continue;
 
 			$filePath = $folder.DIRECTORY_SEPARATOR.$file;
 
 			//If it's a directory digg deeper
-			if(is_dir($filePath)) $plugins = array_merge($plugins, $this->searchFolderForPlugin($filePath));
+			if(is_dir($filePath))
+				$plugins = array_merge($plugins, $this->searchFolderForPlugin($filePath));
 			else
 			{
 				$pathParts = pathinfo($filePath);
 				//If the file got the name of the parent folder or is called Plugin it should be a Plugin
-				if($pathParts['filename'] == $parent || $pathParts['filename'] == 'Plugin') $plugins[] = $filePath;
+				if($pathParts['filename'] == $parent || $pathParts['filename'] == 'Plugin')
+					$plugins[] = $filePath;
 			}
 		}
 
 		return $plugins;
 	}
 
+	private function getPIDs()
+	{
+		if(stripos(PHP_OS, 'WIN') === 0)
+		{
+			$dedicatedProc = `TASKLIST /FI "IMAGENAME eq ManiaPlanetServer.exe" /NH`;
+			if(preg_match_all('/ManiaPlanetServer\.exe\s+(\d+)/m', $dedicatedProc, $matches))
+				return $matches[1];
+		}
+		else
+		{
+			$dedicatedProc = `ps -C "ManiaPlanetServer" --format pid --no-headers --sort +cputime`;
+			if(preg_match_all('/(\\d+)/', $dedicatedProc, $matches))
+				return $matches[1];
+		}
+		return array();
+	}
 }
 
 ?>

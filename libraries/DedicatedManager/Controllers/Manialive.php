@@ -11,125 +11,169 @@ namespace DedicatedManager\Controllers;
 
 class Manialive extends AbstractController
 {
+	protected $defaultAction = 'config';
 
-	function index($host, $port)
+	function onConstruct()
 	{
-		$service = new \DedicatedManager\Services\ServerService();
-		$server = $service->getDetails($host, $port);
-		$this->response->server = $server;
-		$this->response->backLink = $this->request->createLinkArgList('/server/', 'host', 'port');
-		$this->session->set('server', $server);
+		parent::onConstruct();
+		$header = \DedicatedManager\Helpers\Header::getInstance();
+		$header->leftText = _('Back to server');
+		$header->leftLink = $this->request->createLinkArgList('../back-to-server');
+	}
+	
+	function preFilter()
+	{
+		if(!$this->session->get('server'))
+		{
+			try
+			{
+				$service = new \DedicatedManager\Services\ServerService();
+				$server = $service->getDetails($this->request->get('host'), $this->request->get('port'));
+				$this->session->set('server', $server);
+			}
+			catch(\Exception $e)
+			{
+				$this->session->set('error', _('You cannot start ManiaLive: unknown server'));
+				$this->request->redirectArgList('/');
+			}
+		}
+	}
+	
+	function config($configFile = '')
+	{
+		$service = new \DedicatedManager\Services\ManialiveFileService();
+
+		if($configFile)
+		{
+			$config = $service->get($configFile);
+			$this->session->set('configFile', $configFile);
+			$this->session->set('config', $config);
+		}
+		else
+		{
+			$config = new \DedicatedManager\Services\ManialiveConfig();
+		}
+		
+		$this->response->configList = $service->getList();
+		$this->response->config = $this->session->get('config', $config);
 	}
 
-	function setConfig($enableThread = '', array $logs = array(), array $mysql = array())
+	function setConfig($admins=array(), $logs=array(), $database=array(), $threading=array(), $wsapi=array())
 	{
-		$this->session->getStrict('server');
-		if((int) $enableThread !== 0 && (int) $enableThread !== 1)
-		{
-			$this->session->set('error', _('threading can only be equal to 0 or 1'));
-		}
-		if(!count($logs))
-		{
-			$this->session->set('error', _('You have to configure logs'));
-		}
-		if(!count($mysql))
-		{
-			$this->session->set('error', _('You have to configure databasse'));
-		}
-		if($this->session->get('error'))
-		{
-			$server = $this->session->get('server');
-			$this->request->set('host', $server->rpcHost);
-			$this->request->set('port', $server->rpcPort);
-			$this->request->redirectArgList('../', 'host', 'port');
-		}
-		$this->session->set('enableThread', $enableThread);
-		$this->session->set('logs', $logs);
-		$this->session->set('mysql', $mysql);
-
+		$config = $this->session->get('config', new \DedicatedManager\Services\ManialiveConfig());
+		$config->admins = array_filter($admins);
+		$config->setLogsFromArray($logs);
+		$config->setDatabaseFromArray($database);
+		$config->setThreadingFromArray($threading);
+		$config->setWsApiFromArray($wsapi);
+		
+		$this->session->set('config', $config);
 		$this->request->redirectArgList('../plugins');
 	}
 
 	function plugins()
 	{
-		try
-		{
-			$server = $this->session->getStrict('server');
-			$this->session->getStrict('enableThread');
-			$this->session->getStrict('logs');
-			$this->session->getStrict('mysql');
-		}
-		catch(\Exception $e)
-		{
-			$this->session->set('error', _('You need to configure the server before selecting plugins.'));
-			$this->request->redirectArgList('../config');
-		}
-		$this->request->set('host', $server->rpcHost);
-		$this->request->set('port', $server->rpcPort);
-		$this->response->backLink = $this->request->createLinkArgList('../', 'host', 'port');
+		$config = $this->fetchAndAssertConfig(_('selecting plugins'));
 		$service = new \DedicatedManager\Services\ManialiveService();
-		$plugins = $service->getPlugins();
-		\ManiaLib\Utils\Logger::info($plugins);
-		$this->response->plugins = $plugins;
+		$this->response->plugins = $service->getPlugins();
+		$this->response->config = $config;
+		
+		$header = \DedicatedManager\Helpers\Header::getInstance();
+		$header->rightText = _('Back to configuration');
+		$header->rightIcon = 'back';
+		$header->rightLink = $this->request->createLinkArgList('../');
 	}
 
-	function setPlugins(array $plugins = array())
+	function setPlugins($plugins = array(), $other='')
 	{
-		try
-		{
-			$this->session->getStrict('server');
-			$this->session->getStrict('enableThread');
-			$this->session->getStrict('logs');
-			$this->session->getStrict('mysql');
-		}
-		catch(\Exception $e)
-		{
-			$this->session->set('error', _('You need to configure the server before selecting plugins.'));
-			$this->request->redirectArgList('../plugins');
-		}
-		$this->session->set('plugins', $plugins);
-		$this->request->redirectArgList('../advanced');
+		$config = $this->session->get('config');
+		$config->plugins = $plugins;
+		$config->__other = $other;
+		
+		$this->request->redirectArgList('../preview');
 	}
 
-	function advanced()
+	function preview()
 	{
-		try
-		{
-			$server = $this->session->getStrict('server');
-			$this->session->getStrict('enableThread');
-			$this->session->getStrict('logs');
-			$this->session->getStrict('mysql');
-			$this->session->getStrict('plugins');
-		}
-		catch(\Exception $e)
-		{
-			$this->session->set('error', _('You need to configure the server before selecting plugins.'));
-			$this->request->redirectArgList('../plugins');
-		}
-		$this->request->set('host', $server->rpcHost);
-		$this->request->set('port', $server->rpcPort);
-		$this->response->backLink = $this->request->createLinkArgList('../', 'host', 'port');
+		$config = $this->fetchAndAssertConfig(_('starting it'));
+		$server = $this->session->get('server');
+		$this->response->configFile = $this->session->get('configFile', \ManiaLib\Utils\Formatting::stripStyles($server->name));
+		
+		$header = \DedicatedManager\Helpers\Header::getInstance();
+		$header->rightText = _('Back to plugins');
+		$header->rightIcon = 'back';
+		$header->rightLink = $this->request->createLinkArgList('../plugins');
 	}
 	
-	function setAdvanced($advanced = '')
+	function start($configFile)
+	{
+		$config = $this->fetchAndAssertConfig(_('starting it'));
+		$server = $this->session->get('server');
+		$this->session->set('configFile', $configFile);
+		
+		$errors = array();
+		if(strpbrk($configFile, '\\/:*?"<>|'))
+		{
+			$errors[] = _('The server config filename must not contain any of the following characters: \\ / : * ? " < > |');
+		}
+		
+		if(!$errors)
+		{
+			try
+			{
+				$error = _('An error appeared while writing the server configuration file');
+				$service = new \DedicatedManager\Services\ManialiveFileService();
+				$service->save($configFile, $config);
+
+				$error = _('An error appeared while starting ManiaLive');
+				$service = new \DedicatedManager\Services\ManialiveService();
+				$service->start($configFile, array(
+						'address' => $server->rpcHost,
+						'rpcport' => $server->rpcPort,
+						'password' => $server->rpcPassword
+					));
+			}
+			catch(\Exception $e)
+			{
+				\ManiaLib\Application\ErrorHandling::logException($e);
+				$errors[] = $error;
+			}
+		}
+
+		if($errors)
+		{
+			$this->session->set('error', $errors);
+			$this->request->redirectArgList('../preview');
+		}
+		
+		$this->session->set('success', _('ManiaLive has been successfully started'));
+		$this->backToServer();
+	}
+	
+	function backToServer()
+	{
+		$server = $this->session->get('server');
+		$this->request->set('host', $server->rpcHost);
+		$this->request->set('port', $server->rpcPort);
+		
+		$this->session->delete('configFile');
+		$this->session->delete('config');
+		$this->session->delete('server');
+		$this->request->redirectArgList('/server', 'host', 'port');
+	}
+	
+	protected function fetchAndAssertConfig($actionStr)
 	{
 		try
 		{
-			$this->session->getStrict('server');
-			$this->session->getStrict('enableThread');
-			$this->session->getStrict('logs');
-			$this->session->getStrict('mysql');
-			$this->session->getStrict('plugins');
+			return $this->session->getStrict('config');
 		}
 		catch(\Exception $e)
 		{
-			$this->session->set('error', _('You need to configure the server before selecting plugins.'));
-			$this->request->redirectArgList('../plugins');
+			$this->session->set('error', sprintf(_('You need to configure ManiaLive before %s.'), $actionStr));
+			$this->request->redirectArgList('..');
 		}
-		$this->session->set('advanced',$advanced);
-		$this->request->redirectArgList('../files');
 	}
-
 }
 
 ?>

@@ -12,7 +12,6 @@ namespace DedicatedManager\Services;
 
 class ServerService extends AbstractService
 {
-
 	/**
 	 * @return Server[]
 	 */
@@ -30,7 +29,8 @@ class ServerService extends AbstractService
 	{
 		$result = $this->db()->execute(
 				'SELECT S.* FROM Managers M INNER JOIN Servers S USING (rpcHost,rpcPort) '.
-				'WHERE M.login = %s', $this->db()->quote($login));
+				'WHERE M.login = %s', $this->db()->quote($login)
+			);
 		return Server::arrayFromRecordSet($result);
 	}
 
@@ -253,7 +253,7 @@ class ServerService extends AbstractService
 				$this->db()->quote($host),
 				$port,
 				$this->db()->quote($password)
-		);
+			);
 	}
 
 	protected function updateServer($host, $port, $name)

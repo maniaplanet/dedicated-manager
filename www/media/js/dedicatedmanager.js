@@ -24,14 +24,14 @@ $(document).bind('pageinit', function() {
 		formattingTimeout = setTimeout(updateFormattingPreview, 500, $(this));
 	});
 	
-	$('#isOnline').change(function () {
-		if ($(this).val() == '1') {
+	$('#isOnline').change(function() {
+		if($(this).val() == '1') {
 			$('#field-internet').trigger('expand');
 		}
 		else {
 			$('#field-internet').trigger('collapse');
 		}
-	});
+	}).trigger('change');
 	
 	$('#nextLadderMode').change(function () {
 		if($(this).val() == '1') {
@@ -122,4 +122,26 @@ $(document).bind('pageinit', function() {
 			$('#fieldset-spectate-ipAndPort').show().find('input').textinput('enable');
 		}
 	}).trigger('change');
+	
+	$('#databaseEnable').change(function() {
+		if($(this).val() == '1') {
+			$('#field-database').trigger('expand');
+		}
+		else {
+			$('#field-database').trigger('collapse');
+		}
+	}).trigger('change');
+	
+	$('#threadingEnabled').change(function() {
+		if($(this).val() == '1') {
+			$('#field-threading').trigger('expand');
+		}
+		else {
+			$('#field-threading').trigger('collapse');
+		}
+	}).trigger('change');
+	
+	$('#add-admin-button').click(function() {
+		$('<input type="text" name="admins[]"/>').insertAfter($(this).prev()).textinput();
+	});
 });

@@ -16,6 +16,22 @@ img.map-thumbnail {
 	vertical-align: middle;
 }
 
+div.input-list {
+	width: 97%;
+}
+
+@media (min-width: 450px)
+{
+	div.input-list {
+		display: inline-block;
+		width: 60%;
+	}
+}
+
+div.input-list input {
+	width: 100% !important;
+}
+
 /*
  * Used for tree state checkbox
 */
