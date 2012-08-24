@@ -23,7 +23,7 @@ $(document).bind('pageinit', function() {
 		}
 		formattingTimeout = setTimeout(updateFormattingPreview, 500, $(this));
 	});
-
+	
 	$('#isOnline').change(function () {
 		if ($(this).val() == '1') {
 			$('#field-internet').trigger('expand');

@@ -8,9 +8,10 @@ $r = ManiaLib\Application\Request::getInstance();
 		<div class="content-primary">
 			<ul data-role="listview" data-icon="none" data-inset="true">
 				<li data-role="list-divider"><?php echo _('Chat') ?></li>
-				<?php foreach($chat as $line): ?>
-					<li><?php echo ManiaLib\Utils\StyleParser::toHtml($line) ?></li>
-				<?php endforeach; ?>
+				<li>
+					<div id="chat">
+					</div>
+				</li>
 			</ul>
 			<form action="<?php echo $r->createLinkArgList('../send-message') ?>" method="get" data-ajax="false">
 				<input type="hidden" name="host" value="<?php echo $host ?>"/>
@@ -40,4 +41,19 @@ $r = ManiaLib\Application\Request::getInstance();
 		<?php //var_dump($chat) ?>
 	</div>
 </div>
+<script type="text/javascript">
+	function updateChat () {
+		$.ajax({
+			type : 'GET',
+			url : '<?php echo $r->createLink('../chatDisplay') ?>'
+		}).done(function (html) {
+			$('#chat').html(html);
+			$('#chat').scrollTop($('#chat').contents().height());
+		});
+	}
+	$(document).bind('pageinit', function() {
+	updateChat();
+		setInterval('updateChat()', 5000);
+	});
+</script>
 <?php require __DIR__.'/../Footer.php'; ?>
