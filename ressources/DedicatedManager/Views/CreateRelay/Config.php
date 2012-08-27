@@ -168,32 +168,28 @@ $r = ManiaLib\Application\Request::getInstance();
 			<fieldset id="field-internet" data-role="collapsible" <?php echo $account->login ? 'data-collapsed="false"' : '' ?> data-theme="b">
 				<legend><?php echo _('Internet Server Configuration') ?></legend>
 				<ul data-role="listview">
-					<li data-role="fieldcontain">
-						<?php echo _('Create a dedicated server account:') ?>
+					<li>
 						<a href="http://player.maniaplanet.com/index.php/advanced/dedicated-servers/" target="blank">
-							<?php echo _('Go to the Player page') ?>
+							<?php echo _('Create a dedicated server account'); ?>
 						</a>
 					</li>
 					<li data-role="fieldcontain">
-						<label for="masterLogin">
-							<strong><?php echo _('Dedicated server account login'); ?></strong><br/>
-							<i><?php echo _('Enter the dedicated server\'s login'); ?></i>
+						<label for="accountLogin">
+							<strong><?php echo _('Server login'); ?></strong>
 						</label>
-						<?php echo DedicatedManager\Helpers\Input::text('account[login]', 'masterLogin', $account->login) ?>
+						<?php echo DedicatedManager\Helpers\Input::text('account[login]', 'accountLogin', $account->login) ?>
 					</li>
 					<li data-role="fieldcontain">
-						<label for="masterPassword">
-							<strong><?php echo _('Dedicated server account password'); ?></strong><br/>
-							<i><?php echo _('Enter the dedicated server\'s password'); ?></i>
+						<label for="accountPassword">
+							<strong><?php echo _('Server password'); ?></strong>
 						</label>
-						<input type="password" name="account[password]" id="masterPassword" value="<?php echo htmlentities($account->password, ENT_QUOTES, 'utf-8') ?>"/>
+						<input type="password" name="account[password]" id="accountPassword" value="<?php echo htmlentities($account->password, ENT_QUOTES, 'utf-8') ?>"/>
 					</li>
 					<li data-role="fieldcontain">
-						<label for="masterValidationKey">
-							<strong><?php echo _('Validation key (optional)'); ?></strong><br/>
-							<i><?php echo _('Enter the dedicated server\'s validation key'); ?></i>
+						<label for="accountValidationKey">
+							<strong><?php echo _('Server validation key (optional)'); ?></strong>
 						</label>
-						<?php echo DedicatedManager\Helpers\Input::text('account[validationKey]', 'masterValidationKey', $account->validationKey) ?>
+						<?php echo DedicatedManager\Helpers\Input::text('account[validationKey]', 'accountValidationKey', $account->validationKey) ?>
 					</li>
 				</ul>
 			</fieldset>
@@ -209,14 +205,14 @@ $r = ManiaLib\Application\Request::getInstance();
 					</li>
 					<li data-role="fieldcontain">
 						<label for="serverport">
-							<strong><?php echo _('Server port'); ?></strong><br/>
+							<strong><?php echo _('Main port'); ?></strong><br/>
 							<i><?php echo _('If it\'s already used, first free one starting from this value will be taken instead'); ?></i>
 						</label>
 						<?php echo DedicatedManager\Helpers\Input::text('system[serverPort]', 'serverport', $system->serverPort) ?>
 					</li>
 					<li data-role="fieldcontain">
 						<label for="serverp2pport">
-							<strong><?php echo _('Server P2P port'); ?></strong><br/>
+							<strong><?php echo _('P2P port'); ?></strong><br/>
 							<i><?php echo _('If it\'s already used, first free one starting from this value will be taken instead'); ?></i>
 						</label>
 						<?php echo DedicatedManager\Helpers\Input::text('system[serverP2pPort]', 'serverp2pport', $system->serverP2pPort) ?>
@@ -230,7 +226,7 @@ $r = ManiaLib\Application\Request::getInstance();
 					</li>
 					<li data-role="fieldcontain">
 						<label for="xmlrpcport">
-							<strong><?php echo _('Server XML-RPC port'); ?></strong><br/>
+							<strong><?php echo _('XML-RPC port'); ?></strong><br/>
 							<i><?php echo _('If it\'s already used, first free one starting from this value will be taken instead'); ?></i>
 						</label>
 						<?php echo DedicatedManager\Helpers\Input::text('system[xmlrpcPort]', 'xmlrpcport', $system->xmlrpcPort) ?>

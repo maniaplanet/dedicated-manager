@@ -127,11 +127,15 @@ class Manialive extends AbstractController
 
 				$error = _('An error appeared while starting ManiaLive');
 				$service = new \DedicatedManager\Services\ManialiveService();
-				$service->start($configFile, array(
+				$pid = $service->start($configFile, array(
 						'address' => $server->rpcHost,
 						'rpcport' => $server->rpcPort,
 						'password' => $server->rpcPassword
 					));
+				
+				// FIXME too dangerous way to do this...
+//				$service = new \DedicatedManager\Services\ServerService();
+//				$service->attachManialivePID($server->rpcHost, $server->rpcPort, $pid);
 			}
 			catch(\Exception $e)
 			{

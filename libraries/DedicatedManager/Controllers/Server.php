@@ -782,6 +782,9 @@ class Server extends AbstractController
 //		$this->response->chat = $this->connection->getChatLines();
 	}
 	
+	/**
+	 * @redirect
+	 */
 	function chatDisplay()
 	{
 		$this->response->chat = $this->connection->getChatLines();

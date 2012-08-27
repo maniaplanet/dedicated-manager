@@ -54,7 +54,7 @@ $r = ManiaLib\Application\Request::getInstance();
 					</li>
 				</ul>
 			</fieldset>
-			<fieldset id="field-mysql" data-role="collapsible" data-theme="b">
+			<fieldset id="field-database" data-role="collapsible" data-theme="b">
 				<legend><?php echo _('MySQL Configuration'); ?></legend>
 				<ul data-role="listview">
 					<li data-role="fieldcontain">

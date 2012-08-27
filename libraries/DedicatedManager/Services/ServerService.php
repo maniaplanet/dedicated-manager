@@ -91,16 +91,15 @@ class ServerService extends AbstractService
 	 */
 	function start($configFile, $matchFile, $isLan = false)
 	{
-		$config = \DedicatedManager\Config::getInstance();
 		$service = new ConfigFileService();
 		list(,,,$auth) = $service->get($configFile);
 
 		// Starting dedicated
 		$isWindows = stripos(PHP_OS, 'WIN') === 0;
 		if($isWindows)
-			$startCommand = 'START /D "'.$config->dedicatedPath.'" ManiaPlanetServer.exe';
+			$startCommand = 'START ManiaPlanetServer.exe';
 		else
-			$startCommand = 'cd "'.$config->dedicatedPath.'"; ./ManiaPlanetServer';
+			$startCommand = './ManiaPlanetServer';
 		$startCommand .= sprintf(' /dedicated_cfg=%s /game_settings=%s', escapeshellarg($configFile.'.txt'), escapeshellarg('MatchSettings/'.$matchFile.'.txt'));
 		if($isLan)
 			$startCommand .= ' /lan';
@@ -119,16 +118,15 @@ class ServerService extends AbstractService
 	 */
 	function startRelay($configFile, $server, $password=null, $isLan=false)
 	{
-		$config = \DedicatedManager\Config::getInstance();
 		$service = new ConfigFileService();
 		list(,,,$auth) = $service->get($configFile);
 
 		// Starting dedicated
 		$isWindows = stripos(PHP_OS, 'WIN') === 0;
 		if($isWindows)
-			$startCommand = 'START /D "'.$config->dedicatedPath.'" ManiaPlanetServer.exe';
+			$startCommand = 'START ManiaPlanetServer.exe';
 		else
-			$startCommand = 'cd "'.$config->dedicatedPath.'"; ./ManiaPlanetServer';
+			$startCommand = './ManiaPlanetServer';
 		$startCommand .= sprintf(' /dedicated_cfg=%s /join=%s', escapeshellarg($configFile.'.txt'), escapeshellarg($server));
 		if($password)
 			$startCommand .= sprintf(' /joinpassword=%s', escapeshellarg($password));
@@ -144,16 +142,15 @@ class ServerService extends AbstractService
 
 	function startNoautoquit($configFile, $isLan = false)
 	{
-		$config = \DedicatedManager\Config::getInstance();
 		$service = new ConfigFileService();
 		list(,,,$auth) = $service->get($configFile);
 
 		// Starting dedicated
 		$isWindows = stripos(PHP_OS, 'WIN') === 0;
 		if($isWindows)
-			$startCommand = 'START /D "'.$config->dedicatedPath.'" ManiaPlanetServer.exe';
+			$startCommand = 'START ManiaPlanetServer.exe';
 		else
-			$startCommand = 'cd "'.$config->dedicatedPath.'"; ./ManiaPlanetServer';
+			$startCommand = './ManiaPlanetServer';
 		$startCommand .= sprintf(' /dedicated_cfg=%s /noautoquit', escapeshellarg($configFile));
 		if($isLan)
 			$startCommand .= ' /lan';
@@ -172,7 +169,6 @@ class ServerService extends AbstractService
 		$currentPids = $this->getPIDs();
 
 		// Starting dedicated
-		$isWindows = stripos(PHP_OS, 'WIN') === 0;
 		$procHandle = proc_open($commandLine, array(), $pipes, $config->dedicatedPath);
 		proc_close($procHandle);
 
@@ -183,6 +179,7 @@ class ServerService extends AbstractService
 		$pid = reset($diffPids);
 
 		// Reading dedicated log while it's written
+		$isWindows = stripos(PHP_OS, 'WIN') === 0;
 		$logFileName = $config->dedicatedPath.'Logs/ConsoleLog.'.$pid.'.txt';
 		while(!file_exists($logFileName))
 			usleep(200000);
@@ -258,7 +255,12 @@ class ServerService extends AbstractService
 
 	protected function updateServer($host, $port, $name)
 	{
-		$this->db()->execute('UPDATE Servers SET name = %s WHERE rpcHost = %s AND rpcPort = %d', $this->db()->quote($name), $this->db()->quote($host), $port);
+		$this->db()->execute(
+				'UPDATE Servers SET name=%s WHERE rpcHost=%s AND rpcPort=%d',
+				$this->db()->quote($name),
+				$this->db()->quote($host),
+				$port
+			);
 	}
 
 	private function getPIDs()

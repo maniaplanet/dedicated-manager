@@ -38,21 +38,19 @@ $r = ManiaLib\Application\Request::getInstance();
 			</form>
 		</div>
 		<?php require __DIR__.'/Navigation.php'; ?>
-		<?php //var_dump($chat) ?>
 	</div>
 </div>
 <script type="text/javascript">
-	function updateChat () {
+	function updateChat() {
 		$.ajax({
-			type : 'GET',
-			url : '<?php echo $r->createLink('../chatDisplay') ?>'
+			type: 'GET',
+			url: '<?php echo $r->createLink('../chat-display'); ?>'
 		}).done(function (html) {
 			$('#chat').html(html);
-			$('#chat').scrollTop($('#chat').contents().height());
 		});
 	}
 	$(document).bind('pageinit', function() {
-	updateChat();
+		updateChat();
 		setInterval('updateChat()', 5000);
 	});
 </script>

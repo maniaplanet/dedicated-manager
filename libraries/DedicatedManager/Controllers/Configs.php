@@ -24,15 +24,17 @@ class Configs extends AbstractController
 	function index()
 	{
 		$service = new \DedicatedManager\Services\ConfigFileService();
-		$configFiles = $service->getList();
+		$this->response->configFiles = $service->getList();
 		$service = new \DedicatedManager\Services\MatchSettingsFileService();
-		$matchFiles = $service->getList();
-
-		$this->response->configFiles = $configFiles;
-		$this->response->matchFiles = $matchFiles;
+		$this->response->matchFiles = $service->getList();
+		if(\DedicatedManager\Config::getInstance()->manialivePath)
+		{
+			$service = new \DedicatedManager\Services\ManialiveFileService();
+			$this->response->manialiveFiles = $service->getList();
+		}
 	}
 
-	function delete(array $configFiles = array(), array $matchFiles = array())
+	function delete($configFiles=array(), $matchFiles=array(), $manialiveFiles=array())
 	{
 		$errors = array();
 		$success = array();
@@ -42,11 +44,11 @@ class Configs extends AbstractController
 			{
 				$service = new \DedicatedManager\Services\ConfigFileService();
 				$service->deleteList($configFiles);
-				$success[] = _('Configuration files successfully deleted.');
+				$success[] = _('Configuration files successfully deleted');
 			}
 			catch(\Exception $e)
 			{
-				$errors[] = _('Error while deleting configuration files.');
+				$errors[] = _('Error while deleting configuration files');
 			}
 		}
 
@@ -56,11 +58,25 @@ class Configs extends AbstractController
 			{
 				$service = new \DedicatedManager\Services\MatchSettingsFileService();
 				$service->deleteList($matchFiles);
-				$success[] = _('Match settings files successfully deleted.');
+				$success[] = _('Match settings files successfully deleted');
 			}
 			catch(\Exception $e)
 			{
-				$errors[] = _('Error while deleting match settings files.');
+				$errors[] = _('Error while deleting match settings files');
+			}
+		}
+
+		if($manialiveFiles)
+		{
+			try
+			{
+				$service = new \DedicatedManager\Services\ManialiveFileService();
+				$service->deleteList($manialiveFiles);
+				$success[] = _('ManiaLive configuration files successfully deleted');
+			}
+			catch(\Exception $e)
+			{
+				$errors[] = _('Error while deleting ManiaLive configuration files');
 			}
 		}
 

@@ -20,7 +20,7 @@ div.input-list {
 	width: 97%;
 }
 
-@media (min-width: 450px)
+@media all and (min-width: 450px)
 {
 	div.input-list {
 		display: inline-block;
@@ -38,9 +38,4 @@ div.input-list input {
 .someSelected {
     opacity: 0.5;
     filter: alpha(opacity=50);
-}
-
-#chat {
-	max-height: 500px;
-	overflow-y: scroll;
 }

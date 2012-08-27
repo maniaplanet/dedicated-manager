@@ -44,15 +44,18 @@ class Home extends AbstractController
 			$writables = array_merge($writables, $tmp);
 		}
 		
-		$writables[] = $config->manialivePath;
-		$writables[] = $config->manialivePath.'config/';
-		$writables[] = $config->manialivePath.'logs/';
-		if(file_exists($config->manialivePath.'config/'))
+		if($config->manialivePath)
 		{
-			chdir($config->manialivePath.'config/');
-			$tmp = glob('*.[iI][nN][iI]');
-			$tmp = array_map(function ($f) use ($config) { return $config->manialivePath.'config/'.$f; }, $tmp);
-			$writables = array_merge($writables, $tmp);
+			$writables[] = $config->manialivePath;
+			$writables[] = $config->manialivePath.'config/';
+			$writables[] = $config->manialivePath.'logs/';
+			if(file_exists($config->manialivePath.'config/'))
+			{
+				chdir($config->manialivePath.'config/');
+				$tmp = glob('*.[iI][nN][iI]');
+				$tmp = array_map(function ($f) use ($config) { return $config->manialivePath.'config/'.$f; }, $tmp);
+				$writables = array_merge($writables, $tmp);
+			}
 		}
 		chdir($currentDir);
 

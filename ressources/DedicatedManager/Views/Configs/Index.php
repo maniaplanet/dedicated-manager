@@ -1,6 +1,7 @@
 <?php
 require __DIR__.'/../Header.php';
 $r = ManiaLib\Application\Request::getInstance();
+$hasManiaLive = (bool) \DedicatedManager\Config::getInstance()->manialivePath;
 ?>
 <div data-role="page">
 	<?php echo DedicatedManager\Helpers\Header::save() ?>
@@ -27,8 +28,19 @@ $r = ManiaLib\Application\Request::getInstance();
 				<?php endforeach; ?>
 				</fieldset>
 			</div>
+		<?php if($hasManiaLive): ?>
+			<div data-role="collapsible" data-collapsed="false" data-theme="b">
+				<h3><?php echo _('ManiaLive configuration files') ?></h3>
+				<fieldset data-role="controlgroup">
+				<?php foreach($manialiveFiles as $manialiveFile): ?>
+					<?php $id = uniqid('manialive-'); ?>
+					<input type="checkbox" id="<?php echo $id; ?>" name="manialiveFiles[]" value="<?php echo $manialiveFile; ?>"/>
+					<label for="<?php echo $id; ?>"><?php echo $manialiveFile; ?></label>
+				<?php endforeach; ?>
+				</fieldset>
+			</div>
+		<?php endif; ?>
 			<input type="submit" value="<?php echo _('Delete selected files') ?>" data-icon="delete"/>
-			</ul>
 		</form>
     </div>
 </div>

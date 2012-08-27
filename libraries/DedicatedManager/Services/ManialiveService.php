@@ -30,24 +30,29 @@ class ManialiveService extends AbstractService
 		$config = \DedicatedManager\Config::getInstance();
 		$isWindows = stripos(PHP_OS, 'WIN') === 0;
 		if($isWindows)
-			$startCommand = 'START php.exe "'.$config->manialivePath.'bootstrapper.php"';
+			$startCommand = 'START php.exe bootstrapper.php';
 		else
-			$startCommand = 'cd "'.$config->manialivePath.'"; php bootstrapper.php';
+			$startCommand = 'php bootstrapper.php';
 		$startCommand .= ' --manialive_cfg='.escapeshellarg($configFile.'.ini');
 		
-		$cmdOptions = array();
 		foreach($options as $key => $value)
-		{
-			$cmdOptions[] = '--'.$key.'='.escapeshellarg($value);
-		}
-		$startCommand .= ' '.implode(' ', $cmdOptions);
-		if(!$isWindows)
-			$startCommand .= '&';
+			$startCommand .= ' --'.$key.'='.escapeshellarg($value);
 		
-		$procHandle = proc_open($startCommand, array(), $pipes);
-		$status = proc_get_status($procHandle);
+		if(!$isWindows)
+			$startCommand .= ' &';
+		
+		// Getting current PIDs
+		$currentPids = $this->getPIDs();
+		
+		// Starting dedicated
+		$procHandle = proc_open($startCommand, array(), $pipes, $config->manialivePath);
 		proc_close($procHandle);
-		return $status['pid'];
+
+		// Getting its PID
+		$diffPids = array_diff($this->getPIDs(), $currentPids);
+		if(!$diffPids)
+			throw new \Exception('Can\'t start dedicated server.');
+		return reset($diffPids);
 	}
 	
 	function stop($pid)
@@ -58,17 +63,7 @@ class ManialiveService extends AbstractService
 		else
 			`kill -9 $pid`;
 	}
-
-	function register($host, $port, $pid)
-	{
-		$this->db()->execute(
-				'UPDATE Servers SET manialivePID=%d WHERE rpcHost=%s AND rpcPort=%d',
-				$pid,
-				$this->db()->quote($host),
-				$port
-			);
-	}
-
+	
 	private function validatePlugin($plugin)
 	{
 		$matches = array();
@@ -114,13 +109,13 @@ class ManialiveService extends AbstractService
 	{
 		if(stripos(PHP_OS, 'WIN') === 0)
 		{
-			$dedicatedProc = `TASKLIST /FI "IMAGENAME eq ManiaPlanetServer.exe" /NH`;
-			if(preg_match_all('/ManiaPlanetServer\.exe\s+(\d+)/m', $dedicatedProc, $matches))
+			$dedicatedProc = `TASKLIST /FI "IMAGENAME eq php.exe" /NH`;
+			if(preg_match_all('/php\.exe\s+(\d+)/m', $dedicatedProc, $matches))
 				return $matches[1];
 		}
 		else
 		{
-			$dedicatedProc = `ps -C "ManiaPlanetServer" --format pid --no-headers --sort +cputime`;
+			$dedicatedProc = `ps -C "php" --format pid --no-headers --sort +cputime`;
 			if(preg_match_all('/(\\d+)/', $dedicatedProc, $matches))
 				return $matches[1];
 		}

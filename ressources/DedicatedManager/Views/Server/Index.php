@@ -35,6 +35,11 @@ $r = ManiaLib\Application\Request::getInstance();
 			<li data-icon="grid">
 				<a href="<?php echo htmlentities($r->createLinkArgList('../managers', 'host', 'port'), ENT_QUOTES, 'UTF-8') ?>" data-ajax="false"><?php echo _('Managers') ?></a>
 			</li>
+			<?php if(\DedicatedManager\Config::getInstance()->manialivePath): ?>
+				<li data-icon="plus" data-theme="d">
+					<a href="<?php echo htmlentities($r->createLinkArgList('/manialive', 'host', 'port'), ENT_QUOTES, 'UTF-8') ?>" data-ajax="false"><?php echo _('Start a ManiaLive instance') ?></a>
+				</li>
+			<?php endif; ?>
 		<?php endif; ?>
 		</ul>
 	</div>
