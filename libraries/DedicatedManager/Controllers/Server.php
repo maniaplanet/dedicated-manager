@@ -892,7 +892,6 @@ class Server extends AbstractController
 		$controllers = array();
 		foreach($this->connection->executeCallbacks() as $call)
 		{
-			\ManiaLib\Utils\Logger::info($call);
 			if($call[0] == 'ManiaPlanet.Echo' && $call[1][0] == '!census:DedicatedManager '.DEDICATED_MANAGER_VERSION)
 			{
 				$controllers[] = $call[1][1];
