@@ -200,7 +200,7 @@ class Server extends AbstractController
 		if(!$selected)
 		{
 			$this->session->set('error', _('You have to select at least one map'));
-			$this->request->redirectArgList('../add-maps/', 'host', 'port');
+			$this->request->redirectArgList('../add-maps', 'host', 'port');
 		}
 		$selected = explode('|', $selected);
 		if($insert)
@@ -212,7 +212,7 @@ class Server extends AbstractController
 			$this->connection->addMapList($selected);
 		}
 
-		$this->request->redirectArgList('../add-maps/', 'host', 'port');
+		$this->request->redirectArgList('../add-maps', 'host', 'port');
 	}
 
 	/**
@@ -321,7 +321,7 @@ class Server extends AbstractController
 			\ManiaLib\Application\ErrorHandling::logException($e);
 			$this->session->set('error', _('An error occured while changing rules'));
 		}
-		$this->request->redirectArgList('../rules/', 'host', 'port');
+		$this->request->redirectArgList('../rules', 'host', 'port');
 	}
 
 	function config()
@@ -348,7 +348,7 @@ class Server extends AbstractController
 		if(($errors = $service->validate($options)))
 		{
 			$this->session->set('error', $errors);
-			$this->request->redirectArgList('../config/', 'host', 'port');
+			$this->request->redirectArgList('../config', 'host', 'port');
 		}
 
 		$optionsCur = $this->connection->getServerOptions();
@@ -374,7 +374,7 @@ class Server extends AbstractController
 			\ManiaLib\Application\ErrorHandling::logException($e);
 			$this->session->set('error', _('An error occured while changing server configuration'));
 		}
-		$this->request->redirectArgList('../config/', 'host', 'port');
+		$this->request->redirectArgList('../config', 'host', 'port');
 	}
 
 	function votes()
@@ -415,8 +415,8 @@ class Server extends AbstractController
 	{
 		if(!$players)
 		{
-			$this->session->set('error', _('You have to select at least one player.'));
-			$this->request->redirectArgList('../players/', 'host', 'port');
+			$this->session->set('error', _('You have to select at least one player'));
+			$this->request->redirectArgList('../players', 'host', 'port');
 		}
 
 		if($kick)
@@ -429,7 +429,7 @@ class Server extends AbstractController
 			catch(\Exception $e)
 			{
 				\ManiaLib\Application\ErrorHandling::logException($e);
-				$this->session->set('error', _('An error occurred while kicking players.'));
+				$this->session->set('error', _('An error occurred while kicking players'));
 			}
 		}
 		elseif($ban)
@@ -442,7 +442,7 @@ class Server extends AbstractController
 			catch(\Exception $e)
 			{
 				\ManiaLib\Application\ErrorHandling::logException($e);
-				$this->session->set('error', _('An error occurred while banning players.'));
+				$this->session->set('error', _('An error occurred while banning players'));
 			}
 		}
 		elseif($blacklist)
@@ -456,7 +456,7 @@ class Server extends AbstractController
 			catch(\Exception $e)
 			{
 				\ManiaLib\Application\ErrorHandling::logException($e);
-				$this->session->set('error', _('An error occurred while blacklisting players.'));
+				$this->session->set('error', _('An error occurred while blacklisting players'));
 			}
 		}
 		elseif($guestlist)
@@ -469,10 +469,10 @@ class Server extends AbstractController
 			catch(\Exception $e)
 			{
 				\ManiaLib\Application\ErrorHandling::logException($e);
-				$this->session->set('error', _('An error occurred while adding players to the guest list.'));
+				$this->session->set('error', _('An error occurred while adding players to the guest list'));
 			}
 		}
-		$this->request->redirectArgList('../players/', 'host', 'port');
+		$this->request->redirectArgList('../players', 'host', 'port');
 	}
 
 	function banlist()
@@ -492,8 +492,8 @@ class Server extends AbstractController
 	{
 		if(!$players)
 		{
-			$this->session->set('error', _('You have to select at least one player.'));
-			$this->request->redirectArgList('../banlist/', 'host', 'port');
+			$this->session->set('error', _('You have to select at least one player'));
+			$this->request->redirectArgList('../banlist', 'host', 'port');
 		}
 		try
 		{
@@ -504,9 +504,9 @@ class Server extends AbstractController
 		catch(\Exception $e)
 		{
 			\ManiaLib\Application\ErrorHandling::logException($e);
-			$this->session->set('error', _('An error occurred while unbanning players.'));
+			$this->session->set('error', _('An error occurred while unbanning players'));
 		}
-		$this->request->redirectArgList('../banlist/', 'host', 'port');
+		$this->request->redirectArgList('../banlist', 'host', 'port');
 	}
 
 	/**
@@ -522,9 +522,9 @@ class Server extends AbstractController
 		catch(\Exception $e)
 		{
 			\ManiaLib\Application\ErrorHandling::logException($e);
-			$this->session->set('error', _('An error occurred while cleaning the banlist.'));
+			$this->session->set('error', _('An error occurred while cleaning the banlist'));
 		}
-		$this->request->redirect('../banlist/');
+		$this->request->redirect('../banlist');
 	}
 
 	function blacklist()
@@ -553,8 +553,8 @@ class Server extends AbstractController
 	{
 		if(!$players)
 		{
-			$this->session->set('error', _('You have to select at least one player.'));
-			$this->request->redirectArgList('../blacklist/', 'host', 'port');
+			$this->session->set('error', _('You have to select at least one player'));
+			$this->request->redirectArgList('../blacklist', 'host', 'port');
 		}
 
 		try
@@ -566,9 +566,9 @@ class Server extends AbstractController
 		catch(\Exception $e)
 		{
 			\ManiaLib\Application\ErrorHandling::logException($e);
-			$this->session->set('error', _('An error occurred while unblacklisting players.'));
+			$this->session->set('error', _('An error occurred while unblacklisting players'));
 		}
-		$this->request->redirectArgList('../blacklist/', 'host', 'port');
+		$this->request->redirectArgList('../blacklist', 'host', 'port');
 	}
 
 	/**
@@ -584,9 +584,9 @@ class Server extends AbstractController
 		catch(\Exception $e)
 		{
 			\ManiaLib\Application\ErrorHandling::logException($e);
-			$this->session->set('error', _('An error occurred while adding the player to blacklist.'));
+			$this->session->set('error', _('An error occurred while adding the player to blacklist'));
 		}
-		$this->request->redirectArgList('../blacklist/', 'host', 'port');
+		$this->request->redirectArgList('../blacklist', 'host', 'port');
 	}
 
 	/**
@@ -602,9 +602,9 @@ class Server extends AbstractController
 		catch(\Exception $e)
 		{
 			\ManiaLib\Application\ErrorHandling::logException($e);
-			$this->session->set('error', _('An error occurred while cleaning the banlist.'));
+			$this->session->set('error', _('An error occurred while cleaning the banlist'));
 		}
-		$this->request->redirect('../blacklist/');
+		$this->request->redirect('../blacklist');
 	}
 
 	/**
@@ -621,9 +621,9 @@ class Server extends AbstractController
 		catch(\Exception $e)
 		{
 			\ManiaLib\Application\ErrorHandling::logException($e);
-			$this->session->set('error', _('An error occurred while loading the blacklist.'));
+			$this->session->set('error', _('An error occurred while loading the blacklist'));
 		}
-		$this->request->redirectArgList('../blacklist/', 'host', 'port');
+		$this->request->redirectArgList('../blacklist', 'host', 'port');
 	}
 
 	/**
@@ -636,7 +636,7 @@ class Server extends AbstractController
 		if(in_array($filename, $configList))
 		{
 			$this->session->set('error', _('You cannot use this filename'));
-			$this->request->redirectArgList('../blacklist/', 'host', 'port');
+			$this->request->redirectArgList('../blacklist', 'host', 'port');
 		}
 		try
 		{
@@ -646,9 +646,9 @@ class Server extends AbstractController
 		catch(\Exception $e)
 		{
 			\ManiaLib\Application\ErrorHandling::logException($e);
-			$this->session->set('error', _('An error occurred while saving the blacklist.'));
+			$this->session->set('error', _('An error occurred while saving the blacklist'));
 		}
-		$this->request->redirectArgList('../blacklist/', 'host', 'port');
+		$this->request->redirectArgList('../blacklist', 'host', 'port');
 	}
 
 	function guestlist()
@@ -677,8 +677,8 @@ class Server extends AbstractController
 	{
 		if(!$players)
 		{
-			$this->session->set('error', _('You have to select at least one player.'));
-			$this->request->redirectArgList('../guestlist/', 'host', 'port');
+			$this->session->set('error', _('You have to select at least one player'));
+			$this->request->redirectArgList('../guestlist', 'host', 'port');
 		}
 
 		try
@@ -690,9 +690,9 @@ class Server extends AbstractController
 		catch(\Exception $e)
 		{
 			\ManiaLib\Application\ErrorHandling::logException($e);
-			$this->session->set('error', _('An error occurred while removing guests.'));
+			$this->session->set('error', _('An error occurred while removing guests'));
 		}
-		$this->request->redirectArgList('../guestlist/', 'host', 'port');
+		$this->request->redirectArgList('../guestlist', 'host', 'port');
 	}
 
 	/**
@@ -708,9 +708,9 @@ class Server extends AbstractController
 		catch(\Exception $e)
 		{
 			\ManiaLib\Application\ErrorHandling::logException($e);
-			$this->session->set('error', _('An error occurred while cleaning the guestlist.'));
+			$this->session->set('error', _('An error occurred while cleaning the guestlist'));
 		}
-		$this->request->redirect('../guestlist/');
+		$this->request->redirect('../guestlist');
 	}
 
 	/**
@@ -727,9 +727,9 @@ class Server extends AbstractController
 		catch(\Exception $e)
 		{
 			\ManiaLib\Application\ErrorHandling::logException($e);
-			$this->session->set('error', _('An error occurred while loading the guestlist.'));
+			$this->session->set('error', _('An error occurred while loading the guestlist'));
 		}
-		$this->request->redirectArgList('../guestlist/', 'host', 'port');
+		$this->request->redirectArgList('../guestlist', 'host', 'port');
 	}
 
 	/**
@@ -745,9 +745,9 @@ class Server extends AbstractController
 		catch(\Exception $e)
 		{
 			\ManiaLib\Application\ErrorHandling::logException($e);
-			$this->session->set('error', _('An error occurred while addind the player to guestlist.'));
+			$this->session->set('error', _('An error occurred while addind the player to guestlist'));
 		}
-		$this->request->redirectArgList('../guestlist/', 'host', 'port');
+		$this->request->redirectArgList('../guestlist', 'host', 'port');
 	}
 
 	/**
@@ -760,7 +760,7 @@ class Server extends AbstractController
 		if(in_array($filename, $configList))
 		{
 			$this->session->set('error', _('You cannot use this filename'));
-			$this->request->redirectArgList('../guestlist/', 'host', 'port');
+			$this->request->redirectArgList('../guestlist', 'host', 'port');
 		}
 
 		try
@@ -771,9 +771,9 @@ class Server extends AbstractController
 		catch(\Exception $e)
 		{
 			\ManiaLib\Application\ErrorHandling::logException($e);
-			$this->session->set('error', _('An error occurred while saving the guestlist.'));
+			$this->session->set('error', _('An error occurred while saving the guestlist'));
 		}
-		$this->request->redirectArgList('../guestlist/', 'host', 'port');
+		$this->request->redirectArgList('../guestlis/', 'host', 'port');
 	}
 
 	function chat()
@@ -806,7 +806,7 @@ class Server extends AbstractController
 			$this->session->set('error', _('Fail to send your message'));
 		}
 
-		$this->request->redirectArgList('../chat/', 'host', 'port');
+		$this->request->redirectArgList('../chat', 'host', 'port');
 	}
 
 	/**
@@ -823,17 +823,16 @@ class Server extends AbstractController
 	 */
 	function setTeams($team1, $team2)
 	{
-		$this->connection->setTeamInfo($team1['name'], (double) $team1['color'], $team1['country'], $team2['name'],
-			(double) $team2['color'], $team2['country']);
+		$this->connection->setTeamInfo($team1['name'], (double) $team1['color'], $team1['country'], $team2['name'], (double) $team2['color'], $team2['country']);
 		$this->session->set('success', _('Changes has been applied'));
-		$this->request->redirectArgList('../teams/', 'host', 'port');
+		$this->request->redirectArgList('../teams', 'host', 'port');
 	}
 
 	function managers()
 	{
 		if(!$this->isAdmin)
 		{
-			$this->session->set('error', _('You need to be an admin to do this.'));
+			$this->session->set('error', _('You need to be an admin to do this'));
 			$this->request->redirectToReferer();
 		}
 
@@ -848,7 +847,7 @@ class Server extends AbstractController
 	{
 		if(!$this->isAdmin)
 		{
-			$this->session->set('error', _('You need to be an admin to do this.'));
+			$this->session->set('error', _('You need to be an admin to do this'));
 			$this->request->redirectToReferer();
 		}
 
@@ -858,7 +857,7 @@ class Server extends AbstractController
 			foreach($managers as $manager)
 				$service->revoke($this->server->rpcHost, $this->server->rpcPort, $manager);
 		}
-		$this->request->redirectArgList('../managers/', 'host', 'port');
+		$this->request->redirectArgList('../managers', 'host', 'port');
 	}
 
 	/**
@@ -879,9 +878,48 @@ class Server extends AbstractController
 		}
 		catch(\Exception $e)
 		{
-			$this->session->set('warning', _('Already a manager.'));
+			$this->session->set('warning', _('Already a manager'));
 		}
-		$this->request->redirectArgList('../managers/', 'host', 'port');
+		$this->request->redirectArgList('../managers', 'host', 'port');
+	}
+	
+	function controllers()
+	{
+		$this->connection->enableCallbacks(true);
+		$this->connection->dedicatedEcho('DedicatedManager '.DEDICATED_MANAGER_VERSION, '?census');
+		// waiting for answers
+		usleep(500000);
+		$controllers = array();
+		foreach($this->connection->executeCallbacks() as $call)
+		{
+			\ManiaLib\Utils\Logger::info($call);
+			if($call[0] == 'ManiaPlanet.Echo' && $call[1][0] == '!census:DedicatedManager '.DEDICATED_MANAGER_VERSION)
+			{
+				$controllers[] = $call[1][1];
+				if(stripos($call[1][1], 'ManiaLive') !== false)
+					$this->response->manialiveStarted = true;
+			}
+		}
+		$this->response->controllers = array_unique($controllers);
+	}
+	
+	/**
+	 * @redirect
+	 */
+	function stopControllers($controllers)
+	{
+		if(!$controllers)
+		{
+			$this->session->set('error', _('You have to select at least one controller'));
+			$this->request->redirectArgList('../controllers', 'host', 'port');
+		}
+		
+		foreach($controllers as $controller)
+		{
+			$this->connection->dedicatedEcho('DedicatedManager '.DEDICATED_MANAGER_VERSION, '?stop:'.$controller);
+		}
+		$this->session->set('success', _('Controllers have been asked to stop successfully'));
+		$this->request->redirectArgList('../controllers', 'host', 'port');
 	}
 
 	/**
@@ -891,14 +929,14 @@ class Server extends AbstractController
 	{
 		if(!$this->isAdmin)
 		{
-			$this->session->set('error', _('You need to be an admin to do this.'));
+			$this->session->set('error', _('You need to be an admin to do this'));
 			$this->request->redirectToReferer();
 		}
 
 		$this->connection->stopServer();
 		$service = new \DedicatedManager\Services\ServerService();
 		$service->delete($this->server->rpcHost, $this->server->rpcPort);
-		$this->session->set('success', _('Server has been stopped.'));
+		$this->session->set('success', _('Server has been stopped'));
 		$this->request->redirectArgList('/');
 	}
 
@@ -909,7 +947,7 @@ class Server extends AbstractController
 	function restart()
 	{
 		$this->connection->restartMap();
-		$this->session->set('success', _('Current map has been restarted.'));
+		$this->session->set('success', _('Current map has been restarted'));
 		$this->request->redirectToReferer();
 	}
 
@@ -920,7 +958,7 @@ class Server extends AbstractController
 	function next()
 	{
 		$this->connection->nextMap();
-		$this->session->set('success', _('Server is going to the next map.'));
+		$this->session->set('success', _('Server is going to the next map'));
 		$this->request->redirectToReferer();
 	}
 
@@ -931,7 +969,7 @@ class Server extends AbstractController
 	function balance()
 	{
 		$this->connection->autoTeamBalance();
-		$this->session->set('success', _('Teams has been balanced.'));
+		$this->session->set('success', _('Teams has been balanced'));
 		$this->request->redirectToReferer();
 	}
 

@@ -163,7 +163,7 @@ class Manialive extends AbstractController
 		$this->session->delete('configFile');
 		$this->session->delete('config');
 		$this->session->delete('server');
-		$this->request->redirectArgList('/server', 'host', 'port');
+		$this->request->redirectArgList('/server/controllers', 'host', 'port');
 	}
 	
 	protected function fetchAndAssertConfig($actionStr)

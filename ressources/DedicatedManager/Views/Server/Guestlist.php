@@ -11,42 +11,38 @@ $r = ManiaLib\Application\Request::getInstance();
 				<input type="hidden" name="port" value="<?php echo $port ?>"/>
 				<ul data-role="listview" data-inset="true">
 					<li data-role="list-divider">
-						<?php echo _('Current guest list') ?>
+						<?php echo _('Current guestlist') ?>
 					</li>
 					<li data-role="fieldcontain">
 						<fieldset data-role="controlgroup">
-							<legend><?php echo _('Players') ?></legend>
-							<?php if(count($guestListedPlayers)): ?>
-								<?php foreach($guestListedPlayers as $player): ?>
-									<label for="<?php echo $player->login ?>"><?php echo $player->login ?></label>
-									<input type="checkbox" name="players[]" id="<?php echo $player->login ?>" value="<?php echo $player->login ?>" />
-								<?php endforeach; ?>
-							<?php else: ?>
-								<strong><?php echo _('There is no player in the guest list.') ?></strong>
-							<?php endif; ?>
+						<?php if(count($guestListedPlayers)): ?>
+							<?php foreach($guestListedPlayers as $player): ?>
+								<label for="<?php echo $player->login ?>"><?php echo $player->login ?></label>
+								<input type="checkbox" name="players[]" id="<?php echo $player->login ?>" value="<?php echo $player->login ?>" />
+							<?php endforeach; ?>
+						<?php else: ?>
+							<strong><?php echo _('There is not any player in the guestlist'); ?></strong>
+						<?php endif; ?>
 						</fieldset>
 					</li>
 					<li data-role="fieldcontain">
-						<div class="<?php echo ($isLocal
-									? 'ui-grid-d' : 'ui-grid-c') ?>">
+						<div class="<?php echo ($isLocal ? 'ui-grid-d' : 'ui-grid-c') ?>">
 							<div class="ui-block-a">
 								<a href="#add" data-role="button" data-icon="plus" data-rel="dialog" data-transition="pop"><?php echo _('Add a guest') ?></a>
 							</div>
 							<div class="ui-block-b">
-								<input type="submit" value="<?php echo _('Remove from list') ?>" data-icon="minus" <?php echo count($guestListedPlayers)
-									? '' : 'disabled="disabled"' ?>/>
+								<input type="submit" value="<?php echo _('Remove from list') ?>" data-icon="minus" <?php echo count($guestListedPlayers) ? '' : 'disabled="disabled"' ?>/>
 							</div>
 							<div class="ui-block-c">
 								<a href="<?php echo htmlentities($r->createLinkArgList('../clean-guestlist',
 									'host', 'port'), ENT_QUOTES, 'UTF-8') ?>" data-role="button" data-icon="delete" data-ajax="false"><?php echo _('Clean the list') ?></a>
 							</div>
-							<?php if($isLocal): ?>
-								<div class="ui-block-d">
-									<a href="#load" data-role="button" data-icon="gear" data-rel="dialog" data-transition="pop"><?php echo _('Load a guest list') ?></a>
-								</div>
-<?php endif; ?>
-							<div class="<?php echo ($isLocal
-		? 'ui-block-e' : 'ui-block-d') ?>">
+						<?php if($isLocal): ?>
+							<div class="ui-block-d">
+								<a href="#load" data-role="button" data-icon="gear" data-rel="dialog" data-transition="pop"><?php echo _('Load a guest list') ?></a>
+							</div>
+						<?php endif; ?>
+							<div class="<?php echo ($isLocal ? 'ui-block-e' : 'ui-block-d') ?>">
 								<a href="#save" data-role="button" data-icon="check" data-rel="dialog" data-transition="pop"><?php echo _('Save a guest list') ?></a>
 							</div>
 						</div>
@@ -67,10 +63,10 @@ $r = ManiaLib\Application\Request::getInstance();
 			<input type="hidden" name="host" value="<?php echo $host ?>"/>
 			<fieldset data-role="controlgroup">
 				<legend><?php echo _('Available guestlist') ?></legend>
-<?php foreach($guestlistFiles as $file): ?>
-					<input type="radio" name="filename" id="<?php echo $file ?>" value="<?php echo $file ?>"/>
-					<label for="<?php echo $file ?>"><?php echo $file ?></label>
-<?php endforeach; ?>
+			<?php foreach($guestlistFiles as $file): ?>
+				<input type="radio" name="filename" id="<?php echo $file ?>" value="<?php echo $file ?>"/>
+				<label for="<?php echo $file ?>"><?php echo $file ?></label>
+			<?php endforeach; ?>
 			</fieldset>
 			<div class="ui-grid-a">
 				<div class="ui-block-a">

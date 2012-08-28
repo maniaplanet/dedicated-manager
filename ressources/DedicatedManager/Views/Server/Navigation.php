@@ -4,7 +4,7 @@
 	<div data-role="collapsible" data-collapsed="true" data-theme="e" data-content-theme="d">
 		<h3><?php echo _('Show more') ?></h3>
 		<ul data-role="listview" data-theme="c" data-dividertheme="d">
-			<li data-role="list-divider"><?php echo _('Quick menu') ?></li>
+			<li data-role="list-divider"><?php echo _('Quick menu'); ?></li>
 		<?php if(!$isRelay): ?>
 			<li data-icon="grid" <?php echo in_array($currentAction, array('maps', 'addMaps')) ? 'data-theme="e"' : '' ?>>
 				<a href="<?php echo htmlentities($r->createLinkArgList('../maps', 'host', 'port'), ENT_QUOTES, 'UTF-8') ?>" data-ajax="false"><?php echo _('Map list') ?></a>
@@ -34,11 +34,9 @@
 			<li data-icon="grid" <?php echo $currentAction == 'managers' ? 'data-theme="e"' : '' ?>>
 				<a href="<?php echo htmlentities($r->createLinkArgList('../managers', 'host', 'port'), ENT_QUOTES, 'UTF-8') ?>" data-ajax="false"><?php echo _('Managers') ?></a>
 			</li>
-			<?php if(\DedicatedManager\Config::getInstance()->manialivePath): ?>
-				<li data-icon="plus" data-theme="d">
-					<a href="<?php echo htmlentities($r->createLinkArgList('/manialive', 'host', 'port'), ENT_QUOTES, 'UTF-8') ?>" data-ajax="false"><?php echo _('Start a ManiaLive instance') ?></a>
-				</li>
-			<?php endif; ?>
+			<li data-icon="star" <?php echo $currentAction == 'controllers' ? 'data-theme="e"' : '' ?>>
+				<a href="<?php echo htmlentities($r->createLinkArgList('../controllers', 'host', 'port'), ENT_QUOTES, 'UTF-8') ?>" data-ajax="false"><?php echo _('Ingame controllers') ?></a>
+			</li>
 		<?php endif; ?>
 		</ul>
 	</div>

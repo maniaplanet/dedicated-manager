@@ -15,15 +15,14 @@ $r = ManiaLib\Application\Request::getInstance();
 					</li>
 					<li data-role="fieldcontain">
 						<fieldset data-role="controlgroup">
-							<legend><?php echo _('Banned players') ?></legend>
-							<?php if(count($banlist)): ?>
-								<?php foreach($banlist as $player): ?>
-									<label for="<?php echo $player->login ?>"><?php echo $player->login ?></label>
-									<input type="checkbox" name="players[]" id="<?php echo $player->login ?>" value="<?php echo $player->login ?>" />
-								<?php endforeach; ?>
-							<?php else: ?>
-								<strong><?php echo _('There is not any banned player.') ?></strong>
-							<?php endif; ?>
+						<?php if(count($banlist)): ?>
+							<?php foreach($banlist as $player): ?>
+								<label for="<?php echo $player->login ?>"><?php echo $player->login ?></label>
+								<input type="checkbox" name="players[]" id="<?php echo $player->login ?>" value="<?php echo $player->login ?>" />
+							<?php endforeach; ?>
+						<?php else: ?>
+							<strong><?php echo _('There is not any banned player'); ?></strong>
+						<?php endif; ?>
 						</fieldset>
 					</li>
 					<li data-role="fieldcontain">
