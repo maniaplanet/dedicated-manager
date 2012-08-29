@@ -100,6 +100,10 @@ class MapService extends AbstractService
 		$files = scandir($workPath);
 		foreach($files as $filename)
 		{
+			if(mb_detect_encoding($filename, 'UTF-8', true) === false)
+				$utf8Filename = utf8_encode($filename);
+			else
+				$utf8Filename = $filename;
 			if(is_dir($workPath.'/'.$filename))
 			{
 				if($filename == '.' || $filename == '..')
@@ -121,7 +125,7 @@ class MapService extends AbstractService
 					$maps[] = $file;
 				}
 			}
-			else if(preg_match('/\.map\.gbx$/ui', $filename))
+			else if(preg_match('/\.map\.gbx$/ui', $utf8Filename))
 			{
 				try
 				{
@@ -130,6 +134,7 @@ class MapService extends AbstractService
 							&& (!$environment || ($environment && $environment == $file->environment))
 							&& (!$mapTypes || $mapTypes && in_array(strtolower($file->type), $mapTypes, true)) )
 					{
+						$file->filename = $utf8Filename;
 						$maps[] = $file;
 					}
 				}

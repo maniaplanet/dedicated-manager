@@ -231,7 +231,7 @@ class ServerService extends AbstractService
 		}
 
 		// Retrieving XML-RPC port
-		if(preg_match('/Listening for xml-rpc commands on port (\d+)/um', $buffer, $matches))
+		if(preg_match('/Listening for xml-rpc commands on port (\d+)/m', $buffer, $matches))
 			$port = $matches[1];
 		else
 			throw new \Exception('XML-RPC port not found');

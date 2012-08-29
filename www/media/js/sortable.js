@@ -4,7 +4,7 @@ $(document).bind('pageinit', function() {
 		var defaultOrder = $.grep(self.attr('value').split('|'), function(m) {
 			if(m.length == 0)
 				return false;
-			return self.closest('.sortable-container').find('input:checkbox[value="'+m+'"]').length == 1;
+			return self.closest('.sortable-container').find('input:checkbox').filter(function() { return $(this).val() == m; }).length == 1;
 		});
 		var order = defaultOrder.slice(0);
 		self.attr('value', order.join('|'));

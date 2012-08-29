@@ -17,14 +17,14 @@ $r = ManiaLib\Application\Request::getInstance();
 				<li data-role="list-divider"><?php echo _('Change config filenames') ?></li>
 				<li data-role="fieldcontain">
 					<label for="configFile">
-						<?php echo _('Server config filename') ?><br/>
+						<strong><?php echo _('Server config filename') ?></strong><br/>
 						<i><?php echo _('You have to enter a filename to save your server configuration.') ?></i>
 					</label>
 					<?php echo DedicatedManager\Helpers\Input::text('configFile', 'configFile', $configFile) ?>
 				</li>
 				<li data-role="fieldcontain">
 					<label for="matchFile">
-						<?php echo _('Match settings filename') ?><br/>
+						<strong><?php echo _('Match settings filename') ?></strong><br/>
 						<i><?php echo _('You have to enter a filename to save your match configuration.') ?></i>
 					</label>
 					<?php echo DedicatedManager\Helpers\Input::text('matchFile', 'matchFile', $matchFile) ?>

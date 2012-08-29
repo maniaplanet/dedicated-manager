@@ -111,7 +111,9 @@ class MatchSettingsFileService extends DedicatedFileService
 		for($i = 0; $i < count($playlist->map); $i++)
 		{
 			$mapIndex = ($i + (int) $playlist->startindex) % count($playlist->map);
-			$maps[] = str_replace('\\', '/', (string) $playlist->map[$mapIndex]->file);
+			$map = str_replace('\\', '/', (string) $playlist->map[$mapIndex]->file);
+			$map = preg_replace('/^\xEF\xBB\xBF/', '', $map);
+			$maps[] = $map;
 		}
 		return array($gameInfos, $maps);
 	}
@@ -165,22 +167,18 @@ class MatchSettingsFileService extends DedicatedFileService
 
 		foreach($maps as $map)
 		{
-			$playlist->addChild('map')->addChild('file', $map);
+			$playlist->addChild('map')->addChild('file', "\xEF\xBB\xBF".$map);
+			//$playlist->addChild('map')->addChild('file', $map);
 		}
 
 		$playlist->asXML($this->directory.$filename.'.txt');
 	}
 
-	function getCurrentMatchRules($hostname, $port)
+	function getCurrentMatchRules($host, $port)
 	{
 		$service = new \DedicatedManager\Services\ServerService();
-		$server = $service->get($hostname, $port);
-
-		$host = $hostname;
-		$port = $port;
-		$password = $server->rpcPassword;
-
-		$connection = \DedicatedApi\Connection::factory($host,$port,5,'SuperAdmin',$password);
+		$server = $service->get($host, $port);
+		$connection = \DedicatedApi\Connection::factory($host, $port, 5, 'SuperAdmin', $server->rpcPassword);
 		$gameInfo = $connection->getNextGameInfo();
 		$matchRules = array();
 

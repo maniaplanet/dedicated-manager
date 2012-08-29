@@ -162,6 +162,7 @@ class Server extends AbstractController
 		$selected = \ManiaLib\Utils\Arrays::getProperty($maps, 'fileName');
 		$selected = array_map(function($s)
 			{
+				$s = preg_replace('/^\xEF\xBB\xBF/', '', $s);
 				return str_replace('\\', '/', $s);
 			}, $selected);
 
@@ -203,6 +204,7 @@ class Server extends AbstractController
 			$this->request->redirectArgList('../add-maps', 'host', 'port');
 		}
 		$selected = explode('|', $selected);
+		$selected = array_map(function ($s) { return "\xEF\xBB\xBF".$s; }, $selected);
 		if($insert)
 		{
 			$this->connection->insertMapList($selected);
@@ -212,7 +214,7 @@ class Server extends AbstractController
 			$this->connection->addMapList($selected);
 		}
 
-		$this->request->redirectArgList('../add-maps', 'host', 'port');
+		$this->request->redirectArgList('../maps', 'host', 'port');
 	}
 
 	/**
