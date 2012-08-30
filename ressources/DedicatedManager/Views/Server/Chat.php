@@ -42,10 +42,7 @@ $r = ManiaLib\Application\Request::getInstance();
 </div>
 <script type="text/javascript">
 	function updateChat() {
-		$.ajax({
-			type: 'GET',
-			url: '<?php echo $r->createLink('../chat-display'); ?>'
-		}).done(function (html) {
+		$.get('<?php echo $r->createLink('../chat-display'); ?>').done(function (html) {
 			$('#chat').html(html);
 		});
 	}

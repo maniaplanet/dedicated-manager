@@ -45,13 +45,11 @@ class Server extends AbstractController
 		try
 		{
 			$this->server = $service->getDetails($host, $port);
-			$this->connection = \DedicatedApi\Connection::factory($this->server->rpcHost, $this->server->rpcPort, 5,
-					'SuperAdmin', $this->server->rpcPassword);
+			$this->connection = \DedicatedApi\Connection::factory($this->server->rpcHost, $this->server->rpcPort, 5, 'SuperAdmin', $this->server->rpcPassword);
 		}
 		catch(\Exception $e)
 		{
-			$service->delete($host, $port);
-			$this->session->set('error', _('The server cannot be reached, it seems to be closed'));
+			$this->session->set('error', _('The server is unreachable, maybe it is closed'));
 			$this->request->redirectArgList('/');
 		}
 
@@ -907,7 +905,7 @@ class Server extends AbstractController
 	/**
 	 * @redirect
 	 */
-	function stopControllers($controllers)
+	function stopControllers($controllers=array())
 	{
 		if(!$controllers)
 		{

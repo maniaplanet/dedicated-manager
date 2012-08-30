@@ -90,6 +90,28 @@ class Home extends AbstractController
 		$service = new \DedicatedManager\Services\ServerService();
 		$this->response->servers = $this->isAdmin ? $service->getLives() : $service->getLivesForManager($this->session->login);
 	}
+	
+	function status($host, $port)
+	{
+		$service = new \DedicatedManager\Services\ServerService();
+		try
+		{
+			$server = $service->get($host, $port);
+			$this->connection = \DedicatedApi\Connection::factory($server->rpcHost, $server->rpcPort, 5, 'SuperAdmin', $server->rpcPassword);
+			$this->response->running = true;
+		}
+		catch(\Exception $e)
+		{
+			$this->response->running = false;
+		}
+	}
+	
+	function remove($host, $port)
+	{
+		$service = new \DedicatedManager\Services\ServerService();
+		$service->delete($host, $port);
+		$this->request->redirectArgList('/');
+	}
 }
 
 ?>
