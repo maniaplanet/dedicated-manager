@@ -11,11 +11,17 @@ namespace DedicatedManager\Services;
 
 class Spectate extends \DedicatedApi\Structures\AbstractStructure
 {
+	/** @var string */
 	public $method = 'managed';
+	/** @var string */
 	public $managed = '';
+	/** @var string */
 	public $login = '';
+	/** @var string */
 	public $ip = '127.0.0.1';
+	/** @var int */
 	public $port = 2350;
+	/** @var string */
 	public $password = '';
 }
 

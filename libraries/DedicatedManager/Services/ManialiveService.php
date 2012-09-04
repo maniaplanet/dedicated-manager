@@ -11,6 +11,9 @@ namespace DedicatedManager\Services;
 
 class ManialiveService extends AbstractService
 {
+	/**
+	 * @return string[]
+	 */
 	function getPlugins()
 	{
 		$manialivePath = \DedicatedManager\Config::getInstance()->manialivePath;
@@ -25,6 +28,12 @@ class ManialiveService extends AbstractService
 		return $availablePlugins;
 	}
 
+	/**
+	 * @param string $configFile
+	 * @param mixed[] $options
+	 * @return int
+	 * @throws \Exception
+	 */
 	function start($configFile, array $options = array())
 	{
 		$config = \DedicatedManager\Config::getInstance();
@@ -55,6 +64,9 @@ class ManialiveService extends AbstractService
 		return reset($diffPids);
 	}
 	
+	/**
+	 * @param int $pid
+	 */
 	function stop($pid)
 	{
 		$isWindows = stripos(PHP_OS, 'WIN') === 0;
@@ -64,6 +76,10 @@ class ManialiveService extends AbstractService
 			`kill -9 $pid`;
 	}
 	
+	/**
+	 * @param string $plugin
+	 * @return string|bool
+	 */
 	private function validatePlugin($plugin)
 	{
 		$matches = array();
@@ -72,10 +88,15 @@ class ManialiveService extends AbstractService
 			$class = '\\'.str_replace('/', '\\', $matches[1]);
 			if(class_exists($class) && is_subclass_of($class, '\ManiaLive\PluginHandler\Plugin'))
 				return implode('\\', array_slice(explode('\\', $class), 2, 2));
-			else return false;
+			else
+				return false;
 		}
 	}
 
+	/**
+	 * @param string $folder
+	 * @return string[]
+	 */
 	private function searchFolderForPlugin($folder)
 	{
 		$plugins = array();
@@ -105,6 +126,9 @@ class ManialiveService extends AbstractService
 		return $plugins;
 	}
 
+	/**
+	 * @return int[]
+	 */
 	private function getPIDs()
 	{
 		if(stripos(PHP_OS, 'WIN') === 0)

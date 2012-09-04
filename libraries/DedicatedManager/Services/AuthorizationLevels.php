@@ -11,8 +11,11 @@ namespace DedicatedManager\Services;
 
 class AuthorizationLevels extends \DedicatedApi\Structures\AbstractStructure
 {
+	/** @var string */
 	public $superAdmin = 'SuperAdmin';
+	/** @var string */
 	public $admin = 'Admin';
+	/** @var string */
 	public $user = 'User';
 }
 

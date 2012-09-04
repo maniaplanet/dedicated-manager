@@ -11,18 +11,31 @@ namespace DedicatedManager\Services;
 
 class ServerOptions extends \DedicatedApi\Structures\ServerOptions
 {
+	/** @var int */
 	public $nextMaxPlayers = 16;
+	/** @var int */
 	public $nextMaxSpectators = 8;
+	/** @var int */
 	public $nextLadderMode = 1;
+	/** @var int */
 	public $ladderServerLimitMax = 50000;
+	/** @var int */
 	public $ladderServerLimitMin = 0;
+	/** @var int */
 	public $nextCallVoteTimeOut = 60000;
+	/** @var float */
 	public $callVoteRatio = 0.5;
+	/** @var bool */
 	public $allowMapDownload = false;
+	/** @var bool */
 	public $autoSaveReplays = false;
+	/** @var bool */
 	public $autoSaveValidationReplays = false;
+	/** @var int */
 	public $refereeMode = 0;
+	/** @var int */
 	public $clientInputsMaxLatency = 0;
+	/** @var bool */
 	public $disableHorns = false;
 	
 	function ensureCast()

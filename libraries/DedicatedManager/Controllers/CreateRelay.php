@@ -28,7 +28,7 @@ class CreateRelay extends Create
 		$this->response->spectate = $this->session->get('spectate', new \DedicatedManager\Services\Spectate());
 		if(!$this->response->servers)
 		{
-			$this->response->spectate->method = \DedicatedManager\Services\Spectate::LOGIN;
+			$this->response->spectate->method = 'login';
 		}
 
 		$header = \DedicatedManager\Helpers\Header::getInstance();

@@ -11,7 +11,9 @@ namespace DedicatedManager\Services;
 
 class Directory extends File
 {
+	/** @var bool */
 	public $isDirectory = true;
+	/** @var File[] */
 	public $children = array();
 }
 

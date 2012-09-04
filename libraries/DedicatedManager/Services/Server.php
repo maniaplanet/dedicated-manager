@@ -11,24 +11,41 @@ namespace DedicatedManager\Services;
 
 class Server extends AbstractObject
 {
+	/** @var string */
 	public $login;
+	/** @var string */
 	public $name;
+	/** @var string */
 	public $titleId;
+	/** @var string */
 	public $rpcHost;
+	/** @var int */
 	public $rpcPort;
+	/** @var string */
 	public $rpcPassword;
+	/** @var string */
 	public $joinIp;
+	/** @var int */
 	public $joinPort;
+	/** @var string */
 	public $joinPassword;
+	/** @var string */
 	public $specPassword;
+	/** @var bool */
 	public $isRelay;
 	
+	/**
+	 * @return string
+	 */
 	function getJoinLink()
 	{
 		$isLan = preg_match('/_\d{1,3}.\d{1,3}.\d{1,3}.\d{1,3}_\d{1,5}/', $this->login);
 		return 'maniaplanet://#join='.($isLan ? $this->joinIp : $this->login).($this->joinPassword ? ':'.$this->joinPassword : '').'@'.$this->titleId;
 	}
 	
+	/**
+	 * @return string
+	 */
 	function getSpectateLink()
 	{
 		$isLan = preg_match('/_\d{1,3}.\d{1,3}.\d{1,3}.\d{1,3}_\d{1,5}/', $this->login);

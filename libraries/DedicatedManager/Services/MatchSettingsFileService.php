@@ -17,6 +17,10 @@ class MatchSettingsFileService extends DedicatedFileService
 		$this->rootTag = '<playlist>';
 	}
 	
+	/**
+	 * @param GameInfos $gameInfos
+	 * @return string[]
+	 */
 	function validate(GameInfos $gameInfos)
 	{
 		$errors = array();
@@ -73,6 +77,11 @@ class MatchSettingsFileService extends DedicatedFileService
 		return $errors;
 	}
 	
+	/**
+	 * @param string $filename
+	 * @return mixed[] 2 elements: GameInfos, string[]
+	 * @throws \InvalidArgumentException
+	 */
 	function get($filename)
 	{
 		if(!file_exists($this->directory.$filename.'.txt'))
@@ -118,6 +127,11 @@ class MatchSettingsFileService extends DedicatedFileService
 		return array($gameInfos, $maps);
 	}
 
+	/**
+	 * @param string $filename
+	 * @param GameInfos $gameInfos
+	 * @param string[] $maps
+	 */
 	function save($filename, GameInfos $gameInfos, array $maps)
 	{
 		$this->directory = \DedicatedManager\Config::getInstance()->dedicatedPath.'UserData/Maps/MatchSettings/';
@@ -174,6 +188,11 @@ class MatchSettingsFileService extends DedicatedFileService
 		$playlist->asXML($this->directory.$filename.'.txt');
 	}
 
+	/**
+	 * @param string $host
+	 * @param int $port
+	 * @return RuleDisplayable[]
+	 */
 	function getCurrentMatchRules($host, $port)
 	{
 		$service = new \DedicatedManager\Services\ServerService();
@@ -374,6 +393,10 @@ class MatchSettingsFileService extends DedicatedFileService
 		return $matchRules;
 	}
 	
+	/**
+	 * @param string $title
+	 * @return string[]
+	 */
 	function getScriptList($title)
 	{
 		//TODO Clean this mess with custom titles
@@ -415,6 +438,11 @@ class MatchSettingsFileService extends DedicatedFileService
 		return $scripts;
 	}
 
+	/**
+	 * @param string $scriptName
+	 * @param string $title
+	 * @return string[]
+	 */
 	function getScriptMapType($scriptName, $title)
 	{
 		//TODO Clean this mess with custom titles

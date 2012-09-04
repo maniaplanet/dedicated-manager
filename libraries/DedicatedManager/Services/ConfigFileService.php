@@ -11,13 +11,20 @@ namespace DedicatedManager\Services;
 
 class ConfigFileService extends DedicatedFileService
 {
-
 	function __construct()
 	{
 		$this->directory = \DedicatedManager\Config::getInstance()->dedicatedPath.'UserData/Config/';
 		$this->rootTag = '<dedicated>';
 	}
 
+	/**
+	 * @param ServerOptions $options
+	 * @param Account $account
+	 * @param SystemConfig $system
+	 * @param AuthorizationLevels $auth
+	 * @param bool $isLan
+	 * @return string[]
+	 */
 	function validate(ServerOptions $options, Account $account = null, SystemConfig $system = null, AuthorizationLevels $auth = null, $isLan = true)
 	{
 		$errors = array();
@@ -75,6 +82,11 @@ class ConfigFileService extends DedicatedFileService
 		return $errors;
 	}
 
+	/**
+	 * @param string $filename
+	 * @return mixed[] 4 elements: ServerOptions, Account, SystemConfig, AuthorizationLevels
+	 * @throws \InvalidArgumentException
+	 */
 	function get($filename)
 	{
 		if(!file_exists($this->directory.$filename.'.txt'))
@@ -155,6 +167,13 @@ class ConfigFileService extends DedicatedFileService
 		return array($config, $account, $system, $authLevel);
 	}
 
+	/**
+	 * @param string $filename
+	 * @param ServerOptions $config
+	 * @param Account $account
+	 * @param SystemConfig $system
+	 * @param AuthorizationLevels $auth
+	 */
 	function save($filename, ServerOptions $config, Account $account = null, SystemConfig $system = null, AuthorizationLevels $auth = null)
 	{
 		$dom = new \DOMDocument('1.0', 'utf-8');

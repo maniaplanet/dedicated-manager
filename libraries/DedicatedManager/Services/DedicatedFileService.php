@@ -11,9 +11,14 @@ namespace DedicatedManager\Services;
 
 abstract class DedicatedFileService extends AbstractService
 {
+	/** @var string */
 	protected $directory;
+	/** @var string */
 	protected $rootTag;
 	
+	/**
+	 * @return string[]
+	 */
 	final function getList()
 	{
 		if(!file_exists($this->directory))
@@ -36,6 +41,9 @@ abstract class DedicatedFileService extends AbstractService
 		return $files;
 	}
 
+	/**
+	 * @param string[] $files
+	 */
 	final function deleteList(array $files)
 	{
 		foreach($files as $file)
@@ -47,11 +55,19 @@ abstract class DedicatedFileService extends AbstractService
 		}
 	}
 	
+	/**
+	 * @param string $val
+	 * @return bool
+	 */
 	static final function toBool($val)
 	{
 		return (strcasecmp($val, 'true') == 0 || $val == 1);
 	}
 
+	/**
+	 * @param string $path
+	 * @return string
+	 */
 	static final function securePath($path)
 	{
 		return realpath((stripos(PHP_OS, 'WIN') === 0 ? utf8_decode($path) : $path)).'/';

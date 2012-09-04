@@ -11,8 +11,6 @@
 
 namespace DedicatedManager\Services;
 
-/**
- */
 class NotFoundException extends \Exception {}
 
 ?>

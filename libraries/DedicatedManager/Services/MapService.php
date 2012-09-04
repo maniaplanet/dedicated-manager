@@ -11,16 +11,21 @@ namespace DedicatedManager\Services;
 
 class MapService extends AbstractService
 {
+	/** @var string */
 	protected $mapDirectory;
-	protected $cache;
 
 	function __construct()
 	{
 		$config = \DedicatedManager\Config::getInstance();
 		$this->mapDirectory = $config->dedicatedPath.'UserData/Maps/';
-		$this->cache = \ManiaLib\Cache\Cache::factory(\ManiaLib\Cache\MYSQL);
 	}
 	
+	/**
+	 * @param string $filename
+	 * @param string $path
+	 * @return Map
+	 * @throws \InvalidArgumentException
+	 */
 	function get($filename, $path)
 	{
 		if(!file_exists($this->mapDirectory.$path.$filename))
@@ -90,6 +95,16 @@ class MapService extends AbstractService
 		return $map;
 	}
 
+	/**
+	 * @param string $path
+	 * @param bool $recursive
+	 * @param bool $isLaps
+	 * @param string[] $mapTypes
+	 * @param string $environment
+	 * @param int $offset
+	 * @param int $length
+	 * @return Map[]
+	 */
 	function getList($path, $recursive = false, $isLaps = false, array $mapTypes = array(), $environment = '', $offset = null, $length = null)
 	{
 		$workPath = DedicatedFileService::securePath($this->mapDirectory.$path);
@@ -155,6 +170,9 @@ class MapService extends AbstractService
 		return $maps;
 	}
 	
+	/**
+	 * @param string[] $maps
+	 */
 	function delete(array $maps)
 	{
 		foreach($maps as $map)
@@ -171,6 +189,12 @@ class MapService extends AbstractService
 		}
 	}
 	
+	/**
+	 * @param string $tmpFile
+	 * @param string $filename
+	 * @param string $path
+	 * @throws \Exception
+	 */
 	function upload($tmpFile, $filename, $path)
 	{
 		if(!move_uploaded_file($tmpFile, $this->mapDirectory.$path.$filename))
@@ -179,6 +203,11 @@ class MapService extends AbstractService
 		}
 	}
 
+	/**
+	 * @param File $a
+	 * @param File $b
+	 * @return int
+	 */
 	static final function compareFiles(File $a, File $b)
 	{
 		$order = $a->isDirectory - $b->isDirectory;

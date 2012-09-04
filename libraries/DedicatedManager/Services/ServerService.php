@@ -48,7 +48,6 @@ class ServerService extends AbstractService
 	}
 
 	/**
-	 * 
 	 * @param string $rpcHost
 	 * @param int $rpcPort
 	 * @return Server
@@ -89,22 +88,15 @@ class ServerService extends AbstractService
 	 * @param string $matchFile
 	 * @param bool $isLan
 	 */
-	function start($configFile, $matchFile, $isLan = false)
+	function start($configFile, $matchFile, $isLan = false, $options=array())
 	{
 		$service = new ConfigFileService();
 		list(,,,$auth) = $service->get($configFile);
 
-		// Starting dedicated
-		$isWindows = stripos(PHP_OS, 'WIN') === 0;
-		if($isWindows)
-			$startCommand = 'START ManiaPlanetServer.exe';
-		else
-			$startCommand = './ManiaPlanetServer';
-		$startCommand .= sprintf(' /dedicated_cfg=%s /game_settings=%s', escapeshellarg($configFile.'.txt'), escapeshellarg('MatchSettings/'.$matchFile.'.txt'));
-		if($isLan)
-			$startCommand .= ' /lan';
-		if(!$isWindows)
-			$startCommand .= ' &';
+		$options['dedicated_cfg'] = $configFile.'.txt';
+		$options['game_settings'] = 'MatchSettings/'.$matchFile.'.txt';
+		$options['lan'] = $isLan;
+		$startCommand = $this->prepareCommandLine($options);
 
 		$port = $this->doStart($startCommand);
 		$this->checkConnection('127.0.0.1', $port, $auth->superAdmin);
@@ -116,49 +108,42 @@ class ServerService extends AbstractService
 	 * @param string $password
 	 * @param bool $isLan
 	 */
-	function startRelay($configFile, $server, $password=null, $isLan=false)
+	function startRelay($configFile, $server, $password=null, $isLan=false, $options=array())
 	{
 		$service = new ConfigFileService();
 		list(,,,$auth) = $service->get($configFile);
 
-		// Starting dedicated
-		$isWindows = stripos(PHP_OS, 'WIN') === 0;
-		if($isWindows)
-			$startCommand = 'START ManiaPlanetServer.exe';
-		else
-			$startCommand = './ManiaPlanetServer';
-		$startCommand .= sprintf(' /dedicated_cfg=%s /join=%s', escapeshellarg($configFile.'.txt'), escapeshellarg($server));
+		$options['dedicated_cfg'] = $configFile.'.txt';
+		$options['join'] = $server;
 		if($password)
-			$startCommand .= sprintf(' /joinpassword=%s', escapeshellarg($password));
-		if($isLan)
-			$startCommand .= ' /lan';
-		if(!$isWindows)
-			$startCommand .= ' &';
-		\ManiaLib\Utils\Logger::info($startCommand);
+			$options['joinpassword'] = $password;
+		$options['lan'] = $isLan;
+		$startCommand = $this->prepareCommandLine($options);
 
 		$port = $this->doStart($startCommand, 'Synchro');
 		$this->checkConnection('127.0.0.1', $port, $auth->superAdmin);
 	}
-
-	function startNoautoquit($configFile, $isLan = false)
+	
+	private function prepareCommandLine($options)
 	{
-		$service = new ConfigFileService();
-		list(,,,$auth) = $service->get($configFile);
-
-		// Starting dedicated
 		$isWindows = stripos(PHP_OS, 'WIN') === 0;
 		if($isWindows)
-			$startCommand = 'START ManiaPlanetServer.exe';
+			$cmd = 'START ManiaPlanetServer.exe';
 		else
-			$startCommand = './ManiaPlanetServer';
-		$startCommand .= sprintf(' /dedicated_cfg=%s /noautoquit', escapeshellarg($configFile));
-		if($isLan)
-			$startCommand .= ' /lan';
+			$cmd = './ManiaPlanetServer';
+		
+		foreach($options as $key => $value)
+		{
+			if(!is_bool($value))
+				$cmd .= ' /'.$key.'='.escapeshellarg($value);
+			else if($value)
+				$cmd .= ' /'.$key;
+		}
+		
 		if(!$isWindows)
-			$startCommand .= ' &';
-
-		$port = $this->doStart($startCommand, 'Ready, waiting for commands.');
-		$this->checkConnection('127.0.0.1', $port, $auth->superAdmin);
+			$cmd .= ' &';
+		
+		return $cmd;
 	}
 
 	private function doStart($commandLine, $successStr = '...Load succeeds')

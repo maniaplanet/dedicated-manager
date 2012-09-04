@@ -11,8 +11,11 @@ namespace DedicatedManager\Services;
 
 class Account extends \DedicatedApi\Structures\AbstractStructure
 {
+	/** @var string */
 	public $login;
+	/** @var string */
 	public $password;
+	/** @var string */
 	public $validationKey;
 }
 

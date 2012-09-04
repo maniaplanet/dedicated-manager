@@ -11,6 +11,7 @@ namespace DedicatedManager\Services;
 
 class ManialiveFileService extends AbstractService
 {
+	/** @var string */
 	private $directory;
 	
 	function __construct()
@@ -18,6 +19,9 @@ class ManialiveFileService extends AbstractService
 		$this->directory = \DedicatedManager\Config::getInstance()->manialivePath.'/config/';
 	}
 	
+	/**
+	 * @return string[]
+	 */
 	function getList()
 	{
 		if(!file_exists($this->directory))
@@ -36,6 +40,9 @@ class ManialiveFileService extends AbstractService
 		return $files;
 	}
 	
+	/**
+	 * @param string[] $files
+	 */
 	function deleteList(array $files)
 	{
 		foreach($files as $file)
@@ -47,6 +54,11 @@ class ManialiveFileService extends AbstractService
 		}
 	}
 	
+	/**
+	 * @param string $filename
+	 * @return ManialiveConfig
+	 * @throws \InvalidArgumentException
+	 */
 	function get($filename)
 	{
 		if(!file_exists($this->directory.$filename.'.ini'))
@@ -81,6 +93,10 @@ class ManialiveFileService extends AbstractService
 		return $config;
 	}
 	
+	/**
+	 * @param string $filename
+	 * @param ManialiveConfig $config
+	 */
 	function save($filename, ManialiveConfig $config)
 	{
 		$f = fopen($this->directory.$filename.'.ini', 'w');

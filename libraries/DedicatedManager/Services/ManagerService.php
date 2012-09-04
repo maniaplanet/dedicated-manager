@@ -11,11 +11,19 @@ namespace DedicatedManager\Services;
 
 class ManagerService extends AbstractService
 {
+	/**
+	 * @return string[]
+	 */
 	function getAll()
 	{
 		return $this->db()->execute('SELECT DISTINCT login FROM Managers')->fetchArrayOfSingleValues();
 	}
 
+	/**
+	 * @param string $rpcHost
+	 * @param int $rpcPort
+	 * @return string[]
+	 */
 	function getByServer($rpcHost, $rpcPort)
 	{
 		return $this->db()->execute(
@@ -23,6 +31,11 @@ class ManagerService extends AbstractService
 			)->fetchArrayOfSingleValues();
 	}
 
+	/**
+	 * @param string $rpcHost
+	 * @param int $rpcPort
+	 * @param string $login
+	 */
 	function grant($rpcHost, $rpcPort, $login)
 	{
 		$this->db()->execute(
@@ -32,6 +45,12 @@ class ManagerService extends AbstractService
 				$this->db()->quote($login));
 	}
 	
+	/**
+	 * @param string $rpcHost
+	 * @param int $rpcPort
+	 * @param string $login
+	 * @return bool
+	 */
 	function isAllowed($rpcHost, $rpcPort, $login)
 	{
 		return $this->db()->execute(
@@ -42,6 +61,11 @@ class ManagerService extends AbstractService
 			)->fetchSingleValue(false);
 	}
 
+	/**
+	 * @param string $rpcHost
+	 * @param int $rpcPort
+	 * @param string $login
+	 */
 	function revoke($rpcHost, $rpcPort, $login)
 	{
 		$this->db()->execute(

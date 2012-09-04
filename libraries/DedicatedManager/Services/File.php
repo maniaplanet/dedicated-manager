@@ -11,8 +11,11 @@ namespace DedicatedManager\Services;
 
 class File extends AbstractObject
 {
+	/** @var string */
 	public $filename;
+	/** @var string */
 	public $path;
+	/** @var bool */
 	public $isDirectory = false;
 }
 

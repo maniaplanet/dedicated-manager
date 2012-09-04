@@ -34,21 +34,33 @@ class ManialiveConfig
 		$this->wsapi = new _WsApiPart();
 	}
 	
+	/**
+	 * @param string[] $array
+	 */
 	function setLogsFromArray($array)
 	{
 		$this->logs = _LogsPart::fromArray($array);
 	}
 	
+	/**
+	 * @param string[] $array
+	 */
 	function setDatabaseFromArray($array)
 	{
 		$this->database = _DatabasePart::fromArray($array);
 	}
 	
+	/**
+	 * @param string[] $array
+	 */
 	function setThreadingFromArray($array)
 	{
 		$this->threading = _ThreadingPart::fromArray($array);
 	}
 	
+	/**
+	 * @param string[] $array
+	 */
 	function setWsApiFromArray($array)
 	{
 		$this->wsapi = _WsApiPart::fromArray($array);
@@ -57,32 +69,47 @@ class ManialiveConfig
 
 class _LogsPart extends \DedicatedApi\Structures\AbstractStructure
 {
+	/** @var string */
 	public $logsPath = '';
+	/** @var string */
 	public $logsPrefix = 'manialive';
+	/** @var bool */
 	public $runtimeLog = false;
+	/** @var bool */
 	public $globalErrorLog = false;
 }
 
 class _DatabasePart extends \DedicatedApi\Structures\AbstractStructure
 {
+	/** @var bool */
 	public $enable = true;
+	/** @var string */
 	public $host = '127.0.0.1';
+	/** @var int */
 	public $port = 3306;
+	/** @var string */
 	public $username = 'root';
+	/** @var string */
 	public $password = '';
+	/** @var string */
 	public $database = 'ManiaLive';
 }
 
 class _ThreadingPart extends \DedicatedApi\Structures\AbstractStructure
 {
+	/** @var bool */
 	public $enabled = false;
+	/** @var int */
 	public $busyTimeout = 20;
+	/** @var int */
 	public $maxTries = 3;
 }
 
 class _WsApiPart extends \DedicatedApi\Structures\AbstractStructure
 {
+	/** @var string */
 	public $username = '';
+	/** @var string */
 	public $password = '';
 }
 
