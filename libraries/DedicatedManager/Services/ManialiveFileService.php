@@ -12,7 +12,7 @@ namespace DedicatedManager\Services;
 class ManialiveFileService extends AbstractService
 {
 	/** @var string */
-	private $directory;
+	protected $directory;
 	
 	function __construct()
 	{
