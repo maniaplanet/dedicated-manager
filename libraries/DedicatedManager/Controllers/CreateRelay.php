@@ -87,7 +87,8 @@ class CreateRelay extends Create
 
 				$error = _('An error appeared while starting the server');
 				$service = new \DedicatedManager\Services\ServerService();
-				$service->startRelay($configFile, $server, $password, $isLan);
+				$port = $service->startRelay($configFile, $server, $password, $isLan);
+				$service->checkConnection('127.0.0.1', $port, $authLevel->superAdmin);
 			}
 			catch(\Exception $e)
 			{

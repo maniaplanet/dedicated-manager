@@ -59,8 +59,13 @@ class ServerService extends AbstractService
 		$serverName = $connection->getServerName();
 		if($serverName != $server->name)
 		{
+			$this->db()->execute(
+					'UPDATE Servers SET name=%s WHERE rpcHost=%s AND rpcPort=%d',
+					$this->db()->quote($serverName),
+					$this->db()->quote($rpcHost),
+					$rpcPort
+				);
 			$server->name = $serverName;
-			$this->updateServer($server->rpcHost, $server->rpcPort, $serverName);
 		}
 		$info = $connection->getSystemInfo();
 		$server->login = $info->serverLogin;
@@ -87,19 +92,16 @@ class ServerService extends AbstractService
 	 * @param string $configFile
 	 * @param string $matchFile
 	 * @param bool $isLan
+	 * @return int
 	 */
 	function start($configFile, $matchFile, $isLan = false, $options=array())
 	{
-		$service = new ConfigFileService();
-		list(,,,$auth) = $service->get($configFile);
-
 		$options['dedicated_cfg'] = $configFile.'.txt';
 		$options['game_settings'] = 'MatchSettings/'.$matchFile.'.txt';
 		$options['lan'] = $isLan;
 		$startCommand = $this->prepareCommandLine($options);
 
-		$port = $this->doStart($startCommand);
-		$this->checkConnection('127.0.0.1', $port, $auth->superAdmin);
+		return $this->doStart($startCommand);
 	}
 
 	/**
@@ -110,9 +112,6 @@ class ServerService extends AbstractService
 	 */
 	function startRelay($configFile, $server, $password=null, $isLan=false, $options=array())
 	{
-		$service = new ConfigFileService();
-		list(,,,$auth) = $service->get($configFile);
-
 		$options['dedicated_cfg'] = $configFile.'.txt';
 		$options['join'] = $server;
 		if($password)
@@ -120,10 +119,13 @@ class ServerService extends AbstractService
 		$options['lan'] = $isLan;
 		$startCommand = $this->prepareCommandLine($options);
 
-		$port = $this->doStart($startCommand, 'Synchro');
-		$this->checkConnection('127.0.0.1', $port, $auth->superAdmin);
+		return $this->doStart($startCommand, 'Synchro');
 	}
 	
+	/**
+	 * @param mixed[] $options
+	 * @return string
+	 */
 	private function prepareCommandLine($options)
 	{
 		$isWindows = stripos(PHP_OS, 'WIN') === 0;
@@ -146,6 +148,12 @@ class ServerService extends AbstractService
 		return $cmd;
 	}
 
+	/**
+	 * @param string $commandLine
+	 * @param string $successStr
+	 * @return int
+	 * @throws \Exception
+	 */
 	private function doStart($commandLine, $successStr = '...Load succeeds')
 	{
 		$config = \DedicatedManager\Config::getInstance();
@@ -224,6 +232,11 @@ class ServerService extends AbstractService
 		return $port;
 	}
 
+	/**
+	 * @param string $host
+	 * @param int $port
+	 * @param string $password
+	 */
 	function checkConnection($host, $port, $password)
 	{
 		$connection = \DedicatedApi\Connection::factory($host, $port, 5, 'SuperAdmin', $password);
@@ -238,16 +251,9 @@ class ServerService extends AbstractService
 			);
 	}
 
-	protected function updateServer($host, $port, $name)
-	{
-		$this->db()->execute(
-				'UPDATE Servers SET name=%s WHERE rpcHost=%s AND rpcPort=%d',
-				$this->db()->quote($name),
-				$this->db()->quote($host),
-				$port
-			);
-	}
-
+	/**
+	 * @return int[]
+	 */
 	private function getPIDs()
 	{
 		if(stripos(PHP_OS, 'WIN') === 0)
