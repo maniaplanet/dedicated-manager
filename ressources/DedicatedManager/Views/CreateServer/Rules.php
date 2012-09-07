@@ -267,7 +267,7 @@ $r = ManiaLib\Application\Request::getInstance();
 						<select name="rules[scriptName]" id="scriptName" data-native-menu="false">
 							<option><?php echo _('Select one...') ?></option>
 							<?php foreach($scripts as $script): ?>
-								<option value="<?php echo $script ?>" <?php echo $gameInfos->scriptName == $script ? 'selected="selected"' : '' ?>><?php echo $script ?></option>
+								<option value="<?php echo $script ?>" <?php echo $gameInfos->scriptName == $script || count($scripts) == 1 ? 'selected="selected"' : '' ?>><?php echo $script ?></option>
 							<?php endforeach; ?>
 						</select>
 					</li>

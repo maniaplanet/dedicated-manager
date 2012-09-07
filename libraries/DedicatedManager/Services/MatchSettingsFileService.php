@@ -408,7 +408,7 @@ class MatchSettingsFileService extends DedicatedFileService
 		{
 			$game = 'TrackMania';
 		}
-		else if($title == 'SMStormElite@nadeolabs')
+		else if($title == 'SMStormElite@nadeolabs' || $title == 'SMStormEliteExperimental@nadeolabs')
 		{
 			return array('Elite.Script.txt');
 		}
@@ -454,7 +454,7 @@ class MatchSettingsFileService extends DedicatedFileService
 		{
 			$game = 'TrackMania';
 		}
-		elseif($scriptName == 'Elite.Script.txt' && $title == 'SMStormElite@nadeolabs')
+		elseif($scriptName == 'Elite.Script.txt' && ($title == 'SMStormElite@nadeolabs' || $title == 'SMStormEliteExperimental@nadeolabs'))
 		{
 			return array('EliteArena', 'ShootMania\\EliteArena', 'HeroesArena', 'ShootMania\\HeroesArena');
 		}

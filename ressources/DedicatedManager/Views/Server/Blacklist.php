@@ -57,7 +57,7 @@ $r = ManiaLib\Application\Request::getInstance();
 		<h1><?php echo _('Load guest list') ?></h1>
 	</div>
 	<div data-role="content">
-		<form method="get" action="<?php echo $appURL ?>/edit/load-blacklist/" data-ajax="false">
+		<form method="get" action="<?php echo $appURL ?>/server/load-blacklist/" data-ajax="false">
 			<input type="hidden" name="port" value="<?php echo $port ?>"/>
 			<input type="hidden" name="host" value="<?php echo $host ?>"/>
 			<fieldset data-role="controlgroup">
@@ -87,7 +87,7 @@ $r = ManiaLib\Application\Request::getInstance();
 		<h1><?php echo _('Add a player to blacklist') ?></h1>
 	</div>
 	<div data-role="content">
-		<form method="get" action="<?php echo $appURL ?>/edit/add-black/" data-ajax="false">
+		<form method="get" action="<?php echo $appURL ?>/server/add-black/" data-ajax="false">
 			<input type="hidden" name="port" value="<?php echo $port ?>"/>
 			<input type="hidden" name="host" value="<?php echo $host ?>"/>
 			<label for="login"><?php echo _('Enter the login to add') ?></label>
@@ -108,7 +108,7 @@ $r = ManiaLib\Application\Request::getInstance();
 		<h1><?php echo _('Save guest list') ?></h1>
 	</div>
 	<div data-role="content">
-		<form method="get" action="<?php echo $appURL ?>/edit/save-blacklist/" data-ajax="false">
+		<form method="get" action="<?php echo $appURL ?>/server/save-blacklist/" data-ajax="false">
 			<input type="hidden" name="port" value="<?php echo $port ?>"/>
 			<input type="hidden" name="host" value="<?php echo $host ?>"/>
 			<label for="filename"><?php echo _('Enter a filename to save the blacklist') ?></label>

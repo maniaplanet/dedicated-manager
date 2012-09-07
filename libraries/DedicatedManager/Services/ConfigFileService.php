@@ -218,6 +218,9 @@ class ConfigFileService extends DedicatedFileService
 		$serverOptions->addChild('enable_p2p_download', $config->isP2PDownload ? 'True' : 'False');
 		$serverOptions->addChild('callvote_timeout', (int) $config->nextCallVoteTimeOut);
 		$serverOptions->addChild('callvote_ratio', (float) $config->callVoteRatio);
+		$callvoteRaios = $serverOptions->addChild('callvote_ratios')->addChild('voteratio');
+		$callvoteRaios->addAttribute('command','Ban');
+		$callvoteRaios->addAttribute('ratio','-1');
 		$serverOptions->addChild('allow_map_download', $config->allowMapDownload ? 'True' : 'False');
 		$serverOptions->addChild('autosave_replays', $config->autoSaveReplays ? 'True' : 'False');
 		$serverOptions->addChild('autosave_validation_replays', $config->autoSaveValidationReplays ? 'True' : 'False');

@@ -6,7 +6,7 @@ $r = ManiaLib\Application\Request::getInstance();
 	<?php require __DIR__.'/Header.php'; ?>
 	<div data-role="content">
 		<div class="content-primary">
-			<form action="<?php echo $appURL ?>/edit/update-votes/" method="get" data-ajax="false">
+			<form action="<?php echo $appURL ?>/server/update-votes/" method="get" data-ajax="false">
 				<input type="hidden" name="host" value="<?php echo $host; ?>"/>
 				<input type="hidden" name="port" value="<?php echo $port; ?>"/>
 				<ul data-role="listview" data-inset="true">

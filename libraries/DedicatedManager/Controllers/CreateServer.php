@@ -13,16 +13,18 @@ use \DedicatedManager\Services\GameInfos;
 
 class CreateServer extends Create
 {
+
 	function setConfig(array $options, array $account, array $system, array $authLevel, $isOnline = 0)
 	{
 		parent::setConfig($options, $account, $system, $authLevel, $isOnline);
+
 		$this->request->redirectArgList('../rules');
 	}
 
 	function rules($matchFile = '')
 	{
-		list(,,$system) = $this->fetchAndAssertConfig(_('setting game options'));
-		
+		list(,, $system) = $this->fetchAndAssertConfig(_('setting game options'));
+
 		$service = new \DedicatedManager\Services\MatchSettingsFileService();
 
 		if($matchFile)
@@ -57,17 +59,17 @@ class CreateServer extends Create
 		$gameInfos = GameInfos::fromArray($rules);
 		$gameInfos->chatTime *= isset($rules['chatTime']) ? 1000 : 1;
 		$gameInfos->finishTimeout = $gameInfos->finishTimeout < 0 ? 1 :
-				(isset($rules['finishTimeout']) ? $gameInfos->finishTimeout * 1000 : $gameInfos->finishTimeout);
+			(isset($rules['finishTimeout']) ? $gameInfos->finishTimeout * 1000 : $gameInfos->finishTimeout);
 		$gameInfos->timeAttackLimit = $gameInfos->timeAttackLimit < 0 ? 1 :
-				(isset($rules['timeAttackLimit']) ? $gameInfos->timeAttackLimit * 1000 : $gameInfos->timeAttackLimit);
+			(isset($rules['timeAttackLimit']) ? $gameInfos->timeAttackLimit * 1000 : $gameInfos->timeAttackLimit);
 		$gameInfos->timeAttackSynchStartPeriod *= isset($rules['timeAttackSynchStartPeriod']) ? 1000 : 1;
 		$gameInfos->lapsTimeLimit = $gameInfos->lapsTimeLimit < 0 ? 1 :
-				(isset($rules['lapsTimeLimit']) ? $gameInfos->lapsTimeLimit * 1000 : $gameInfos->lapsTimeLimit);
-		
+			(isset($rules['lapsTimeLimit']) ? $gameInfos->lapsTimeLimit * 1000 : $gameInfos->lapsTimeLimit);
+
 		$this->session->set('gameInfos', $gameInfos);
 
 		$service = new \DedicatedManager\Services\MatchSettingsFileService();
-		if( ($errors = $service->validate($gameInfos)) )
+		if(($errors = $service->validate($gameInfos)))
 		{
 			$this->session->set('error', $errors);
 			$this->request->redirectArgList('../rules');
@@ -79,7 +81,7 @@ class CreateServer extends Create
 	function maps()
 	{
 		set_time_limit(0);
-		list(,,$system) = $this->fetchAndAssertConfig(_('selecting maps'));
+		list(,, $system) = $this->fetchAndAssertConfig(_('selecting maps'));
 		$gameInfos = $this->fetchAndAssertSettings(_('selecting maps'));
 
 		//TODO Find a way to clean this mess
@@ -96,7 +98,7 @@ class CreateServer extends Create
 		}
 
 		$isLaps = $gameInfos->gameMode == GameInfos::GAMEMODE_LAPS;
-		
+
 		$service = new \DedicatedManager\Services\MapService();
 		$this->response->files = $service->getList('', true, $isLaps, $type, $environment);
 		$this->response->selected = $this->session->get('selected', array());
@@ -106,20 +108,20 @@ class CreateServer extends Create
 		$header->rightIcon = 'back';
 		$header->rightLink = $this->request->createLinkArgList('../rules');
 	}
-	
+
 	function setMaps($selected = '')
 	{
 		$this->fetchAndAssertConfig(_('selecting maps'));
 		$this->fetchAndAssertSettings(_('selecting maps'));
-		
+
 		$this->session->set('selected', explode('|', $selected));
-		
+
 		if(!$selected)
 		{
 			$this->session->set('error', _('You have to select at least one map'));
 			$this->request->redirectArgList('../maps/');
 		}
-		
+
 		$this->request->redirectArgList('../preview');
 	}
 
@@ -128,7 +130,7 @@ class CreateServer extends Create
 		list($options) = $this->fetchAndAssertConfig(_('starting it'));
 		$this->fetchAndAssertSettings(_('starting server'));
 		$this->fetchAndAssertMaps(_('starting server'));
-		
+
 		$defaultFileName = \ManiaLib\Utils\Formatting::stripStyles($options->name);
 		$this->response->configFile = $this->session->get('configFile', $defaultFileName);
 		$this->response->matchFile = $this->session->get('matchFile', $defaultFileName);
@@ -144,10 +146,10 @@ class CreateServer extends Create
 		list($options, $account, $system, $authLevel, $isLan) = $this->fetchAndAssertConfig(_('starting it'));
 		$gameInfos = $this->fetchAndAssertSettings(_('starting server'));
 		$maps = $this->fetchAndAssertMaps(_('starting server'));
-		
+
 		$this->session->set('configFile', $configFile);
 		$this->session->set('matchFile', $matchFile);
-		
+
 		$errors = array();
 		if(strpbrk($configFile, '\\/:*?"<>|'))
 		{
@@ -157,7 +159,7 @@ class CreateServer extends Create
 		{
 			$errors[] = _('The match settings filename must not contain any of the following characters: \\ / : * ? " < > |');
 		}
-		
+
 		if(!$errors)
 		{
 			try
@@ -191,7 +193,7 @@ class CreateServer extends Create
 		$this->session->set('success', _('Your server has been successfully started'));
 		$this->goHome();
 	}
-	
+
 	function goHome()
 	{
 		$this->session->delete('gameInfos');
@@ -200,7 +202,7 @@ class CreateServer extends Create
 		$this->session->delete('matchFile');
 		parent::goHome();
 	}
-	
+
 	protected function fetchAndAssertSettings($actionStr)
 	{
 		try
@@ -214,7 +216,7 @@ class CreateServer extends Create
 			$this->request->redirectArgList('../rules');
 		}
 	}
-	
+
 	protected function fetchAndAssertMaps($actionStr)
 	{
 		try
@@ -228,6 +230,7 @@ class CreateServer extends Create
 			$this->request->redirectArgList('../maps');
 		}
 	}
+
 }
 
 ?>

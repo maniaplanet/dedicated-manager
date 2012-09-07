@@ -29,6 +29,7 @@ $r = ManiaLib\Application\Request::getInstance();
 							</optgroup>
 							<optgroup label="<?php echo _('Custom titles') ?>">
 								<option value="SMStormElite@nadeolabs" <?php echo $system->title == 'SMStormElite@nadeolabs' ? 'selected="selected"' : '' ?>>ShootMania Storm Elite</option>
+								<option value="SMStormEliteExperimental@nadeolabs" <?php echo $system->title == 'SMStormEliteExperimental@nadeolabs' ? 'selected="selected"' : '' ?>>ShootMania Storm Elite (experimental)</option>
 								<option value="SMStormJoust@nadeolabs" <?php echo $system->title == 'SMStormJoust@nadeolabs' ? 'selected="selected"' : '' ?>>ShootMania Storm Joust</option>
 								<option value="SMStormHeroes@nadeolabs" <?php echo $system->title == 'SMStormHeroes@nadeolabs' ? 'selected="selected"' : '' ?>>ShootMania Storm Heroes</option>
 								<option value="Platform@nadeolive" <?php echo $system->title == 'Platform@nadeolive' ? 'selected="selected"' : '' ?>>TrackMania Canyon Platform</option>
