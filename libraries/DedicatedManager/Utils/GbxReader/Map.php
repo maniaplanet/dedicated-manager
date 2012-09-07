@@ -31,7 +31,7 @@ class Map extends FileStructure
 	public $thumbnail;
 	public $comments;
 	
-	static function fetch($fp)
+	final static function fetch($fp)
 	{
 		$map = new self;
 		self::ignore($fp, 3);

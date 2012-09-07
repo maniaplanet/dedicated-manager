@@ -13,7 +13,10 @@ abstract class AbstractStructure
 {
 	static private $lookbackStrings = array();
 	
-	abstract static function fetch($fp);
+	static function fetch($fp)
+	{
+		throw new \LogicException('This method has to be defined in subclasses');
+	}
 	
 	final static function ignore($fp, $length)
 	{
