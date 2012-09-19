@@ -773,7 +773,7 @@ class Server extends AbstractController
 			\ManiaLib\Application\ErrorHandling::logException($e);
 			$this->session->set('error', _('An error occurred while saving the guestlist'));
 		}
-		$this->request->redirectArgList('../guestlis/', 'host', 'port');
+		$this->request->redirectArgList('../guestlist/', 'host', 'port');
 	}
 
 	function chat()
