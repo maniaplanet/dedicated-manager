@@ -23,12 +23,12 @@ class AddServer extends AbstractController
 		{
 			$service = new \DedicatedManager\Services\ServerService();
 			$service->checkConnection($rpcHost, $rpcPort, $rpcPassword);
+			$this->session->set('success', 'The server has been added successfully');
 		}
 		catch(\Exception $e)
 		{
 			$this->session->set('error', 'Impossible to connect to the server.');
 		}
-		$this->session->set('success', 'The server has been added successfully');
 		$this->request->redirectArgList('/');
 	}
 
