@@ -1,5 +1,4 @@
 <?php
-
 /**
  * @copyright   Copyright (c) 2009-2012 NADEO (http://www.nadeo.com)
  * @license     http://www.gnu.org/licenses/lgpl.html LGPL License 3
@@ -7,6 +6,7 @@
  * @author      $Author$:
  * @date        $Date$:
  */
+
 namespace DedicatedManager\Services;
 
 class Server extends AbstractObject
@@ -37,19 +37,10 @@ class Server extends AbstractObject
 	/**
 	 * @return string
 	 */
-	function getJoinLink()
+	function getLink($method='join')
 	{
 		$isLan = preg_match('/_\d{1,3}.\d{1,3}.\d{1,3}.\d{1,3}_\d{1,5}/', $this->login);
-		return 'maniaplanet://#join='.($isLan ? $this->joinIp : $this->login).($this->joinPassword ? ':'.$this->joinPassword : '').'@'.$this->titleId;
-	}
-	
-	/**
-	 * @return string
-	 */
-	function getSpectateLink()
-	{
-		$isLan = preg_match('/_\d{1,3}.\d{1,3}.\d{1,3}.\d{1,3}_\d{1,5}/', $this->login);
-		return 'maniaplanet://#spectate='.($isLan ? $this->joinIp : $this->login).($this->specPassword ? ':'.$this->specPassword : '').'@'.$this->titleId;
+		return 'maniaplanet://#'.$method.'='.($isLan ? $this->joinIp : $this->login).($this->joinPassword ? ':'.$this->joinPassword : '').'@'.$this->titleId;
 	}
 }
 

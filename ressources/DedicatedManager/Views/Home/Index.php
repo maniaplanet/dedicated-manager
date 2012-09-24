@@ -22,7 +22,7 @@ $r = ManiaLib\Application\Request::getInstance();
 			<li>
 				<a href="<?php echo htmlentities($r->createLinkArgList('/server', 'host', 'port'), ENT_QUOTES, 'UTF-8') ?>" data-ajax="false"
 				   data-host="<?php echo $server->rpcHost; ?>" data-port="<?php echo $server->rpcPort; ?>" class="server ui-disabled">
-					<?php echo ManiaLib\Utils\StyleParser::toHtml($server->name) ?: '&nbsp;'; ?>
+					<?php echo ManiaLib\Utils\StyleParser::toHtml(\ManiaLib\Utils\Formatting::stripLinks($server->name)) ?: '&nbsp;'; ?>
 				</a>
 			<?php if($isAdmin): ?>
 				<a href="<?php echo htmlentities($r->createLinkArgList('../remove', 'host', 'port'), ENT_QUOTES, 'UTF-8') ?>" data-icon="minus" data-theme="c" data-ajax="false"></a>

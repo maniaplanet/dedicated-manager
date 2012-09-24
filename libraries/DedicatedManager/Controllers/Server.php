@@ -105,8 +105,8 @@ class Server extends AbstractController
 		$this->response->host = $this->server->rpcHost;
 		$this->response->port = $this->server->rpcPort;
 		$this->response->isRelay = $this->server->isRelay;
-		$this->response->maniaplanetJoin = $this->server->getJoinLink();
-		$this->response->maniaplanetSpectate = $this->server->getSpectateLink();
+		$this->response->maniaplanetJoin = $this->server->getLink('join');
+		$this->response->maniaplanetSpectate = $this->server->getLink('spectate');
 		$this->response->playersCount = count($this->players);
 		$this->response->options = $this->options;
 		$this->response->currentMap = $this->currentMap;
