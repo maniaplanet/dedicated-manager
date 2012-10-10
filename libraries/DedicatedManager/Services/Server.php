@@ -40,7 +40,8 @@ class Server extends AbstractObject
 	function getLink($method='join')
 	{
 		$isLan = preg_match('/_\d{1,3}.\d{1,3}.\d{1,3}.\d{1,3}_\d{1,5}/', $this->login);
-		return 'maniaplanet://#'.$method.'='.($isLan ? $this->joinIp : $this->login).($this->joinPassword ? ':'.$this->joinPassword : '').'@'.$this->titleId;
+		$password = preg_match('/^q?join$/i', $method) ? $this->joinPassword : $this->specPassword;
+		return 'maniaplanet://#'.$method.'='.($isLan ? $this->joinIp : $this->login).($password ? ':'.$password : '').'@'.$this->titleId;
 	}
 }
 
