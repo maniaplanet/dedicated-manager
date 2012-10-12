@@ -11,8 +11,29 @@ $r = ManiaLib\Application\Request::getInstance();
     </div>
 	<?php echo DedicatedManager\Helpers\Box\Box::detect() ?>
     <div data-role="content">
-		<p><?php echo _('If you want to load an <strong>existing match settings</strong> click on the link: ') ?>
-			<a id="loadConfigLink" href="#dialog" data-rel="dialog"><?php echo _('load match settings'); ?></a></p>
+		<form name="load_config_form" action="<?php echo $r->createLinkArgList('.') ?>" data-ajax="false" method="get" title="<?php echo _('Load existing configuration') ?>">
+			<fieldset data-role="collapsible" data-inset="true" data-theme="e">
+			<legend><?php echo _('Load a Match settings file') ?></legend>
+			<ul data-role="listview" >
+				<li>
+					<div class="ui-grid-a">
+						<div class="ui-block-a">
+							<select id="matchFile" name="matchFile" size="5" data-native-menu="false">
+									<option selected="selected"><?php echo _('Select your Match settings file') ?></option>
+								<?php foreach($settingsList as $setting): ?>
+									<option value="<?php echo $setting ?>" <?php echo ( $setting == $matchFile ? 'selected="selected"': '') ?>><?php echo $setting ?></option>
+								<?php endforeach; ?>
+							</select>
+						</div>
+						<div class="ui-block-b">
+							<input type="submit" value="Load" data-theme="a"/>
+						</div>
+					</div>
+				</li>
+			</ul>
+			</fieldset>
+		</form>
+		<br/>
 		<form action="<?php echo $r->createLinkArgList('../set-rules') ?>" method="get" data-ajax="false">
 		<?php if($title == 'TMCanyon'): ?>
 			<fieldset data-role="collapsible" data-collapsed="false" data-theme="b">
@@ -280,29 +301,6 @@ $r = ManiaLib\Application\Request::getInstance();
 				</div>
 				<div class="ui-block-b">
 					<input type="submit" value="<?php echo _('Next step') ?>" data-theme="b"/>
-				</div>
-			</div>
-		</form>
-    </div>
-</div>
-<div data-role="dialog" id="dialog">
-    <div data-role="header" data-theme="b">
-		<h1><?php echo _('Load MatchSettings') ?></h1>
-    </div>
-    <div data-role="content">
-		<form name="load_config_form" action="<?php echo $r->createLinkArgList('.') ?>" data-ajax="false" method="get" title="<?php echo _('Load existing settings') ?>">
-			<label for="matchFile"><?php echo _('A match settings contains game mode setups and a map selection') ?></label>
-			<select id="matchFile" name="matchFile" size="5" data-native-menu="false">
-			<?php foreach($settingsList as $settings): ?>
-				<option value="<?php echo $settings ?>"><?php echo $settings ?></option>
-			<?php endforeach; ?>
-			</select>
-			<div class="ui-grid-a">
-				<div class="ui-block-a">
-					<a href="#" data-rel="back" data-role="button"><?php echo _('Back') ?></a>
-				</div>
-				<div class="ui-block-b">
-					<input type="submit" value="Load" data-theme="a"/>
 				</div>
 			</div>
 		</form>

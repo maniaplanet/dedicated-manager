@@ -51,6 +51,7 @@ abstract class Create extends AbstractController
 			$authLevel = new \DedicatedManager\Services\AuthorizationLevels();
 		}
 		
+		$this->response->configFile = $configFile;
 		$this->response->configList = $service->getList();
 		$this->response->authLevel = $this->session->get('authLevel', $authLevel);
 		$this->response->options = $this->session->get('options', $options);

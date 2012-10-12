@@ -11,8 +11,30 @@ $r = ManiaLib\Application\Request::getInstance();
     </div>
 	<?php echo DedicatedManager\Helpers\Box\Box::detect(); ?>
     <div data-role="content">
-		<p><?php echo _('If you want to load an <strong>existing server configuration</strong> click on the link: ') ?>
-			<a href="#dialog" data-rel="dialog"><?php echo _('load server config'); ?></a></p>
+		<form name="load_config_form" action="<?php echo $r->createLinkArgList('.') ?>" data-ajax="false" method="get" title="<?php echo _('Load existing configuration') ?>">
+			<fieldset data-role="collapsible" data-inset="true" data-theme="e">
+			<legend><?php echo _('Load a configuration file') ?></legend>
+			<ul data-role="listview" >
+				<li>
+					<div class="ui-grid-a">
+						<div class="ui-block-a">
+							<select id="configFile" name="configFile" size="5" data-native-menu="false">
+									<option selected="selected"><?php echo _('Select your config file') ?></option>
+								<?php foreach($configList as $config): ?>
+									<option value="<?php echo $config ?>" <?php echo ( $config == $configFile ? 'selected="selected"': '') ?>><?php echo $config ?></option>
+								<?php endforeach; ?>
+							</select>
+						</div>
+						<div class="ui-block-b">
+							<input type="submit" value="Load" data-theme="a"/>
+						</div>
+					</div>
+				</li>
+			</ul>
+			</fieldset>
+		</form>
+		<br/>
+		
 		<form name="config" action="<?php echo $r->createLinkArgList('../set-config') ?>" method="get" data-ajax="false">
 			<fieldset data-role="collapsible" data-collapsed="false" data-theme="b">
 				<legend><?php echo _('Basic Server Configuration') ?></legend>
@@ -339,29 +361,6 @@ $r = ManiaLib\Application\Request::getInstance();
 				</div>
 				<div class="ui-block-b">
 					<input type="submit" id="submit" value="<?php echo _('Next step') ?>" data-theme="b"/>
-				</div>
-			</div>
-		</form>
-    </div>
-</div>
-<div data-role="dialog" id="dialog">
-    <div data-role="header" data-theme="b">
-		<h1><?php echo _('Server configuration') ?></h1>
-    </div>
-    <div data-role="content">
-		<form name="load_config_form" action="<?php echo $r->createLinkArgList('.') ?>" data-ajax="false" method="get" title="<?php echo _('Load existing configuration') ?>">
-			<label for="configFile"><?php echo _('Select the configuration file you want to load') ?></label>
-			<select id="configFile" name="configFile" size="5" data-native-menu="false">
-			<?php foreach($configList as $config): ?>
-				<option value="<?php echo $config ?>"><?php echo $config ?></option>
-			<?php endforeach; ?>
-			</select>
-			<div class="ui-grid-a">
-				<div class="ui-block-a">
-					<a href="#" data-rel="back" data-role="button"><?php echo _('Back') ?></a>
-				</div>
-				<div class="ui-block-b">
-					<input type="submit" value="Load" data-theme="a"/>
 				</div>
 			</div>
 		</form>
