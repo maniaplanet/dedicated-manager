@@ -1,18 +1,3 @@
-$.fn.reverse = [].reverse;
-
-var formattingTimeout = null;
-var updateFormattingPreview = function(that)
-{
-	var thisThat = that;
-	$.ajax({
-		type : 'GET',
-		url : 'http://127.0.0.1/manager/index.php/ajax/formatting',
-		data: 'input=' + that.val()
-	}).done(function (html) {
-		thisThat.siblings('.formattingResult').html(html);
-	});
-}
-
 $(document).bind('pageinit', function() {
 	/*
 	 * Formating preview
@@ -143,5 +128,13 @@ $(document).bind('pageinit', function() {
 	
 	$('#add-admin-button').click(function() {
 		$('<input type="text" name="admins[]"/>').insertAfter($(this).prev()).textinput();
+	});
+	
+	$(":jqmData(role='maniaplanet-style')").each(function() {
+		$('<div class="maniaplanet-style"/>').insertBefore($(this))
+			.append($(this))
+			.append('<div class="ui-corner-all ui-body-c">'+MPStyle.Parser.toHTML($(this).val())+'</div>');
+	}).bind("focus propertychange keyup input paste", function () {
+		$(this).next().html(MPStyle.Parser.toHTML($(this).val()));
 	});
 });

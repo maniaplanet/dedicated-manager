@@ -11,6 +11,7 @@
 		<script type="text/javascript" src="<?php echo $mediaURL ?>jquery/jquery.mobile-1.2.0.min.js"></script>
 		<script type="text/javascript" src="<?php echo $mediaURL ?>js/jqm-collapsibleGroup.js"></script>
 		<script type="text/javascript" src="<?php echo $mediaURL ?>js/jqm-utils.js"></script>
+		<script type="text/javascript" src="<?php echo $mediaURL ?>js/mp-style-parser.js"></script>
 		<script type="text/javascript" src="<?php echo $mediaURL ?>js/sortable.js"></script>
 		<script type="text/javascript" src="<?php echo $mediaURL ?>js/huepicker.js"></script>
 		<script type="text/javascript" src="<?php echo $mediaURL ?>js/dedicatedmanager.js"></script>

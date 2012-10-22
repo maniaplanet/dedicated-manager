@@ -16,20 +16,27 @@ img.map-thumbnail {
 	vertical-align: middle;
 }
 
-div.input-list {
+div.input-list, div.maniaplanet-style {
 	width: 97%;
 }
 
 @media all and (min-width: 450px)
 {
-	div.input-list {
+	div.input-list, div.maniaplanet-style {
 		display: inline-block;
-		width: 60%;
+		width: 78%;
 	}
 }
 
-div.input-list input {
+div.input-list input, div.maniaplanet-style input, div.maniaplanet-style textarea {
 	width: 100% !important;
+}
+
+div.maniaplanet-style div {
+	font-weight: normal;
+	line-height: 1.4;
+	padding: .4em;
+	margin-top: 2px;
 }
 
 /*
