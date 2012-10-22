@@ -7,34 +7,34 @@ $r = ManiaLib\Application\Request::getInstance();
     <div class="ui-bar ui-bar-b">
 		<h2><?php echo sprintf(_('Step %d on %d'), 1, 2) ?></h2><br/>
 		<h3><?php echo _('Configuration of your relay server') ?></h3><br/>
-		<?php echo _('Feel free to leave default values.') ?>
+		<?php echo _('Feel free to leave default values') ?>
     </div>
 	<?php echo DedicatedManager\Helpers\Box\Box::detect(); ?>
     <div data-role="content">
-		<form name="load_config_form" action="<?php echo $r->createLinkArgList('.') ?>" data-ajax="false" method="get" title="<?php echo _('Load existing configuration') ?>">
-			<fieldset data-role="collapsible" data-inset="true" data-theme="e">
-			<legend><?php echo _('Load a configuration file') ?></legend>
-			<ul data-role="listview" >
-				<li>
-					<div class="ui-grid-a">
-						<div class="ui-block-a">
-							<select id="configFile" name="configFile" size="5" data-native-menu="false">
-									<option selected="selected"><?php echo _('Select your config file') ?></option>
+		<form name="load_config_form" action="<?php echo $r->createLinkArgList('.') ?>" data-ajax="false" method="get" data-role="collapsible-group">
+			<fieldset data-role="collapsible" data-theme="e">
+				<legend><?php echo _('Load a configuration file') ?></legend>
+				<ul data-role="listview" >
+					<li>
+						<div class="ui-grid-a">
+							<div class="ui-block-a">
+								<select id="configFile" name="configFile" size="5" data-native-menu="false">
+									<option <?php echo in_array($configFile, $configList) ? '' : 'selected="selected"'; ?>><?php echo _('Select file') ?></option>
 								<?php foreach($configList as $config): ?>
 									<option value="<?php echo $config ?>" <?php echo ( $config == $configFile ? 'selected="selected"': '') ?>><?php echo $config ?></option>
 								<?php endforeach; ?>
-							</select>
+								</select>
+							</div>
+							<div class="ui-block-b">
+								<input type="submit" value="Load" data-theme="a"/>
+							</div>
 						</div>
-						<div class="ui-block-b">
-							<input type="submit" value="Load" data-theme="a"/>
-						</div>
-					</div>
-				</li>
-			</ul>
+					</li>
+				</ul>
 			</fieldset>
 		</form>
-		<br/>
-		<form name="config" action="<?php echo $r->createLinkArgList('../set-config') ?>" method="get" data-ajax="false">
+		
+		<form name="config" action="<?php echo $r->createLinkArgList('../set-config') ?>" method="get" data-ajax="false" data-role="collapsible-group">
 			<fieldset data-role="collapsible" data-collapsed="false" data-theme="b">
 				<legend><?php echo _('Basic Server Configuration') ?></legend>
 				<ul data-role="listview">

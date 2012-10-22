@@ -10,24 +10,30 @@ $r = ManiaLib\Application\Request::getInstance();
     </div>
 	<?php echo DedicatedManager\Helpers\Box\Box::detect(); ?>
     <div data-role="content">
-		<form name="config" action="<?php echo $r->createLinkArgList('../set-plugins') ?>" method="get" data-ajax="false">
-			<ul data-role="listview" data-inset="true">
-				<li data-role="list-divider"><?php echo _('Select your plugins') ?></li>
-				<li data-role="fieldcontain">
-					<fieldset data-role="controlgroup">
-					<?php foreach($plugins as $plugin): ?>
-						<?php $id = uniqid('plugin-'); ?>
-						<input type="checkbox" id="<?php echo $id; ?>" name="plugins[]" value="<?php echo $plugin; ?>"
-							<?php echo in_array($plugin, $config->plugins) ? 'checked="checked"' : ''; ?>/>
-						<label for="<?php echo $id; ?>"><?php echo $plugin; ?></label>
-					<?php endforeach; ?>
-					</fieldset>
-				</li>
-				<li data-role="list-divider"><?php echo _('Configure plugins') ?></li>
-				<li data-role="fieldcontain">
-					<textarea name="other"><?php echo $config->__other; ?></textarea>
-				</li>
-			</ul>
+		<form name="config" action="<?php echo $r->createLinkArgList('../set-plugins') ?>" method="get" data-ajax="false" data-role="collapsible-group">
+			<fieldset data-role="collapsible" data-collapsed="false" data-theme="b">
+				<legend><?php echo _('Select your plugins') ?></legend>
+				<ul data-role="listview">
+					<li data-role="fieldcontain">
+						<fieldset data-role="controlgroup">
+						<?php foreach($plugins as $plugin): ?>
+							<?php $id = uniqid('plugin-'); ?>
+							<input type="checkbox" id="<?php echo $id; ?>" name="plugins[]" value="<?php echo $plugin; ?>"
+								<?php echo in_array($plugin, $config->plugins) ? 'checked="checked"' : ''; ?>/>
+							<label for="<?php echo $id; ?>"><?php echo $plugin; ?></label>
+						<?php endforeach; ?>
+						</fieldset>
+					</li>
+				</ul>
+			</fieldset>
+			<fieldset data-role="collapsible" data-collapsed="false" data-theme="b">
+				<legend><?php echo _('Configure plugins') ?></legend>
+				<ul data-role="listview">
+					<li data-role="fieldcontain">
+						<textarea name="other"><?php echo $config->__other; ?></textarea>
+					</li>
+				</ul>
+			</fieldset>
 			<div class="ui-grid-a">
 				<div class="ui-block-a">
 					<input type="reset" id="reset" value="<?php echo _('Restore') ?>"/>

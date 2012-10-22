@@ -6,7 +6,7 @@ $r = ManiaLib\Application\Request::getInstance();
 	<?php require __DIR__.'/Header.php'; ?>
 	<div data-role="content">
 		<div class="content-primary">
-			<form action="<?php echo $r->createLinkArgList('../set-config') ?>" method="get" data-ajax="false">
+			<form action="<?php echo $r->createLinkArgList('../set-config') ?>" method="get" data-ajax="false" data-role="collapsible-group">
 				<input type="hidden" name="host" value="<?php echo $host ?>"/>
 				<input type="hidden" name="port" value="<?php echo $port ?>"/>
 				<fieldset data-role="collapsible" data-collapsed="false" data-theme="b">

@@ -11,30 +11,30 @@ $r = ManiaLib\Application\Request::getInstance();
     </div>
 	<?php echo DedicatedManager\Helpers\Box\Box::detect() ?>
     <div data-role="content">
-		<form name="load_config_form" action="<?php echo $r->createLinkArgList('.') ?>" data-ajax="false" method="get" title="<?php echo _('Load existing configuration') ?>">
-			<fieldset data-role="collapsible" data-inset="true" data-theme="e">
-			<legend><?php echo _('Load a Match settings file') ?></legend>
-			<ul data-role="listview" >
-				<li>
-					<div class="ui-grid-a">
-						<div class="ui-block-a">
-							<select id="matchFile" name="matchFile" size="5" data-native-menu="false">
-									<option selected="selected"><?php echo _('Select your Match settings file') ?></option>
+		<form name="load_config_form" action="<?php echo $r->createLinkArgList('.') ?>" data-ajax="false" method="get" data-role="collapsible-group">
+			<fieldset data-role="collapsible" data-theme="e">
+				<legend><?php echo _('Load a Match settings file') ?></legend>
+				<ul data-role="listview" >
+					<li>
+						<div class="ui-grid-a">
+							<div class="ui-block-a">
+								<select id="matchFile" name="matchFile" size="5" data-native-menu="false">
+									<option <?php echo in_array($matchFile, $settingsList) ? '' : 'selected="selected"'; ?>><?php echo _('Select file') ?></option>
 								<?php foreach($settingsList as $setting): ?>
-									<option value="<?php echo $setting ?>" <?php echo ( $setting == $matchFile ? 'selected="selected"': '') ?>><?php echo $setting ?></option>
+									<option value="<?php echo $setting ?>" <?php echo $setting == $matchFile ? 'selected="selected"': ''; ?>><?php echo $setting ?></option>
 								<?php endforeach; ?>
-							</select>
+								</select>
+							</div>
+							<div class="ui-block-b">
+								<input type="submit" value="Load" data-theme="a"/>
+							</div>
 						</div>
-						<div class="ui-block-b">
-							<input type="submit" value="Load" data-theme="a"/>
-						</div>
-					</div>
-				</li>
-			</ul>
+					</li>
+				</ul>
 			</fieldset>
 		</form>
-		<br/>
-		<form action="<?php echo $r->createLinkArgList('../set-rules') ?>" method="get" data-ajax="false">
+		
+		<form action="<?php echo $r->createLinkArgList('../set-rules') ?>" method="get" data-ajax="false" data-role="collapsible-group">
 		<?php if($title == 'TMCanyon'): ?>
 			<fieldset data-role="collapsible" data-collapsed="false" data-theme="b">
 				<legend><?php echo _('Game mode selection') ?></legend>

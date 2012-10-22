@@ -12,7 +12,7 @@ $r = ManiaLib\Application\Request::getInstance();
     </div>
 	<?php echo DedicatedManager\Helpers\Box\Box::detect(); ?>
     <div data-role="content">
-		<form action="<?php echo $r->createLinkArgList('../start') ?>" method="get" data-ajax="false">
+		<form action="<?php echo $r->createLinkArgList('../start') ?>" method="get" data-ajax="false" data-role="collapsible-group">
 			<fieldset data-role="collapsible" data-collapsed="false" data-theme="b">
 				<legend><?php echo _('Change config filename') ?></legend>
 				<ul data-role="listview">
