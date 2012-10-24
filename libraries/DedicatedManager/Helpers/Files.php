@@ -109,7 +109,7 @@ abstract class Files
 		else
 			$value = implode('|', array_map(function ($s) { return htmlentities($s, ENT_QUOTES | ENT_HTML5, 'utf-8'); }, $selected));
 		return sprintf(
-				'<div class="sortable-container"><input type="hidden" class="sortable-result" name="%s" value="%s"/>',
+				'<div data-role="tree-selector" class="sortable-container"><input type="hidden" class="sortable-result" name="%s" value="%s"/>',
 				$name, $value
 			).self::subTree($files, $selected, $hideSelected, $withThumbnail)
 			.'</div>';
