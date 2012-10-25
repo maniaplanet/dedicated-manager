@@ -63,7 +63,7 @@ $r = ManiaLib\Application\Request::getInstance();
 							<strong><?php echo _('Displayed name'); ?></strong><br/>
 							<i><?php echo _('Name that will be displayed in the server list'); ?></i>
 						</label>
-						<input type="text" name="options[name]" id="name" value="<?php echo htmlentities($options->name, ENT_QUOTES, 'utf-8'); ?>" data-role="maniaplanet-style"/>
+						<input type="text" name="options[name]" id="name" value="<?php echo htmlentities($options->name, ENT_QUOTES, 'utf-8'); ?>" maxlength="75" data-role="maniaplanet-style"/>
 					</li>
 					<li data-role="fieldcontain">
 						<label for="comment">

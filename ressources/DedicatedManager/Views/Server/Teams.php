@@ -13,7 +13,7 @@ $r = ManiaLib\Application\Request::getInstance();
 					<li data-role="list-divider"><?php echo _('Team 1') ?></li>
 					<li data-role="fieldcontain">
 						<label for="name1"><?php echo _('Name:') ?></label>
-						<input type="text" id="name1" name="team1[name]" value="Blue"/>
+						<input type="text" id="name1" name="team1[name]" value="Blue" data-role="maniaplanet-style"/>
 					</li>
 					<li data-role="fieldcontain">
 						<label for="country1"><?php echo _('Country:') ?></label>
@@ -26,7 +26,7 @@ $r = ManiaLib\Application\Request::getInstance();
 					<li data-role="list-divider"><?php echo _('Team 2') ?></li>
 					<li data-role="fieldcontain">
 						<label for="name2"><?php echo _('Name:') ?></label>
-						<input type="text" id="name2" name="team2[name]" value="Red"/>
+						<input type="text" id="name2" name="team2[name]" value="Red" data-role="maniaplanet-style"/>
 					</li>
 					<li data-role="fieldcontain">
 						<label for="country2"><?php echo _('Country:') ?></label>

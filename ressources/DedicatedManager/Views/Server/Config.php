@@ -17,14 +17,14 @@ $r = ManiaLib\Application\Request::getInstance();
 								<strong><?php echo _('Displayed name'); ?></strong><br/>
 								<i><?php echo _('Name that will be displayed in the server list.') ?></i>
 							</label>
-							<?php echo DedicatedManager\Helpers\Input::text('options[name]', 'name', $options->name) ?>
+							<input type="text" name="options[name]" id="name" value="<?php echo htmlentities($options->name, ENT_QUOTES, 'utf-8'); ?>" maxlength="75" data-role="maniaplanet-style"/>
 						</li>
 						<li data-role="fieldcontain">
 							<label for="comment">
 								<strong><?php echo _('Description'); ?></strong><br/>
 								<i><?php echo _('Short description of the server.') ?></i>
 							</label>
-							<textarea name="options[comment]" id="comment" rows="4" cols="25"><?php echo $options->comment; ?></textarea>
+							<textarea name="options[comment]" id="comment" data-role="maniaplanet-style"><?php echo htmlentities($options->comment, ENT_QUOTES, 'utf-8') ?></textarea>
 						</li>
 					<?php if($isRelay): ?>
 						<li data-role="fieldcontain">

@@ -1,14 +1,4 @@
 $(document).bind('pageinit', function() {
-	/*
-	 * Formating preview
-	 */
-	$('.formattingPreview').bind('propertychange keyup input paste change', function() {
-		if (formattingTimeout != null) {
-			clearTimeout(formattingTimeout);
-		}
-		formattingTimeout = setTimeout(updateFormattingPreview, 500, $(this));
-	});
-	
 	$('#isOnline').change(function() {
 		if($(this).val() == '1') {
 			$('#field-internet').trigger('expand');
@@ -128,13 +118,5 @@ $(document).bind('pageinit', function() {
 	
 	$('#add-admin-button').click(function() {
 		$('<input type="text" name="admins[]"/>').insertAfter($(this).prev()).textinput();
-	});
-	
-	$(":jqmData(role='maniaplanet-style')").each(function() {
-		$('<div class="maniaplanet-style"/>').insertBefore($(this))
-			.append($(this))
-			.append('<div class="ui-corner-all ui-body-c">'+MPStyle.Parser.toHTML($(this).val())+'</div>');
-	}).bind("focus propertychange keyup input paste", function () {
-		$(this).next().html(MPStyle.Parser.toHTML($(this).val()));
 	});
 });

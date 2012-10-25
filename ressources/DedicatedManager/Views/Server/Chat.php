@@ -20,7 +20,7 @@ $r = ManiaLib\Application\Request::getInstance();
 					<li data-role="list-divider"><?php echo _('Send a message') ?></li>
 					<li data-role="fieldcontain">
 						<label for="message"><?php echo _('Message') ?></label>
-						<input type="text" id="message" name="message" value="" placeholder="<?php echo _('Enter your message here...') ?>" required="required"/>
+						<input type="text" id="message" name="message" data-role="maniaplanet-style" placeholder="<?php echo _('Enter your message here...') ?>" required="required"/>
 					</li>
 					<li data-role="fieldcontain">
 						<label for="receiver"><?php echo _('Receiver') ?></label>

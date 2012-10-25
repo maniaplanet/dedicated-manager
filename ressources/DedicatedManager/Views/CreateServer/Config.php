@@ -49,9 +49,9 @@ $r = ManiaLib\Application\Request::getInstance();
 								<option value="SMStorm" <?php echo $system->title == 'SMStorm' ? 'selected="selected"' : '' ?>>ShootMania Storm</option>
 							</optgroup>
 							<optgroup label="<?php echo _('Custom titles') ?>">
-								<?php foreach($titles as $title): ?>
+							<?php foreach($titles as $title): ?>
 								<option value="<?= $title->idString ?>" <?php echo $system->title == $title->idString ? 'selected="selected"' : '' ?>><?= $title->name ?></option>
-								<?php endforeach; ?>
+							<?php endforeach; ?>
 							</optgroup>
 						</select>
 					</li>
@@ -61,7 +61,7 @@ $r = ManiaLib\Application\Request::getInstance();
 							<strong><?php echo _('Displayed name'); ?></strong><br/>
 							<i><?php echo _('Name that will be displayed in the server list'); ?></i>
 						</label>
-						<input type="text" name="options[name]" id="name" value="<?php echo htmlentities($options->name, ENT_QUOTES, 'utf-8'); ?>" data-role="maniaplanet-style"/>
+						<input type="text" name="options[name]" id="name" value="<?php echo htmlentities($options->name, ENT_QUOTES, 'utf-8'); ?>" maxlength="75" data-role="maniaplanet-style"/>
 					</li>
 					<li data-role="fieldcontain">
 						<label for="comment">

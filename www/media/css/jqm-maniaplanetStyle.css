@@ -1,0 +1,38 @@
+/* 
+    Document   : jqm-maniaplanetStyle
+    Created on : 25 oct. 2012, 14:57:56
+    Author     : Nadeo
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+.maniaplanet-style-preview {
+	width: 97%;
+	position: relative;
+}
+
+.maniaplanet-style-preview input, .maniaplanet-style-preview textarea {
+	width: 100% !important;
+}
+
+.maniaplanet-style-preview div {
+	position: absolute;
+	top: 100%;
+	left: 10px;
+	right: 10px;
+	z-index: 2;
+	margin-top: -6px;
+	padding: .4em;
+	font-weight: normal;
+	line-height: 1.4;
+	word-wrap: break-word;
+	overflow-wrap: break-word;
+}
+
+@media all and (min-width: 450px)
+{
+	.maniaplanet-style-preview {
+		display: inline-block;
+		width: 78%;
+	}
+}
