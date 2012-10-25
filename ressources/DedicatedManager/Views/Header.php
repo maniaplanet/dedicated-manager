@@ -9,12 +9,12 @@
 		<link rel="stylesheet" href="<?php echo $mediaURL ?>css/dedicatedmanager.css" type="text/css" media="all" />
 		<script type="text/javascript" src="<?php echo $mediaURL ?>jquery/jquery-1.8.2.min.js"></script>
 		<script type="text/javascript" src="<?php echo $mediaURL ?>jquery/jquery.mobile-1.2.0.min.js"></script>
+		<script type="text/javascript" src="<?php echo $mediaURL ?>js/jqm-utils.js"></script>
 		<script type="text/javascript" src="<?php echo $mediaURL ?>js/jqm-collapsibleGroup.js"></script>
 		<script type="text/javascript" src="<?php echo $mediaURL ?>js/jqm-treeSelector.js"></script>
-		<script type="text/javascript" src="<?php echo $mediaURL ?>js/jqm-utils.js"></script>
+		<script type="text/javascript" src="<?php echo $mediaURL ?>js/jqm-selectorSorter.js"></script>
+		<script type="text/javascript" src="<?php echo $mediaURL ?>js/jqm-huepicker.js"></script>
 		<script type="text/javascript" src="<?php echo $mediaURL ?>js/mp-style-parser.js"></script>
-		<script type="text/javascript" src="<?php echo $mediaURL ?>js/sortable.js"></script>
-		<script type="text/javascript" src="<?php echo $mediaURL ?>js/huepicker.js"></script>
 		<script type="text/javascript" src="<?php echo $mediaURL ?>js/dedicatedmanager.js"></script>
 	</head>
 	<body>

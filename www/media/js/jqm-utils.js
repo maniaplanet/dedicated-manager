@@ -3,7 +3,9 @@ $(document).bind('pageinit', function() {
 	$('form').bind('reset', function() {
 		var self = this;
 		setTimeout(function() {
-			$(self).find('input, textarea, select, button').trigger('change');
+			var elts = $(self).find('input, textarea, select, button');
+			elts.not(':checkbox, :radio').change();
+			elts.filter(':checkbox, :radio').checkboxradio('refresh');
 		}, 1);
 	});
 	
