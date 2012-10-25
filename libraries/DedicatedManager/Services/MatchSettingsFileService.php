@@ -399,7 +399,7 @@ class MatchSettingsFileService extends DedicatedFileService
 	 */
 	function getScriptList($title)
 	{
-		//TODO Clean this mess with custom titles
+		$titleService = new TitleService();
 		if(preg_match('/(storm){1}$/ixu', $title))
 		{
 			$game = 'ShootMania';
@@ -408,21 +408,9 @@ class MatchSettingsFileService extends DedicatedFileService
 		{
 			$game = 'TrackMania';
 		}
-		else if($title == 'SMStormElite@nadeolabs' || $title == 'SMStormEliteExperimental@nadeolabs')
+		else if($titleService->isCustomTitle($title))
 		{
-			return array('Elite.Script.txt');
-		}
-		else if($title == 'SMStormJoust@nadeolabs')
-		{
-			return array('Joust.Script.txt');
-		}
-		else if($title == 'SMStormHeroes@nadeolabs')
-		{
-			return array('Heroes.Script.txt');
-		}
-		else if($title == 'Platform@nadeolive')
-		{
-			return array('PlatformMulti.Script.txt');
+			return array($titleService->getScript($title));
 		}
 
 		$scriptDirectory = \DedicatedManager\Config::getInstance()->dedicatedPath.'UserData/Scripts/Modes/'.$game.'/';
@@ -445,7 +433,7 @@ class MatchSettingsFileService extends DedicatedFileService
 	 */
 	function getScriptMapType($scriptName, $title)
 	{
-		//TODO Clean this mess with custom titles
+		$titleService = new TitleService();
 		if(preg_match('/(storm){1}$/ixu', $title))
 		{
 			$game = 'ShootMania';
@@ -454,21 +442,9 @@ class MatchSettingsFileService extends DedicatedFileService
 		{
 			$game = 'TrackMania';
 		}
-		elseif($scriptName == 'Elite.Script.txt' && ($title == 'SMStormElite@nadeolabs' || $title == 'SMStormEliteExperimental@nadeolabs'))
+		elseif($titleService->isCustomTitle($title))
 		{
-			return array('EliteArena', 'ShootMania\\EliteArena', 'HeroesArena', 'ShootMania\\HeroesArena');
-		}
-		elseif($scriptName == 'Joust.Script.txt' && $title == 'SMStormJoust@nadeolabs')
-		{
-			return array('JoustArena', 'ShootMania\\JoustArena');
-		}
-		elseif($scriptName == 'Heroes.Script.txt' && $title == 'SMStormHeroes@nadeolabs')
-		{
-			return array('HeroesArena', 'ShootMania\\HeroesArena', 'EliteArena', 'ShootMania\\EliteArena');
-		}
-		elseif($scriptName == 'PlatformMulti.Script.txt' && $title == 'Platform@nadeolive')
-		{
-			return array('Platform', 'TrackMania\\Platform');
+			return $titleService->getMapTypes($title);
 		}
 
 		$scriptDirectory = \DedicatedManager\Config::getInstance()->dedicatedPath.'UserData/Scripts/Modes/'.$game.'/';

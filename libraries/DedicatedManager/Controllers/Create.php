@@ -51,6 +51,9 @@ abstract class Create extends AbstractController
 			$authLevel = new \DedicatedManager\Services\AuthorizationLevels();
 		}
 		
+		$titleService = new \DedicatedManager\Services\TitleService();
+		$this->response->titles = $titleService->getList();
+		\ManiaLib\Utils\Logger::info($this->response->titles);
 		$this->response->configFile = $configFile;
 		$this->response->configList = $service->getList();
 		$this->response->authLevel = $this->session->get('authLevel', $authLevel);
