@@ -9,6 +9,9 @@
 
 namespace DedicatedManager;
 
+/**
+ * @method \DedicatedManager\Config getInstance()
+ **/
 class Config extends \ManiaLib\Utils\Singleton
 {
 	public $dedicatedPath = '';

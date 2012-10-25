@@ -69,7 +69,24 @@ class TitleService extends AbstractService
 
 	function getList()
 	{
-		return $this->titleList;
+		$list = array();
+		foreach($this->titleList as $title)
+			$filenames[$title->idString] = $title->filename;
+
+		$currentDir = getcwd();
+		chdir(\DedicatedManager\Config::getInstance()->dedicatedPath.'UserData/Packs/');
+
+		$files = array();
+		foreach(glob('*.[tT][iT][tT][lL][eE].[pP][aA][cC][kK].[gG][bB][xX]') as $file)
+		{
+			$key = array_keys($filenames, $file);
+			if($key)
+			{
+				$list[] = $this->titleList[end($key)];
+			}
+		}
+		chdir($currentDir);
+		return $list;
 	}
 
 	function isCustomTitle($idString)
@@ -80,21 +97,21 @@ class TitleService extends AbstractService
 	function getMapTypes($idString)
 	{
 		if(!$this->isCustomTitle($idString)) throw new \InvalidArgumentException();
-		
+
 		$game = $this->titleList[$idString]->game;
 		$mapTypes = $this->titleList[$idString]->mapTypes;
 		foreach($mapTypes as $mapType)
 		{
 			$mapTypes[] = $game.'\\'.$mapType;
 		}
-		
+
 		return $mapTypes;
 	}
-	
+
 	function getScript($idString)
 	{
 		if(!$this->isCustomTitle($idString)) throw new \InvalidArgumentException();
-		
+
 		return $this->titleList[$idString]->script;
 	}
 
