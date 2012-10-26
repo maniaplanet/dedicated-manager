@@ -1,4 +1,8 @@
 $(document).bind('pageinit', function() {
+	$('select#isOnline').parent().find('.ui-slider-switch').css('width', '7em');
+	$('select#hideServer').parent().find('.ui-slider-switch').css('width', '7em');
+	$('select#nextLadderMode').parent().find('.ui-slider-switch').css('width', '7em');
+	
 	$('#isOnline').change(function() {
 		if($(this).val() == '1') {
 			$('#field-internet').trigger('expand');

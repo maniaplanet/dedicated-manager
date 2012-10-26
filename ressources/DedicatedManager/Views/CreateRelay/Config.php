@@ -49,11 +49,9 @@ $r = ManiaLib\Application\Request::getInstance();
 								<option value="SMStorm" <?php echo $system->title == 'SMStorm' ? 'selected="selected"' : '' ?>>ShootMania Storm</option>
 							</optgroup>
 							<optgroup label="<?php echo _('Custom titles') ?>">
-								<option value="SMStormElite@nadeolabs" <?php echo $system->title == 'SMStormElite@nadeolabs' ? 'selected="selected"' : '' ?>>ShootMania Storm Elite</option>
-								<option value="SMStormEliteExperimental@nadeolabs" <?php echo $system->title == 'SMStormEliteExperimental@nadeolabs' ? 'selected="selected"' : '' ?>>ShootMania Storm Elite (experimental)</option>
-								<option value="SMStormJoust@nadeolabs" <?php echo $system->title == 'SMStormJoust@nadeolabs' ? 'selected="selected"' : '' ?>>ShootMania Storm Joust</option>
-								<option value="SMStormHeroes@nadeolabs" <?php echo $system->title == 'SMStormHeroes@nadeolabs' ? 'selected="selected"' : '' ?>>ShootMania Storm Heroes</option>
-								<option value="Platform@nadeolive" <?php echo $system->title == 'Platform@nadeolive' ? 'selected="selected"' : '' ?>>TrackMania Canyon Platform</option>
+							<?php foreach($titles as $title): ?>
+								<option value="<?= $title->idString ?>" <?php echo $system->title == $title->idString ? 'selected="selected"' : '' ?>><?= $title->name ?></option>
+							<?php endforeach; ?>
 							</optgroup>
 						</select>
 					</li>
@@ -92,8 +90,8 @@ $r = ManiaLib\Application\Request::getInstance();
 							<i><?php echo _('If the box "yes" is selected your server will be accessible to every one'); ?></i>
 						</label>
 						<select id="isOnline" name="isOnline" data-role="slider">
-							<option value="0" <?php echo !$account->login ? 'selected="selected"' : '' ?>><?php echo _('No') ?></option>
-							<option value="1" <?php echo $account->login ? 'selected="selected"' : '' ?>><?php echo _('Yes') ?></option>
+							<option value="0" <?php echo !$account->login ? 'selected="selected"' : '' ?>><?php echo _('LAN') ?></option>
+							<option value="1" <?php echo $account->login ? 'selected="selected"' : '' ?>><?php echo _('Online') ?></option>
 						</select>
 					</li>
 				</ul>
@@ -117,8 +115,8 @@ $r = ManiaLib\Application\Request::getInstance();
 							<i><?php echo _('If "yes" is selected the server will not be visible in the server list'); ?></i>
 						</label>
 						<select id="hideServer" name="config[hideServer]" data-role="slider">
-							<option value="0" <?php echo !$options->hideServer ? 'selected="selected"' : '' ?>><?php echo _('No') ?></option>
-							<option value="1" <?php echo $options->hideServer ? 'selected="selected"' : '' ?>><?php echo _('Yes') ?></option>
+							<option value="0" <?php echo !$options->hideServer ? 'selected="selected"' : '' ?>><?php echo _('Visible') ?></option>
+							<option value="1" <?php echo $options->hideServer ? 'selected="selected"' : '' ?>><?php echo _('Hidden') ?></option>
 						</select>
 					</li>
 					<li data-role="fieldcontain">

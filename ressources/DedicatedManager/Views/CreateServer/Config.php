@@ -83,8 +83,8 @@ $r = ManiaLib\Application\Request::getInstance();
 							<i><?php echo _('If the box "yes" is selected your server will be accessible to every one'); ?></i>
 						</label>
 						<select id="isOnline" name="isOnline" data-role="slider">
-							<option value="0" <?php echo !$account->login ? 'selected="selected"' : '' ?>><?php echo _('No') ?></option>
-							<option value="1" <?php echo $account->login ? 'selected="selected"' : '' ?>><?php echo _('Yes') ?></option>
+							<option value="0" <?php echo !$account->login ? 'selected="selected"' : '' ?>><?php echo _('LAN') ?></option>
+							<option value="1" <?php echo $account->login ? 'selected="selected"' : '' ?>><?php echo _('Online') ?></option>
 						</select>
 					</li>
 				</ul>
@@ -129,8 +129,8 @@ $r = ManiaLib\Application\Request::getInstance();
 							<i><?php echo _('If "yes" is selected the server will not be visible in the server list'); ?></i>
 						</label>
 						<select id="hideServer" name="options[hideServer]" data-role="slider">
-							<option value="0" <?php echo !$options->hideServer ? 'selected="selected"' : '' ?>><?php echo _('No') ?></option>
-							<option value="1" <?php echo $options->hideServer ? 'selected="selected"' : '' ?>><?php echo _('Yes') ?></option>
+							<option value="0" <?php echo !$options->hideServer ? 'selected="selected"' : '' ?>><?php echo _('Visible') ?></option>
+							<option value="1" <?php echo $options->hideServer ? 'selected="selected"' : '' ?>><?php echo _('Hidden') ?></option>
 						</select>
 					</li>
 					<li data-role="fieldcontain">
@@ -247,8 +247,8 @@ $r = ManiaLib\Application\Request::getInstance();
 							<i><?php echo _('Choose if you want to activate or not the ladder on your server'); ?></i>
 						</label>
 						<select id="nextLadderMode" name="options[nextLadderMode]" data-role="slider">
-							<option value="0" <?php echo !$options->nextLadderMode ? 'selected="selected"' : '' ?>><?php echo _('No') ?></option>
-							<option value="1" <?php echo $options->nextLadderMode ? 'selected="selected"' : '' ?>><?php echo _('Yes') ?></option>
+							<option value="0" <?php echo !$options->nextLadderMode ? 'selected="selected"' : '' ?>><?php echo _('Disable') ?></option>
+							<option value="1" <?php echo $options->nextLadderMode ? 'selected="selected"' : '' ?>><?php echo _('Enable') ?></option>
 						</select>
 					</li>
 					<li data-role="fieldcontain">
