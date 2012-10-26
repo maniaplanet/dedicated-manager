@@ -146,7 +146,7 @@ class MatchSettingsFileService extends DedicatedFileService
 		$gameSettings->addChild('allwarmupduration', (int) $gameInfos->allWarmUpDuration);
 		$gameSettings->addChild('disablerespawn', $gameInfos->disableRespawn);
 		$gameSettings->addChild('forceshowallopponents', $gameInfos->forceShowAllOpponents);
-		$gameSettings->addChild('script_name', (string) $gameInfos->scriptName);
+		$gameSettings->addChild('script_name')->{0} = "\xEF\xBB\xBF".(string)$gameInfos->scriptName;
 		$gameSettings->addChild('rounds_pointslimit', (int) $gameInfos->roundsPointsLimit);
 		$gameSettings->addChild('rounds_usenewrules', (int) $gameInfos->roundsUseNewRules);
 		$gameSettings->addChild('rounds_forcedlaps', (int) $gameInfos->roundsForcedLaps);
@@ -181,8 +181,7 @@ class MatchSettingsFileService extends DedicatedFileService
 
 		foreach($maps as $map)
 		{
-			$playlist->addChild('map')->addChild('file', "\xEF\xBB\xBF".$map);
-			//$playlist->addChild('map')->addChild('file', $map);
+			$playlist->addChild('map')->addChild('file')->{0} = "\xEF\xBB\xBF".$map;
 		}
 
 		$playlist->asXML($this->directory.$filename.'.txt');

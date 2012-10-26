@@ -186,13 +186,13 @@ class ConfigFileService extends DedicatedFileService
 		$authLevel = $dedicated->addChild('authorization_levels');
 		$level = $authLevel->addChild('level');
 		$level->addChild('name', 'SuperAdmin');
-		$level->addChild('password', (string) $auth->superAdmin);
+		$level->addChild('password')->{0} = (string) $auth->superAdmin;
 		$level = $authLevel->addChild('level');
 		$level->addChild('name', 'Admin');
-		$level->addChild('password', (string) $auth->admin);
+		$level->addChild('password')->{0} = (string) $auth->admin;
 		$level = $authLevel->addChild('level');
 		$level->addChild('name', 'User');
-		$level->addChild('password', (string) $auth->user);
+		$level->addChild('password')->{0} = (string) $auth->user;
 
 		if(!$account)
 		{
@@ -200,17 +200,17 @@ class ConfigFileService extends DedicatedFileService
 		}
 		$masterAccount = $dedicated->addChild('masterserver_account');
 		$masterAccount->addChild('login', (string) $account->login);
-		$masterAccount->addChild('password', (string) $account->password);
+		$masterAccount->addChild('password')->{0} = (string) $account->password;
 		$masterAccount->addChild('validation_key', (string) $account->validationKey);
 
 		$serverOptions = $dedicated->addChild('server_options');
-		$serverOptions->addChild('name', (string) $config->name);
-		$serverOptions->addChild('comment', (string) $config->comment);
+		$serverOptions->addChild('name')->{0} = (string) $config->name;
+		$serverOptions->addChild('comment')->{0} = (string) $config->comment;
 		$serverOptions->addChild('hide_server', (int) $config->hideServer);
 		$serverOptions->addChild('max_players', (int) $config->nextMaxPlayers);
-		$serverOptions->addChild('password', (string) $config->password);
+		$serverOptions->addChild('password')->{0} = (string) $config->password;
 		$serverOptions->addChild('max_spectators', (int) $config->nextMaxSpectators);
-		$serverOptions->addChild('password_spectator', (string) $config->passwordForSpectator);
+		$serverOptions->addChild('password_spectator')->{0} = (string) $config->passwordForSpectator;
 		$serverOptions->addChild('ladder_mode', (int) $config->nextLadderMode);
 		$serverOptions->addChild('ladder_serverlimit_min', (int) $config->ladderServerLimitMin);
 		$serverOptions->addChild('ladder_serverlimit_max', (int) $config->ladderServerLimitMax);
@@ -224,9 +224,9 @@ class ConfigFileService extends DedicatedFileService
 		$serverOptions->addChild('allow_map_download', $config->allowMapDownload ? 'True' : 'False');
 		$serverOptions->addChild('autosave_replays', $config->autoSaveReplays ? 'True' : 'False');
 		$serverOptions->addChild('autosave_validation_replays', $config->autoSaveValidationReplays ? 'True' : 'False');
-		$serverOptions->addChild('referee_password', (string) $config->refereePassword);
-		$serverOptions->addChild('referee_validation_mode', (string) $config->refereeMode);
-		$serverOptions->addChild('use_changing_validation_seed', (string) $config->nextUseChangingValidationSeed);
+		$serverOptions->addChild('referee_password')->{0} = (string) $config->refereePassword;
+		$serverOptions->addChild('referee_validation_mode')->{0} = (string) $config->refereeMode;
+		$serverOptions->addChild('use_changing_validation_seed')->{0} = (string) $config->nextUseChangingValidationSeed;
 		$serverOptions->addChild('disable_horns', $config->disableHorns ? 'True' : 'False');
 		$serverOptions->addChild('clientinputs_maxlatency', (int) $config->clientInputsMaxLatency);
 
