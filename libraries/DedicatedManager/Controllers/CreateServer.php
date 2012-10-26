@@ -40,7 +40,6 @@ class CreateServer extends Create
 		}
 
 		$gameInfos = $this->session->get('gameInfos', $gameInfos);
-
 		$this->response->matchFile = $matchFile;
 		$this->response->settingsList = $service->getList();
 		$this->response->gameInfos = $gameInfos;

@@ -9,7 +9,7 @@
 
 namespace DedicatedManager\Services;
 
-class TitleService extends AbstractService
+class TitleService
 {
 
 	protected $titleList = array();
