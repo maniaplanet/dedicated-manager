@@ -77,8 +77,8 @@ $r = ManiaLib\Application\Request::getInstance();
 								<i><?php echo _('If checked the server will not be visible in the server list.') ?></i>
 							</label>
 							<select id="hideServer" name="options[hideServer]" data-role="slider">
-								<option value="0" <?php echo !$options->hideServer ? 'selected="selected"' : '' ?>><?php echo _('No') ?></option>
-								<option value="1" <?php echo $options->hideServer ? 'selected="selected"' : '' ?>><?php echo _('Yes') ?></option>
+								<option value="0" <?php echo !$options->hideServer ? 'selected="selected"' : '' ?>><?php echo _('Visible') ?></option>
+								<option value="1" <?php echo $options->hideServer ? 'selected="selected"' : '' ?>><?php echo _('Hidden') ?></option>
 							</select>
 						</li>
 						<li data-role="fieldcontain">
@@ -145,9 +145,9 @@ $r = ManiaLib\Application\Request::getInstance();
 								<strong><?php echo _('Autosave replays'); ?></strong><br/>
 								<i><?php echo _('If checked every a replay will be saved on each map.') ?></i>
 							</label>
-							<select id="autosaveReplays" name="options[autosaveReplays]" data-role="slider">
-								<option value="0" <?php echo !$options->autosaveReplays ? 'selected="selected"' : '' ?>><?php echo _('No') ?></option>
-								<option value="1" <?php echo $options->autosaveReplays ? 'selected="selected"' : '' ?>><?php echo _('Yes') ?></option>
+							<select id="autosaveReplays" name="options[autoSaveReplays]" data-role="slider">
+								<option value="0" <?php echo !$options->autoSaveReplays ? 'selected="selected"' : '' ?>><?php echo _('No') ?></option>
+								<option value="1" <?php echo $options->autoSaveReplays ? 'selected="selected"' : '' ?>><?php echo _('Yes') ?></option>
 							</select>
 						</li>
 						<li data-role="fieldcontain">
@@ -155,9 +155,9 @@ $r = ManiaLib\Application\Request::getInstance();
 								<strong><?php echo _('Autosave replays for validation'); ?></strong><br/>
 								<i><?php echo _('If checked a replay of validation will be generated on each map.') ?></i>
 							</label>
-							<select id="autosaveValidationReplays" name="options[autosaveValidationReplays]" data-role="slider">
-								<option value="0" <?php echo !$options->autosaveValidationReplays ? 'selected="selected"' : '' ?>><?php echo _('No') ?></option>
-								<option value="1" <?php echo $options->autosaveValidationReplays ? 'selected="selected"' : '' ?>><?php echo _('Yes') ?></option>
+							<select id="autosaveValidationReplays" name="options[autoSaveValidationReplays]" data-role="slider">
+								<option value="0" <?php echo !$options->autoSaveValidationReplays ? 'selected="selected"' : '' ?>><?php echo _('No') ?></option>
+								<option value="1" <?php echo $options->autoSaveValidationReplays ? 'selected="selected"' : '' ?>><?php echo _('Yes') ?></option>
 							</select>
 						</li>
 					<?php if(!$isRelay): ?>
@@ -167,8 +167,8 @@ $r = ManiaLib\Application\Request::getInstance();
 								<i><?php echo _("Choose if you want to activate or not the ladder on your server.") ?></i>
 							</label>
 							<select id="nextLadderMode" name="options[nextLadderMode]" data-role="slider">
-								<option value="0" <?php echo !$options->nextLadderMode ? 'selected="selected"' : '' ?>><?php echo _('No') ?></option>
-								<option value="1" <?php echo $options->nextLadderMode ? 'selected="selected"' : '' ?>><?php echo _('Yes') ?></option>
+								<option value="0" <?php echo !$options->nextLadderMode ? 'selected="selected"' : '' ?>><?php echo _('Disable') ?></option>
+								<option value="1" <?php echo $options->nextLadderMode ? 'selected="selected"' : '' ?>><?php echo _('Enable') ?></option>
 							</select>
 						</li>
 					<?php endif; ?>

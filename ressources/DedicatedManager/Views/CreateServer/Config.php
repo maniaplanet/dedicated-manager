@@ -194,23 +194,23 @@ $r = ManiaLib\Application\Request::getInstance();
 						<?php echo DedicatedManager\Helpers\Input::text('options[clientInputsMaxLatency]', 'inputsMaxLatency', $options->clientInputsMaxLatency) ?>
 					</li>
 					<li data-role="fieldcontain">
-						<label for="autosaveReplays">
+						<label for="autoSaveReplays">
 							<strong><?php echo _('Autosave replays'); ?></strong><br/>
 							<i><?php echo _('If "yes" every a replay will be saved on each map'); ?></i>
 						</label>
-						<select id="autosaveReplays" name="options[autosaveReplays]" data-role="slider">
-							<option value="0" <?php echo !$options->autosaveReplays ? 'selected="selected"' : '' ?>><?php echo _('No') ?></option>
-							<option value="1" <?php echo $options->autosaveReplays ? 'selected="selected"' : '' ?>><?php echo _('Yes') ?></option>
+						<select id="autoSaveReplays" name="options[autoSaveReplays]" data-role="slider">
+							<option value="0" <?php echo !$options->autoSaveReplays ? 'selected="selected"' : '' ?>><?php echo _('No') ?></option>
+							<option value="1" <?php echo $options->autoSaveReplays ? 'selected="selected"' : '' ?>><?php echo _('Yes') ?></option>
 						</select>
 					</li>
 					<li data-role="fieldcontain">
-						<label for="autosaveValidationReplays">
+						<label for="autoSaveValidationReplays">
 							<strong><?php echo _('Autosave replays for validation'); ?></strong><br/>
 							<i><?php echo _('If "yes" a replay of validation will be generated on each map'); ?></i>
 						</label>
-						<select id="autosaveValidationReplays" name="options[autosaveValidationReplays]" data-role="slider">
-							<option value="0" <?php echo !$options->autosaveValidationReplays ? 'selected="selected"' : '' ?>><?php echo _('No') ?></option>
-							<option value="1" <?php echo $options->autosaveValidationReplays ? 'selected="selected"' : '' ?>><?php echo _('Yes') ?></option>
+						<select id="autoSaveValidationReplays" name="options[autoSaveValidationReplays]" data-role="slider">
+							<option value="0" <?php echo !$options->autoSaveValidationReplays ? 'selected="selected"' : '' ?>><?php echo _('No') ?></option>
+							<option value="1" <?php echo $options->autoSaveValidationReplays ? 'selected="selected"' : '' ?>><?php echo _('Yes') ?></option>
 						</select>
 					</li>
 				</ul>
