@@ -190,6 +190,7 @@ class ServerService extends AbstractService
 			}
 		}
 		$buffer = '';
+		$timeout = time() + 20;
 		while(true)
 		{
 			$line = fgets($logFile);
@@ -199,6 +200,14 @@ class ServerService extends AbstractService
 					break;
 				if(strpos($buffer, 'Server not running, exiting.') !== false || strpos($buffer, 'This title isn\'t playable.') !== false)
 					throw new \Exception('Server stopped automatically');
+				if(time() > $timeout)
+				{
+					if($isWindows)
+						`TASKKILL /PID $pid`;
+					else
+						`kill -9 $pid`;
+					throw new \Exception('Server stopped automatically');
+				}
 
 				if(!$buffer)
 					fseek($logFile, 0, SEEK_SET);
