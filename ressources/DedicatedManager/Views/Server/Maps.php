@@ -22,7 +22,7 @@ $r = ManiaLib\Application\Request::getInstance();
 						</fieldset>
 					</li>
 				<?php if(!$isRelay): ?>
-					<li data-role="fieldcontain">
+					<li>
 						<div class="ui-grid-b">
 							<div class="ui-block-a">
 								<input data-theme="d" type="submit" name="delete" value="<?php echo _('Delete from map list') ?>" data-icon="delete"/>

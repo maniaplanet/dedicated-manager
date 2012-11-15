@@ -27,7 +27,7 @@ $c = \DedicatedManager\Config::getInstance();
 						<?php endif; ?>
 						</fieldset>
 					</li>
-					<li data-role="fieldcontain">
+					<li>
 						<input type="submit" value="<?php echo _('Stop') ?>" data-icon="delete" <?php echo count($controllers) ? '' : 'disabled="disabled"' ?>/>
 					</li>
 				</ul>

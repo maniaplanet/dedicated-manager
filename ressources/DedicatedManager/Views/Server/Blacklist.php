@@ -25,7 +25,7 @@ $r = ManiaLib\Application\Request::getInstance();
 						<?php endif; ?>
 						</fieldset>
 					</li>
-					<li data-role="fieldcontain">
+					<li>
 						<div class="<?php echo ($isLocal ? 'ui-grid-d' : 'ui-grid-c'); ?>">
 							<div class="ui-block-a">
 								<a href="#add" data-role="button" data-icon="plus" data-rel="dialog" data-transition="pop"><?php echo _('Add a player') ?></a>

@@ -12,8 +12,18 @@ $(document).bind('pageinit', function() {
 	// Checkboxes hack for readonly style
 	$('.readonly-checkbox').parent().css('opacity', 1);
 	
+	// Readonly input should not be focusable
+	$('input, select, textarea').not(':jqmData(role="datebox")').focus(function() {
+		if(this.readOnly)
+			$(this).blur();
+	});
+	
 	// Input file hack for custom style
-	$('input:file[customized!=customized]').each(function () {
+	$('input:file').each(function () {
+		if($(this).jqmData('customized'))
+			return;
+		$(this).jqmData('customized', true)
+		
 		var self = $(this);
 		self.css({
 			display: 'block',
@@ -29,14 +39,19 @@ $(document).bind('pageinit', function() {
 			.click(function () {
 				self.trigger('click');
 			});
-		self.appendTo(button.parent()).attr('customized', 'customized');
+		self.appendTo(button.parent());
 		self.change(function() {
 			button.prev().children('.ui-btn-text').text('Choose file' + (self.val() ? ': '+self.val() : ''));
-		}).trigger('change');
+		}).change();
 	});
 	
 	// Alert bars close
 	$('.alert-bar a').click(function() {
-		$(this).closest('.alert-bar').slideUp(200);
+		$(this).closest('.alert-bar').slideUp('fast');
+	});
+	
+	// List divider hack
+	$('.ui-li-divider[data-theme]').each(function() {
+		$(this).removeClass('ui-bar-a ui-bar-b ui-bar-c ui-bar-d ui-bar-e').addClass('ui-bar-'+$(this).jqmData('theme'));
 	});
 });

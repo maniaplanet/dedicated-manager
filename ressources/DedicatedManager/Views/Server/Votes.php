@@ -57,7 +57,7 @@ $r = ManiaLib\Application\Request::getInstance();
 						</label>
 						<input type="range" id="default" name="ratios[*]" value="<?php echo $ratios['*']; ?>" min="-1" max="100" step="1" data-highlight="true"/>
 					</li>
-					<li data-role="fieldcontain">
+					<li>
 						<div class="ui-grid-a">
 							<div class="ui-block-a">
 								<input type="reset" value="<?php echo _('Restore') ?>" data-icon="refresh"/>

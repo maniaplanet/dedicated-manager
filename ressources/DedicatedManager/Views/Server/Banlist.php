@@ -25,7 +25,7 @@ $r = ManiaLib\Application\Request::getInstance();
 						<?php endif; ?>
 						</fieldset>
 					</li>
-					<li data-role="fieldcontain">
+					<li>
 						<div class="ui-grid-a">
 							<div class="ui-block-a">
 								<input type="submit" value="<?php echo _('Unban') ?>" data-icon="minus" <?php echo count($banlist) ? '' : 'disabled="disabled"' ?>/>

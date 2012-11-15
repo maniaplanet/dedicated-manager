@@ -31,7 +31,7 @@ $r = ManiaLib\Application\Request::getInstance();
 							<?php endforeach; ?>
 						</select>
 					</li>
-					<li data-role="fieldcontain">
+					<li>
 						<input type="submit" value="<?php echo _('Send') ?>"/>
 					</li>
 				</ul>
