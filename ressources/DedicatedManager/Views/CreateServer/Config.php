@@ -50,7 +50,7 @@ $r = ManiaLib\Application\Request::getInstance();
 							</optgroup>
 							<optgroup label="<?php echo _('Custom titles') ?>">
 							<?php foreach($titles as $title): ?>
-								<option value="<?= $title->idString ?>" <?php echo $system->title == $title->idString ? 'selected="selected"' : '' ?>><?= $title->name ?></option>
+								<option value="<?php echo $title->idString ?>" <?php echo $system->title == $title->idString ? 'selected="selected"' : '' ?>><?php echo $title->name ?></option>
 							<?php endforeach; ?>
 							</optgroup>
 						</select>
