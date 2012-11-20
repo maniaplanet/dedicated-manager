@@ -50,7 +50,7 @@ class CreateRelay extends Create
 					list($rpcHost, $rpcPort, $rpcPass) = explode(':', $spectate->managed, 3);
 					$connection = \DedicatedApi\Connection::factory($rpcHost, $rpcPort, 5, 'SuperAdmin', $rpcPass);
 					$info = $connection->getSystemInfo();
-					$server = $info->publishedIp.':'.$info->port;
+					$gameServer = $info->publishedIp.':'.$info->port;
 					$password = $connection->getServerPasswordForSpectator();
 				}
 				catch(\Exception $e)
@@ -59,11 +59,11 @@ class CreateRelay extends Create
 				}
 				break;
 			case 'ip':
-				$server = $spectate->ip.':'.$spectate->port;
+				$gameServer = $spectate->ip.':'.$spectate->port;
 				$password = $spectate->password;
 				break;
 			case 'login':
-				$server = $spectate->login;
+				$gameServer = $spectate->login;
 				$password = $spectate->password;
 				break;
 		}
@@ -87,8 +87,11 @@ class CreateRelay extends Create
 
 				$error = _('An error appeared while starting the server');
 				$service = new \DedicatedManager\Services\ServerService();
-				$port = $service->startRelay($configFile, $server, $password, $isLan);
-				$service->checkConnection('127.0.0.1', $port, $authLevel->superAdmin);
+				$server = new \DedicatedManager\Services\Server();
+				$server->rpcHost = '127.0.0.1';
+				$server->rpcPort = $service->startRelay($configFile, $gameServer, $password, $isLan);
+				$server->rpcPassword = $authLevel->superAdmin;
+				$service->register($server);
 			}
 			catch(\Exception $e)
 			{

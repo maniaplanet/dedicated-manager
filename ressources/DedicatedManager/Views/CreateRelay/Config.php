@@ -114,7 +114,7 @@ $r = ManiaLib\Application\Request::getInstance();
 							<strong><?php echo _('Hide server'); ?></strong><br/>
 							<i><?php echo _('If "yes" is selected the server will not be visible in the server list'); ?></i>
 						</label>
-						<select id="hideServer" name="config[hideServer]" data-role="slider">
+						<select id="hideServer" name="options[hideServer]" data-role="slider">
 							<option value="0" <?php echo !$options->hideServer ? 'selected="selected"' : '' ?>><?php echo _('Visible') ?></option>
 							<option value="1" <?php echo $options->hideServer ? 'selected="selected"' : '' ?>><?php echo _('Hidden') ?></option>
 						</select>
@@ -124,7 +124,7 @@ $r = ManiaLib\Application\Request::getInstance();
 							<strong><?php echo _('Allow map download'); ?></strong><br/>
 							<i><?php echo _('Allow players to download maps from the server'); ?></i>
 						</label>
-						<select id="allowMapDownload" name="config[allowMapDownload]" data-role="slider">
+						<select id="allowMapDownload" name="options[allowMapDownload]" data-role="slider">
 							<option value="0" <?php echo !$options->allowMapDownload ? 'selected="selected"' : '' ?>><?php echo _('No') ?></option>
 							<option value="1" <?php echo $options->allowMapDownload ? 'selected="selected"' : '' ?>><?php echo _('Yes') ?></option>
 						</select>
@@ -148,7 +148,7 @@ $r = ManiaLib\Application\Request::getInstance();
 							<strong><?php echo _('Referee password'); ?></strong><br/>
 							<i><?php echo _('Enter a password if you want to limit access to referees'); ?></i>
 						</label>
-						<input type="text" name="config[refereePassword]" id="refereePassword" value="<?php echo $options->refereePassword; ?>"/>
+						<input type="text" name="options[refereePassword]" id="refereePassword" value="<?php echo $options->refereePassword; ?>"/>
 					</li>
 					<li data-role="fieldcontain">
 						<fieldset data-role="controlgroup">
@@ -157,9 +157,9 @@ $r = ManiaLib\Application\Request::getInstance();
 								<i><?php echo _('Select if the referees will validate only top3 on each race or everyone'); ?></i>
 							</legend>
 
-							<input type="radio" name="config[refereeMode]" id="refereeModeTop3" value="0" <?php echo $options->refereeMode == 0 ? 'checked="checked"' : '' ?>/>
+							<input type="radio" name="options[refereeMode]" id="refereeModeTop3" value="0" <?php echo $options->refereeMode == 0 ? 'checked="checked"' : '' ?>/>
 							<label for="refereeModeTop3"><?php echo _('Top 3'); ?></label>
-							<input type="radio" name="config[refereeMode]" id="refereeModeAll" value="1" <?php echo $options->refereeMode == 1 ? 'checked="checked"' : '' ?>/>
+							<input type="radio" name="options[refereeMode]" id="refereeModeAll" value="1" <?php echo $options->refereeMode == 1 ? 'checked="checked"' : '' ?>/>
 							<label for="refereeModeAll"><?php echo _('All players'); ?></label>
 						</fieldset>
 					</li>
@@ -168,7 +168,7 @@ $r = ManiaLib\Application\Request::getInstance();
 							<strong><?php echo _('Autosave replays'); ?></strong><br/>
 							<i><?php echo _('If "yes" every a replay will be saved on each map'); ?></i>
 						</label>
-						<select id="autosaveReplays" name="config[autosaveReplays]" data-role="slider">
+						<select id="autosaveReplays" name="options[autosaveReplays]" data-role="slider">
 							<option value="0" <?php echo !$options->autosaveReplays ? 'selected="selected"' : '' ?>><?php echo _('No') ?></option>
 							<option value="1" <?php echo $options->autosaveReplays ? 'selected="selected"' : '' ?>><?php echo _('Yes') ?></option>
 						</select>
@@ -178,7 +178,7 @@ $r = ManiaLib\Application\Request::getInstance();
 							<strong><?php echo _('Autosave replays for validation'); ?></strong><br/>
 							<i><?php echo _('If "yes" a replay of validation will be generated on each map'); ?></i>
 						</label>
-						<select id="autosaveValidationReplays" name="config[autosaveValidationReplays]" data-role="slider">
+						<select id="autosaveValidationReplays" name="options[autosaveValidationReplays]" data-role="slider">
 							<option value="0" <?php echo !$options->autosaveValidationReplays ? 'selected="selected"' : '' ?>><?php echo _('No') ?></option>
 							<option value="1" <?php echo $options->autosaveValidationReplays ? 'selected="selected"' : '' ?>><?php echo _('Yes') ?></option>
 						</select>

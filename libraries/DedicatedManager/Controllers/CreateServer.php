@@ -13,7 +13,6 @@ use \DedicatedManager\Services\GameInfos;
 
 class CreateServer extends Create
 {
-
 	function setConfig(array $options, array $account, array $system, array $authLevel, $isOnline = 0)
 	{
 		parent::setConfig($options, $account, $system, $authLevel, $isOnline);
@@ -174,8 +173,11 @@ class CreateServer extends Create
 
 				$error = _('An error appeared while starting the server.');
 				$service = new \DedicatedManager\Services\ServerService();
-				$port = $service->start($configFile, $matchFile, $isLan);
-				$service->checkConnection('127.0.0.1', $port, $authLevel->superAdmin);
+				$server = new \DedicatedManager\Services\Server();
+				$server->rpcHost = '127.0.0.1';
+				$server->rpcPort = $service->start($configFile, $matchFile, $isLan);
+				$server->rpcPassword = $authLevel->superAdmin;
+				$service->register($server);
 			}
 			catch(\Exception $e)
 			{
@@ -230,7 +232,6 @@ class CreateServer extends Create
 			$this->request->redirectArgList('../maps');
 		}
 	}
-
 }
 
 ?>

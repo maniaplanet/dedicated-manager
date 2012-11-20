@@ -13,12 +13,8 @@ use DedicatedApi\Structures\GameInfos;
 
 class Server extends AbstractController
 {
-
 	/** @var \DedicatedManager\Services\Server */
 	private $server;
-
-	/** @var \DedicatedApi\Connection */
-	private $connection;
 	private $players;
 	private $options;
 	private $currentMap;
@@ -44,8 +40,8 @@ class Server extends AbstractController
 		$service = new \DedicatedManager\Services\ServerService();
 		try
 		{
-			$this->server = $service->getDetails($host, $port);
-			$this->connection = \DedicatedApi\Connection::factory($this->server->rpcHost, $this->server->rpcPort, 5, 'SuperAdmin', $this->server->rpcPassword);
+			$this->server = $service->get($host, $port);
+			$this->server->fetchDetails();
 		}
 		catch(\Exception $e)
 		{
@@ -73,7 +69,7 @@ class Server extends AbstractController
 		}
 
 		$mapDirectory = \DedicatedManager\Config::getInstance()->dedicatedPath.'UserData/Maps/';
-		if(!in_array($this->server->rpcHost, array('127.0.0.1', 'localhost')) && $this->connection->getMapsDirectory() != $mapDirectory)
+		if(!in_array($this->server->rpcHost, array('127.0.0.1', 'localhost')) && $this->server->connection->getMapsDirectory() != $mapDirectory)
 		{
 			if(preg_match('/@local/u', $comment))
 			{
@@ -91,10 +87,10 @@ class Server extends AbstractController
 		if(!$comment || !preg_match('/@redirect/u', $comment))
 		{
 			$this->request->registerReferer();
-			$this->players = $this->connection->getPlayerList(-1, 0);
-			$this->options = $this->connection->getServerOptions();
-			$this->currentMap = $this->connection->getCurrentMapInfo();
-			if(!$this->server->isRelay) $this->nextMap = $this->connection->getNextMapInfo();
+			$this->players = $this->server->connection->getPlayerList(-1, 0);
+			$this->options = $this->server->connection->getServerOptions();
+			$this->currentMap = $this->server->connection->getCurrentMapInfo();
+			if(!$this->server->isRelay) $this->nextMap = $this->server->connection->getNextMapInfo();
 		}
 	}
 
@@ -124,7 +120,7 @@ class Server extends AbstractController
 	 */
 	function maps()
 	{
-		$this->response->maps = $this->connection->getMapList(-1, 0);
+		$this->response->maps = $this->server->connection->getMapList(-1, 0);
 	}
 
 	/**
@@ -141,11 +137,11 @@ class Server extends AbstractController
 
 		if($delete)
 		{
-			$this->connection->removeMapList($maps);
+			$this->server->connection->removeMapList($maps);
 		}
 		elseif($nextList)
 		{
-			$this->connection->chooseNextMapList($maps);
+			$this->server->connection->chooseNextMapList($maps);
 		}
 		$this->request->redirectArgList('../maps', 'host', 'port');
 	}
@@ -156,7 +152,7 @@ class Server extends AbstractController
 	 */
 	function addMaps()
 	{
-		$maps = $this->connection->getMapList(-1, 0);
+		$maps = $this->server->connection->getMapList(-1, 0);
 		$selected = \ManiaLib\Utils\Arrays::getProperty($maps, 'fileName');
 		$selected = array_map(function($s)
 			{
@@ -164,11 +160,11 @@ class Server extends AbstractController
 				return str_replace('\\', '/', $s);
 			}, $selected);
 
-		$matchSettings = $this->connection->getNextGameInfo();
+		$matchSettings = $this->server->connection->getNextGameInfo();
 
 		if($matchSettings->gameMode == GameInfos::GAMEMODE_SCRIPT)
 		{
-			$scriptInfo = $this->connection->getModeScriptInfo();
+			$scriptInfo = $this->server->connection->getModeScriptInfo();
 			$type = explode(',', $scriptInfo->compatibleMapTypes);
 			$isLaps = false;
 		}
@@ -205,11 +201,11 @@ class Server extends AbstractController
 		$selected = array_map(function ($s) { return "\xEF\xBB\xBF".$s; }, $selected);
 		if($insert)
 		{
-			$this->connection->insertMapList($selected);
+			$this->server->connection->insertMapList($selected);
 		}
 		elseif($add)
 		{
-			$this->connection->addMapList($selected);
+			$this->server->connection->addMapList($selected);
 		}
 
 		$this->request->redirectArgList('../maps', 'host', 'port');
@@ -228,7 +224,7 @@ class Server extends AbstractController
 		}
 		try
 		{
-			$this->connection->saveMatchSettings('MatchSettings/'.$filename.'.txt');
+			$this->server->connection->saveMatchSettings('MatchSettings/'.$filename.'.txt');
 			$this->session->set('success', _('Match settings successfully saved'));
 		}
 		catch(\Exception $e)
@@ -247,11 +243,11 @@ class Server extends AbstractController
 		$service = new \DedicatedManager\Services\MatchSettingsFileService();
 		$matchRules = $service->getCurrentMatchRules($this->server->rpcHost, $this->server->rpcPort);
 
-		$matchInfo = $this->connection->getNextGameInfo();
+		$matchInfo = $this->server->connection->getNextGameInfo();
 		switch($matchInfo->gameMode)
 		{
 			case GameInfos::GAMEMODE_SCRIPT:
-				$gameMode = $this->connection->getModeScriptInfo()->name;
+				$gameMode = $this->server->connection->getModeScriptInfo()->name;
 				break;
 			case GameInfos::GAMEMODE_ROUNDS:
 				$gameMode = _('Round');
@@ -282,10 +278,10 @@ class Server extends AbstractController
 	{
 		try
 		{
-			$gameMode = $this->connection->getGameMode();
+			$gameMode = $this->server->connection->getGameMode();
 			if($gameMode == GameInfos::GAMEMODE_SCRIPT)
 			{
-				$info = $this->connection->getModeScriptInfo();
+				$info = $this->server->connection->getModeScriptInfo();
 				foreach($info->paramDescs as $value)
 				{
 					switch($value->type)
@@ -304,16 +300,16 @@ class Server extends AbstractController
 							$rules[$value->name] = (string) $rules[$value->name];
 					}
 				}
-				$this->connection->setModeScriptSettings($rules);
+				$this->server->connection->setModeScriptSettings($rules);
 			}
 			else
 			{
-				$gameInfo = $this->connection->getCurrentGameInfo();
+				$gameInfo = $this->server->connection->getCurrentGameInfo();
 				foreach($rules as $key => $value)
 					$gameInfo->$key = (int) $value;
-				$this->connection->setGameInfos($gameInfo);
+				$this->server->connection->setGameInfos($gameInfo);
 			}
-			$this->connection->restartMap();
+			$this->server->connection->restartMap();
 			$this->session->set('success', _('Rules have been successfully changed'));
 		}
 		catch(\Exception $e)
@@ -326,9 +322,9 @@ class Server extends AbstractController
 
 	function config()
 	{
-		$this->options->disableHorns = $this->connection->areHornsDisabled();
+		$this->options->disableHorns = $this->server->connection->areHornsDisabled();
 		$this->response->rpcPassword = $this->server->rpcPassword;
-		$systemInfo = $this->connection->getSystemInfo();
+		$systemInfo = $this->server->connection->getSystemInfo();
 		$this->response->connectionRates = array(
 			'download' => $systemInfo->connectionDownloadRate,
 			'upload' => $systemInfo->connectionUploadRate
@@ -351,22 +347,24 @@ class Server extends AbstractController
 			$this->request->redirectArgList('../config', 'host', 'port');
 		}
 
-		$optionsCur = $this->connection->getServerOptions();
+		$optionsCur = $this->server->connection->getServerOptions();
 		$options->nextVehicleNetQuality = $optionsCur->nextVehicleNetQuality;
 		$options->nextUseChangingValidationSeed = $optionsCur->nextUseChangingValidationSeed;
 
 		try
 		{
 			$options->ensureCast();
-			$this->connection->setServerOptions($options->toArray());
-			$this->connection->disableHorns($options->disableHorns);
+			$this->server->connection->setServerOptions($options->toArray());
+			$this->server->connection->disableHorns($options->disableHorns);
+			$this->server->connection->setConnectionRates((int) $connectionRates['download'], (int) $connectionRates['upload']);
 			if($rpcPassword != $this->server->rpcPassword)
 			{
-				$this->connection->changeAuthPassword('SuperAdmin', $rpcPassword);
+				$this->server->connection->changeAuthPassword('SuperAdmin', $rpcPassword);
+				$this->server->closeConnection();
+				$this->server->rpcPassword = $rpcPassword;
 				$service = new \DedicatedManager\Services\ServerService();
-				$service->checkConnection($this->server->rpcHost, $this->server->rpcPort, $rpcPassword);
+				$service->register($this->server);
 			}
-			$this->connection->setConnectionRates((int) $connectionRates['download'], (int) $connectionRates['upload']);
 			$this->session->set('success', _('Configuration successfully changed'));
 		}
 		catch(\Exception $e)
@@ -379,7 +377,7 @@ class Server extends AbstractController
 
 	function votes()
 	{
-		$tmpRatios = $this->connection->getCallVoteRatios();
+		$tmpRatios = $this->server->connection->getCallVoteRatios();
 		$ratios = array();
 		foreach($tmpRatios as $ratio)
 		{
@@ -398,7 +396,7 @@ class Server extends AbstractController
 		{
 			$finalRatios[] = array('Command' => $command, 'Ratio' => (double) ($ratio < 0 ? -1 : $ratio / 100));
 		}
-		$this->connection->setCallVoteRatios($finalRatios);
+		$this->server->connection->setCallVoteRatios($finalRatios);
 		$this->session->set('success', _('Vote ratios successfully changed'));
 		$this->request->redirectArgList('../votes', 'host', 'port');
 	}
@@ -423,7 +421,7 @@ class Server extends AbstractController
 		{
 			try
 			{
-				array_map(array($this->connection, 'kick'), $players);
+				array_map(array($this->server->connection, 'kick'), $players);
 				$this->session->set('success', sprintf(_('Successfully kicked %s'), implode(', ', $players)));
 			}
 			catch(\Exception $e)
@@ -436,7 +434,7 @@ class Server extends AbstractController
 		{
 			try
 			{
-				array_map(array($this->connection, 'ban'), $players);
+				array_map(array($this->server->connection, 'ban'), $players);
 				$this->session->set('success', sprintf(_('Successfully banned %s'), implode(', ', $players)));
 			}
 			catch(\Exception $e)
@@ -449,9 +447,9 @@ class Server extends AbstractController
 		{
 			try
 			{
-				array_map(array($this->connection, 'blackList'), $players);
+				array_map(array($this->server->connection, 'blackList'), $players);
 				$this->session->set('success', sprintf(_('Successfully blacklisted %s'), implode(', ', $players)));
-				array_map(array($this->connection, 'kick'), $players);
+				array_map(array($this->server->connection, 'kick'), $players);
 			}
 			catch(\Exception $e)
 			{
@@ -463,7 +461,7 @@ class Server extends AbstractController
 		{
 			try
 			{
-				array_map(array($this->connection, 'addGuest'), $players);
+				array_map(array($this->server->connection, 'addGuest'), $players);
 				$this->session->set('success', sprintf(_('Successfully added to guest list %s'), implode(', ', $players)));
 			}
 			catch(\Exception $e)
@@ -477,7 +475,7 @@ class Server extends AbstractController
 
 	function banlist()
 	{
-		$this->response->banlist = $this->connection->getBanList(-1, 0);
+		$this->response->banlist = $this->server->connection->getBanList(-1, 0);
 		$this->response->players = $this->players;
 
 		$header = \DedicatedManager\Helpers\Header::getInstance();
@@ -497,7 +495,7 @@ class Server extends AbstractController
 		}
 		try
 		{
-			array_map(array($this->connection, 'unBan'), $players);
+			array_map(array($this->server->connection, 'unBan'), $players);
 
 			$this->session->set('success', sprintf(_('Successfully unban %s'), implode(', ', $players)));
 		}
@@ -516,7 +514,7 @@ class Server extends AbstractController
 	{
 		try
 		{
-			$this->connection->cleanBanList();
+			$this->server->connection->cleanBanList();
 			$this->session->set('success', _('Banlist successfully cleaned'));
 		}
 		catch(\Exception $e)
@@ -538,7 +536,7 @@ class Server extends AbstractController
 		{
 			$this->response->blacklistFiles = array();
 		}
-		$this->response->blackListedPlayers = $this->connection->getBlackList(-1, 0);
+		$this->response->blackListedPlayers = $this->server->connection->getBlackList(-1, 0);
 		$this->response->players = $this->players;
 
 		$header = \DedicatedManager\Helpers\Header::getInstance();
@@ -559,7 +557,7 @@ class Server extends AbstractController
 
 		try
 		{
-			array_map(array($this->connection, 'unBlackList'), $players);
+			array_map(array($this->server->connection, 'unBlackList'), $players);
 
 			$this->session->set('success', sprintf(_('Successfully unblacklisted %s'), implode(', ', $players)));
 		}
@@ -578,7 +576,7 @@ class Server extends AbstractController
 	{
 		try
 		{
-			$this->connection->blackList($login);
+			$this->server->connection->blackList($login);
 			$this->session->set('success', _('player successfully added to blacklist'));
 		}
 		catch(\Exception $e)
@@ -596,7 +594,7 @@ class Server extends AbstractController
 	{
 		try
 		{
-			$this->connection->cleanBlackList();
+			$this->server->connection->cleanBlackList();
 			$this->session->set('success', _('Banlist successfully cleaned'));
 		}
 		catch(\Exception $e)
@@ -615,7 +613,7 @@ class Server extends AbstractController
 	{
 		try
 		{
-			$this->connection->loadBlackList($filename.'.txt');
+			$this->server->connection->loadBlackList($filename.'.txt');
 			$this->session->set('success', _('Blacklist successfully loaded'));
 		}
 		catch(\Exception $e)
@@ -640,7 +638,7 @@ class Server extends AbstractController
 		}
 		try
 		{
-			$this->connection->saveBlackList($filename.'.txt');
+			$this->server->connection->saveBlackList($filename.'.txt');
 			$this->session->set('success', _('Blacklist successfully saved'));
 		}
 		catch(\Exception $e)
@@ -662,7 +660,7 @@ class Server extends AbstractController
 		{
 			$this->response->guestlistFiles = array();
 		}
-		$this->response->guestListedPlayers = $this->connection->getGuestList(-1, 0);
+		$this->response->guestListedPlayers = $this->server->connection->getGuestList(-1, 0);
 		$this->response->players = $this->players;
 
 		$header = \DedicatedManager\Helpers\Header::getInstance();
@@ -683,7 +681,7 @@ class Server extends AbstractController
 
 		try
 		{
-			array_map(array($this->connection, 'removeGuest'), $players);
+			array_map(array($this->server->connection, 'removeGuest'), $players);
 
 			$this->session->set('success', sprintf(_('Successfully removed guests %s'), implode(', ', $players)));
 		}
@@ -702,7 +700,7 @@ class Server extends AbstractController
 	{
 		try
 		{
-			$this->connection->cleanGuestList();
+			$this->server->connection->cleanGuestList();
 			$this->session->set('success', _('Guestlist successfully cleaned'));
 		}
 		catch(\Exception $e)
@@ -721,7 +719,7 @@ class Server extends AbstractController
 	{
 		try
 		{
-			$this->connection->loadGuestList($filename.'.txt');
+			$this->server->connection->loadGuestList($filename.'.txt');
 			$this->session->set('success', _('Guestlist successfully loaded'));
 		}
 		catch(\Exception $e)
@@ -739,7 +737,7 @@ class Server extends AbstractController
 	{
 		try
 		{
-			$this->connection->addGuest($login);
+			$this->server->connection->addGuest($login);
 			$this->session->set('success', _('Player successfully added to guestlist'));
 		}
 		catch(\Exception $e)
@@ -765,7 +763,7 @@ class Server extends AbstractController
 
 		try
 		{
-			$this->connection->saveGuestList($filename.'.txt');
+			$this->server->connection->saveGuestList($filename.'.txt');
 			$this->session->set('success', _('Guestlist successfully saved'));
 		}
 		catch(\Exception $e)
@@ -787,7 +785,7 @@ class Server extends AbstractController
 	 */
 	function chatDisplay()
 	{
-		$this->response->chat = $this->connection->getChatLines();
+		$this->response->chat = $this->server->connection->getChatLines();
 	}
 
 	/**
@@ -797,7 +795,7 @@ class Server extends AbstractController
 	{
 		try
 		{
-			$this->connection->chatSendServerMessage($message, $receiver ? : null);
+			$this->server->connection->chatSendServerMessage($message, $receiver ? : null);
 			$this->session->set('success', _('Your message has been sent'));
 		}
 		catch(\Exception $e)
@@ -823,7 +821,7 @@ class Server extends AbstractController
 	 */
 	function setTeams($team1, $team2)
 	{
-		$this->connection->setTeamInfo($team1['name'], (double) $team1['color'], $team1['country'], $team2['name'], (double) $team2['color'], $team2['country']);
+		$this->server->connection->setTeamInfo($team1['name'], (double) $team1['color'], $team1['country'], $team2['name'], (double) $team2['color'], $team2['country']);
 		$this->session->set('success', _('Changes has been applied'));
 		$this->request->redirectArgList('../teams', 'host', 'port');
 	}
@@ -885,12 +883,12 @@ class Server extends AbstractController
 	
 	function controllers()
 	{
-		$this->connection->enableCallbacks(true);
-		$this->connection->dedicatedEcho('DedicatedManager '.DEDICATED_MANAGER_VERSION, '?census');
+		$this->server->connection->enableCallbacks(true);
+		$this->server->connection->dedicatedEcho('DedicatedManager '.DEDICATED_MANAGER_VERSION, '?census');
 		// waiting for answers
 		usleep(500000);
 		$controllers = array();
-		foreach($this->connection->executeCallbacks() as $call)
+		foreach($this->server->connection->executeCallbacks() as $call)
 		{
 			if($call[0] == 'ManiaPlanet.Echo' && $call[1][0] == '!census:DedicatedManager '.DEDICATED_MANAGER_VERSION)
 			{
@@ -915,7 +913,7 @@ class Server extends AbstractController
 		
 		foreach($controllers as $controller)
 		{
-			$this->connection->dedicatedEcho('DedicatedManager '.DEDICATED_MANAGER_VERSION, '?stop:'.$controller);
+			$this->server->connection->dedicatedEcho('DedicatedManager '.DEDICATED_MANAGER_VERSION, '?stop:'.$controller);
 		}
 		$this->session->set('success', _('Controllers have been asked to stop successfully'));
 		$this->request->redirectArgList('../controllers', 'host', 'port');
@@ -932,7 +930,7 @@ class Server extends AbstractController
 			$this->request->redirectToReferer();
 		}
 
-		$this->connection->stopServer();
+		$this->server->connection->stopServer();
 		$service = new \DedicatedManager\Services\ServerService();
 		$service->delete($this->server->rpcHost, $this->server->rpcPort);
 		$this->session->set('success', _('Server has been stopped'));
@@ -945,7 +943,7 @@ class Server extends AbstractController
 	 */
 	function restart()
 	{
-		$this->connection->restartMap();
+		$this->server->connection->restartMap();
 		$this->session->set('success', _('Current map has been restarted'));
 		$this->request->redirectToReferer();
 	}
@@ -956,7 +954,7 @@ class Server extends AbstractController
 	 */
 	function next()
 	{
-		$this->connection->nextMap();
+		$this->server->connection->nextMap();
 		$this->session->set('success', _('Server is going to the next map'));
 		$this->request->redirectToReferer();
 	}
@@ -967,7 +965,7 @@ class Server extends AbstractController
 	 */
 	function balance()
 	{
-		$this->connection->autoTeamBalance();
+		$this->server->connection->autoTeamBalance();
 		$this->session->set('success', _('Teams has been balanced'));
 		$this->request->redirectToReferer();
 	}

@@ -50,38 +50,6 @@ class ServerService extends AbstractService
 	/**
 	 * @param string $rpcHost
 	 * @param int $rpcPort
-	 * @return Server
-	 */
-	function getDetails($rpcHost, $rpcPort)
-	{
-		$server = $this->get($rpcHost, $rpcPort);
-		$connection = \DedicatedApi\Connection::factory($rpcHost, $rpcPort, 5, 'SuperAdmin', $server->rpcPassword);
-		$serverName = $connection->getServerName();
-		if($serverName != $server->name)
-		{
-			$this->db()->execute(
-					'UPDATE Servers SET name=%s WHERE rpcHost=%s AND rpcPort=%d',
-					$this->db()->quote($serverName),
-					$this->db()->quote($rpcHost),
-					$rpcPort
-				);
-			$server->name = $serverName;
-		}
-		$info = $connection->getSystemInfo();
-		$server->login = $info->serverLogin;
-		$server->titleId = $info->titleId;
-		$server->joinIp = $info->publishedIp;
-		$server->joinPort = $info->port;
-		$server->joinPassword = $connection->getServerPassword();
-		$server->specPassword = $connection->getServerPasswordForSpectator();
-		$server->isRelay = $connection->isRelayServer();
-
-		return $server;
-	}
-
-	/**
-	 * @param string $rpcHost
-	 * @param int $rpcPort
 	 */
 	function delete($rpcHost, $rpcPort)
 	{
@@ -242,21 +210,19 @@ class ServerService extends AbstractService
 	}
 
 	/**
-	 * @param string $host
-	 * @param int $port
-	 * @param string $password
+	 * @param Server $server
 	 */
-	function checkConnection($host, $port, $password)
+	function register($server)
 	{
-		$connection = \DedicatedApi\Connection::factory($host, $port, 5, 'SuperAdmin', $password);
+		$server->openConnection();
 
 		$this->db()->execute(
 				'INSERT INTO Servers(name, rpcHost, rpcPort, rpcPassword) VALUES (%s,%s,%d,%s) '.
 				'ON DUPLICATE KEY UPDATE name=VALUES(name), rpcPassword=VALUES(rpcPassword)',
-				$this->db()->quote($connection->getServerName()),
-				$this->db()->quote($host),
-				$port,
-				$this->db()->quote($password)
+				$this->db()->quote($server->connection->getServerName()),
+				$this->db()->quote($server->rpcHost),
+				$server->rpcPort,
+				$this->db()->quote($server->rpcPassword)
 			);
 	}
 

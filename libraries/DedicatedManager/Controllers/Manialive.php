@@ -28,7 +28,8 @@ class Manialive extends AbstractController
 			try
 			{
 				$service = new \DedicatedManager\Services\ServerService();
-				$server = $service->getDetails($this->request->get('host'), $this->request->get('port'));
+				$server = $service->get($this->request->get('host'), $this->request->get('port'));
+				$server->fetchDetails();
 				$this->session->set('server', $server);
 			}
 			catch(\Exception $e)
