@@ -125,6 +125,8 @@ class ServerService extends AbstractService
 	private function doStart($commandLine, $successStr = '...Load succeeds')
 	{
 		$config = \DedicatedManager\Config::getInstance();
+		$time = time();
+		$timeout = $time + 20;
 
 		// Getting current PIDs
 		$currentPids = $this->getPIDs();
@@ -142,8 +144,12 @@ class ServerService extends AbstractService
 		// Reading dedicated log while it's written
 		$isWindows = stripos(PHP_OS, 'WIN') === 0;
 		$logFileName = $config->dedicatedPath.'Logs/ConsoleLog.'.$pid.'.txt';
-		while(!file_exists($logFileName))
+		while(!file_exists($logFileName) || filemtime($logFileName) < $time)
+		{
+			if(time() > $timeout)
+				throw new \Exception('Can\'t start dedicated server.');
 			usleep(200000);
+		}
 		$tries = 0;
 		while(!($logFile = fopen($logFileName, 'r')))
 		{
@@ -158,7 +164,6 @@ class ServerService extends AbstractService
 			}
 		}
 		$buffer = '';
-		$timeout = time() + 20;
 		while(true)
 		{
 			$line = fgets($logFile);
