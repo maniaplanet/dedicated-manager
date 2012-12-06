@@ -19,8 +19,8 @@ $r = ManiaLib\Application\Request::getInstance();
 							<div class="ui-block-a">
 								<select id="configFile" name="configFile" size="5" data-native-menu="false">
 									<option <?php echo in_array($configFile, $configList) ? '' : 'selected="selected"'; ?>><?php echo _('Select file') ?></option>
-								<?php foreach($configList as $config): ?>
-									<option value="<?php echo $config ?>" <?php echo $config == $configFile ? 'selected="selected"': ''; ?>><?php echo $config ?></option>
+								<?php foreach($configList as $file): ?>
+									<option value="<?php echo $file ?>" <?php echo $file == $configFile ? 'selected="selected"': ''; ?>><?php echo $file ?></option>
 								<?php endforeach; ?>
 								</select>
 							</div>
