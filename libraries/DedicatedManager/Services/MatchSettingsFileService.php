@@ -128,18 +128,21 @@ class MatchSettingsFileService extends DedicatedFileService
 		}
 		
 		$scriptSettings = array();
-		for($i = 0; $i < count($playlist->mode_script_settings); $i++)
+		foreach($playlist->mode_script_settings->setting as $settings)
 		{
 			$scriptSetting = new ScriptSettings();
-			$scriptSetting->name = (string)$playlist->mode_script_settings[$i]->name;
-			if((string)$playlist->mode_script_settings[$i]->type == 'boolean')
-				$scriptSetting->default = ((string)$playlist->mode_script_settings[$i]->value == 'True');
-			elseif((string)$playlist->mode_script_settings[$i]->type == 'integer')
-				$scriptSetting->default = (int)$playlist->mode_script_settings[$i]->value;
-			elseif((string)$playlist->mode_script_settings[$i]->type == 'real')
-				$scriptSetting->default = (double)$playlist->mode_script_settings[$i]->value;
-			else
-				$scriptSetting->default = (string)$playlist->mode_script_settings[$i]->value;
+			foreach($settings->attributes() as $key => $value)
+			{
+				switch($key)
+				{
+					case 'name':$scriptSetting->name = (string)$value;
+						break;
+					case 'type':$scriptSetting->type = (string)$value;
+						break;
+					case 'value':$scriptSetting->default = (string)$value;
+						break;
+				}
+			}
 			$scriptSettings[$scriptSetting->name] = $scriptSetting;
 		}
 		
@@ -197,7 +200,7 @@ class MatchSettingsFileService extends DedicatedFileService
 		$filter->addChild('force_default_gamemode', 0);
 		
 		$modeScriptSettings = $playlist->addChild('mode_script_settings');
-		
+		\ManiaLib\Utils\Logger::info($scriptSettings);
 		foreach($scriptSettings as $scriptSetting)
 		{
 			/* @var $scriptSetting ScriptSettings */

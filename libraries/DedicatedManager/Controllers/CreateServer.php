@@ -33,7 +33,6 @@ class CreateServer extends Create
 			$this->session->set('gameInfos', $gameInfos);
 			$this->session->set('selected', $maps);
 			$this->session->set('scriptSettings', $scriptSettings);
-			$this->session->set('scriptSettings', $scriptSettings);
 		}
 		else
 		{
