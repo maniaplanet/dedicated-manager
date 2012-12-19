@@ -127,6 +127,25 @@ $r = ManiaLib\Application\Request::getInstance();
 								<?php endforeach; ?>
 							</select>
 						</li>
+						<?php foreach($scriptsRules as $script => $scriptRules): ?>
+						<div id="<?php echo $script ?>">
+							<?php foreach($scriptRules as $scriptRule): ?>
+							<li data-role="fieldcontain">
+								<label for="<?php echo $script.'_'.$scriptRule->name ?>">
+									<strong><?php echo $scriptRule->desc; ?></strong>
+								</label>
+								<?php if($scriptRule->type == 'boolean'): ?>
+									<select name="scriptRules[<?php echo $script?>][<?php echo $scriptRule->name ?>]" id="<?php echo $script.'_'.$scriptRule->name ?>" data-role="slider">
+											<option value="0" <?php echo (!$scriptRule->default ? 'selected="selected"' : '') ?>><?php echo _('No') ?></option>
+											<option value="1" <?php echo ($scriptRule->default ? 'selected="selected"' : '') ?>><?php echo _('Yes') ?></option>
+									</select>
+								<?php else: ?>
+									<input type="text" id="<?php echo $script.'_'.$scriptRule->name ?>" name="scriptRules[<?php echo $script?>][<?php echo $scriptRule->name ?>]" value="<?php echo $scriptRule->default ?>"/>
+								<?php endif; ?>
+							</li>
+							<?php endforeach; ?>
+						</div>
+						<?php endforeach; ?>
 					</ul>
 				</fieldset>
 			<?php endif; ?>
@@ -292,6 +311,23 @@ $r = ManiaLib\Application\Request::getInstance();
 							<?php endforeach; ?>
 						</select>
 					</li>
+					<?php foreach($scriptsRules as $script => $scriptRules): ?>
+						<?php foreach($scriptRules as $scriptRule): ?>
+							<li data-role="fieldcontain">
+								<label for="<?php echo $script.'_'.$scriptRule->name ?>">
+									<strong><?php echo $scriptRule->desc; ?></strong>
+								</label>
+								<?php if($scriptRule->type == 'boolean'): ?>
+									<select name="scriptRules[<?php echo $script?>][<?php echo $scriptRule->name ?>]" id="<?php echo $script.'_'.$scriptRule->name ?>" data-role="slider">
+											<option value="0" <?php echo (!$scriptRule->default ? 'selected="selected"' : '') ?>><?php echo _('No') ?></option>
+											<option value="1" <?php echo ($scriptRule->default ? 'selected="selected"' : '') ?>><?php echo _('Yes') ?></option>
+									</select>
+								<?php else: ?>
+									<input type="text" id="<?php echo $script.'_'.$scriptRule->name ?>" name="scriptRules[<?php echo $script?>][<?php echo $scriptRule->name ?>]" value="<?php echo $scriptRule->default ?>"/>
+								<?php endif; ?>
+							</li>
+						<?php endforeach; ?>
+					<?php endforeach; ?>
 				</ul>
 			</fieldset>
 		<?php endif; ?>
