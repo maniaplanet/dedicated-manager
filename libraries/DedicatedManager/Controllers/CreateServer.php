@@ -41,10 +41,12 @@ class CreateServer extends Create
 		}
 
 		$scripts = $service->getScriptList($system->title);
-		$rules = array();
+		$scriptIds = array();
+		$scriptsRules = array();
 		foreach($scripts as $script)
 		{
-			$rules[$script] = $service->getScriptMatchRules($system->title, $script);
+			$scriptIds[$script] = uniqid();
+			$scriptsRules[$script] = $service->getScriptMatchRules($system->title, $script);
 		}
 		
 		$gameInfos = $this->session->get('gameInfos', $gameInfos);
@@ -52,14 +54,15 @@ class CreateServer extends Create
 		{
 			foreach($scriptSettings as $scriptSetting)
 			{
-				$rules[$gameInfos->scriptName][$scriptSetting->name]->default = $scriptSetting->default;
+				$scriptsRules[$gameInfos->scriptName][$scriptSetting->name]->default = $scriptSetting->default;
 			}
 		}
 		$this->response->matchFile = $matchFile;
 		$this->response->settingsList = $service->getList();
 		$this->response->gameInfos = $gameInfos;
 		$this->response->scripts = $scripts;
-		$this->response->scriptsRules = $rules;
+		$this->response->scriptIds = $scriptIds;
+		$this->response->scriptsRules = $scriptsRules;
 		$this->response->title = $system->title;
 
 		$header = \DedicatedManager\Helpers\Header::getInstance();

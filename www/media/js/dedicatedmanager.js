@@ -81,6 +81,12 @@ $(document).bind('pageinit', function() {
 		}
 	}).trigger('change');
 	
+	$('#scriptName').change(function() {
+		$('.setting').hide().find('input').textinput('disable').end().find('select').select('disable');
+		$('.setting.'+$('#scriptName option:selected').first().jqmData('script-id')).show().find('input').textinput('enable').end().find('select').select('enable');
+		$(this).closest('ul').listview('refresh');
+	}).trigger('change');
+	
 	$('#relayMethod').change(function() {
 		if($(this).val() == 'managed')
 		{

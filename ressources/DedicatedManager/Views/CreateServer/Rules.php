@@ -111,44 +111,43 @@ $r = ManiaLib\Application\Request::getInstance();
 					</li>
 				</ul>
 			</fieldset>
-			<?php if(count($scripts)): ?>
-				<fieldset id="fieldset-gamemode-script" data-role="collapsible" data-theme="b" class="gamemode">
-					<legend><?php echo _('Script mode rules') ?></legend>
-					<ul data-role="listview">
-						<li data-role="fieldcontain">
-							<label for="scriptName">
-								<strong><?php echo _('Script name'); ?></strong><br/>
-								<i><?php echo _('Select the game mode script you want to use.') ?></i>
-							</label>
-							<select name="rules[scriptName]" id="scriptName" data-native-menu="false">
-								<option><?php echo _('Select one...') ?></option>
-								<?php foreach($scripts as $script): ?>
-									<option value="<?php echo $script ?>" <?php echo $gameInfos->scriptName == $script ? 'selected="selected"' : '' ?>><?php echo $script ?></option>
-								<?php endforeach; ?>
-							</select>
-						</li>
-						<?php foreach($scriptsRules as $script => $scriptRules): ?>
-						<div id="<?php echo $script ?>">
-							<?php foreach($scriptRules as $scriptRule): ?>
-							<li data-role="fieldcontain">
-								<label for="<?php echo $script.'_'.$scriptRule->name ?>">
-									<strong><?php echo $scriptRule->desc; ?></strong>
-								</label>
-								<?php if($scriptRule->type == 'boolean'): ?>
-									<select name="scriptRules[<?php echo $script?>][<?php echo $scriptRule->name ?>]" id="<?php echo $script.'_'.$scriptRule->name ?>" data-role="slider">
-											<option value="0" <?php echo (!$scriptRule->default ? 'selected="selected"' : '') ?>><?php echo _('No') ?></option>
-											<option value="1" <?php echo ($scriptRule->default ? 'selected="selected"' : '') ?>><?php echo _('Yes') ?></option>
-									</select>
-								<?php else: ?>
-									<input type="text" id="<?php echo $script.'_'.$scriptRule->name ?>" name="scriptRules[<?php echo $script?>][<?php echo $scriptRule->name ?>]" value="<?php echo $scriptRule->default ?>"/>
-								<?php endif; ?>
-							</li>
+		<?php if(count($scripts)): ?>
+			<fieldset id="fieldset-gamemode-script" data-role="collapsible" data-theme="b" class="gamemode">
+				<legend><?php echo _('Script mode rules') ?></legend>
+				<ul data-role="listview">
+					<li data-role="fieldcontain">
+						<label for="scriptName">
+							<strong><?php echo _('Script name'); ?></strong><br/>
+							<i><?php echo _('Select the game mode script you want to use.') ?></i>
+						</label>
+						<select name="rules[scriptName]" id="scriptName" data-native-menu="false">
+							<option><?php echo _('Select one...') ?></option>
+							<?php foreach($scripts as $script): ?>
+								<option value="<?php echo $script ?>" <?php echo $gameInfos->scriptName == $script ? 'selected="selected"' : '' ?> data-script-id="<?php echo $scriptIds[$script]; ?>"><?php echo $script ?></option>
 							<?php endforeach; ?>
-						</div>
-						<?php endforeach; ?>
-					</ul>
-				</fieldset>
-			<?php endif; ?>
+						</select>
+					</li>
+				<?php foreach($scriptsRules as $script => $scriptRules): ?>
+					<?php foreach($scriptRules as $scriptRule): ?>
+						<li data-role="fieldcontain" class="setting <?php echo $scriptIds[$script]; ?>">
+							<label for="<?php echo $script.'_'.$scriptRule->name ?>">
+								<strong><?php echo $scriptRule->name; ?></strong><br/>
+								<i><?php echo $scriptRule->desc; ?></i>
+							</label>
+						<?php if($scriptRule->type == 'boolean'): ?>
+							<select name="scriptRules[<?php echo $script?>][<?php echo $scriptRule->name ?>]" id="<?php echo $script.'_'.$scriptRule->name ?>" data-role="slider">
+								<option value="0" <?php echo (!$scriptRule->default ? 'selected="selected"' : '') ?>><?php echo _('No') ?></option>
+								<option value="1" <?php echo ($scriptRule->default ? 'selected="selected"' : '') ?>><?php echo _('Yes') ?></option>
+							</select>
+						<?php else: ?>
+							<input type="text" id="<?php echo $script.'_'.$scriptRule->name ?>" name="scriptRules[<?php echo $script?>][<?php echo $scriptRule->name ?>]" value="<?php echo $scriptRule->default ?>"/>
+						<?php endif; ?>
+						</li>
+					<?php endforeach; ?>
+				<?php endforeach; ?>
+				</ul>
+			</fieldset>
+		<?php endif; ?>
 			<fieldset id="fieldset-gamemode-round" data-role="collapsible" data-theme="b" class="gamemode">
 				<legend><?php echo _('Rounds mode rules') ?></legend>
 				<ul data-role="listview">
@@ -294,8 +293,8 @@ $r = ManiaLib\Application\Request::getInstance();
 				</ul>
 			</fieldset>
 		<?php else: ?>
-			<input type="hidden" name="rules[gameMode]" value="<?php echo GameInfos::GAMEMODE_SCRIPT ?>">
-			<fieldset data-role="collapsible" data-collapsed="false" data-theme="b">
+			<input type="hidden" id="gameMode" name="rules[gameMode]" value="<?php echo GameInfos::GAMEMODE_SCRIPT ?>">
+			<fieldset id="fieldset-gamemode-script" data-role="collapsible" data-theme="b" class="gamemode">
 				<legend><?php echo _('Script mode rules') ?></legend>
 				<ul data-role="listview">
 					<li data-role="fieldcontain">
@@ -303,31 +302,31 @@ $r = ManiaLib\Application\Request::getInstance();
 							<strong><?php echo _('Script name'); ?></strong><br/>
 							<i><?php echo _('Select the game mode script you want to use.') ?></i>
 						</label>
-
 						<select name="rules[scriptName]" id="scriptName" data-native-menu="false">
 							<option><?php echo _('Select one...') ?></option>
 							<?php foreach($scripts as $script): ?>
-								<option value="<?php echo $script ?>" <?php echo $gameInfos->scriptName == $script || count($scripts) == 1 ? 'selected="selected"' : '' ?>><?php echo $script ?></option>
+								<option value="<?php echo $script ?>" <?php echo $gameInfos->scriptName == $script ? 'selected="selected"' : '' ?> data-script-id="<?php echo $scriptIds[$script]; ?>"><?php echo $script ?></option>
 							<?php endforeach; ?>
 						</select>
 					</li>
-					<?php foreach($scriptsRules as $script => $scriptRules): ?>
-						<?php foreach($scriptRules as $scriptRule): ?>
-							<li data-role="fieldcontain">
-								<label for="<?php echo $script.'_'.$scriptRule->name ?>">
-									<strong><?php echo $scriptRule->desc; ?></strong>
-								</label>
-								<?php if($scriptRule->type == 'boolean'): ?>
-									<select name="scriptRules[<?php echo $script?>][<?php echo $scriptRule->name ?>]" id="<?php echo $script.'_'.$scriptRule->name ?>" data-role="slider">
-											<option value="0" <?php echo (!$scriptRule->default ? 'selected="selected"' : '') ?>><?php echo _('No') ?></option>
-											<option value="1" <?php echo ($scriptRule->default ? 'selected="selected"' : '') ?>><?php echo _('Yes') ?></option>
-									</select>
-								<?php else: ?>
-									<input type="text" id="<?php echo $script.'_'.$scriptRule->name ?>" name="scriptRules[<?php echo $script?>][<?php echo $scriptRule->name ?>]" value="<?php echo $scriptRule->default ?>"/>
-								<?php endif; ?>
-							</li>
-						<?php endforeach; ?>
+				<?php foreach($scriptsRules as $script => $scriptRules): ?>
+					<?php foreach($scriptRules as $scriptRule): ?>
+						<li data-role="fieldcontain" class="setting <?php echo $scriptIds[$script]; ?>">
+							<label for="<?php echo $script.'_'.$scriptRule->name ?>">
+								<strong><?php echo $scriptRule->name; ?></strong><br/>
+								<i><?php echo $scriptRule->desc; ?></i>
+							</label>
+						<?php if($scriptRule->type == 'boolean'): ?>
+							<select name="scriptRules[<?php echo $script?>][<?php echo $scriptRule->name ?>]" id="<?php echo $script.'_'.$scriptRule->name ?>" data-role="slider">
+								<option value="0" <?php echo (!$scriptRule->default ? 'selected="selected"' : '') ?>><?php echo _('No') ?></option>
+								<option value="1" <?php echo ($scriptRule->default ? 'selected="selected"' : '') ?>><?php echo _('Yes') ?></option>
+							</select>
+						<?php else: ?>
+							<input type="text" id="<?php echo $script.'_'.$scriptRule->name ?>" name="scriptRules[<?php echo $script?>][<?php echo $scriptRule->name ?>]" value="<?php echo $scriptRule->default ?>"/>
+						<?php endif; ?>
+						</li>
 					<?php endforeach; ?>
+				<?php endforeach; ?>
 				</ul>
 			</fieldset>
 		<?php endif; ?>

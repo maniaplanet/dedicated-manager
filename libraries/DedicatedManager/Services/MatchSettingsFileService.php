@@ -242,7 +242,8 @@ class MatchSettingsFileService extends DedicatedFileService
 						$rule = new RuleDisplayable();
 					$rule->name = $value->name;
 					$rule->value = $value->default;
-					$rule->label = ($value->desc ? : $value->name);
+					$rule->label = $value->name;
+					$rule->documentation = $value->desc;
 					if($value->type == 'boolean')
 						{
 						$rule->value = $rule->value == 'True';
