@@ -131,8 +131,15 @@ class MatchSettingsFileService extends DedicatedFileService
 		for($i = 0; $i < count($playlist->mode_script_settings); $i++)
 		{
 			$scriptSetting = new ScriptSettings();
-			$scriptSetting->name = $playlist->mode_script_settings[$i]->name;
-			$scriptSetting->default = $playlist->mode_script_settings[$i]->value;
+			$scriptSetting->name = (string)$playlist->mode_script_settings[$i]->name;
+			if((string)$playlist->mode_script_settings[$i]->type == 'boolean')
+				$scriptSetting->default = ((string)$playlist->mode_script_settings[$i]->value == 'True');
+			elseif((string)$playlist->mode_script_settings[$i]->type == 'integer')
+				$scriptSetting->default = (int)$playlist->mode_script_settings[$i]->value;
+			elseif((string)$playlist->mode_script_settings[$i]->type == 'real')
+				$scriptSetting->default = (double)$playlist->mode_script_settings[$i]->value;
+			else
+				$scriptSetting->default = (string)$playlist->mode_script_settings[$i]->value;
 			$scriptSettings[$scriptSetting->name] = $scriptSetting;
 		}
 		
