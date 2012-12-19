@@ -46,6 +46,11 @@ class Title extends AbstractObject
 	 * @var string
 	 */
 	public $filename;
+	
+	/**
+	 * @var \DedicatedApi\Structures\ScriptSettings[]
+	 */
+	public $scriptSettings = array();
 
 }
 

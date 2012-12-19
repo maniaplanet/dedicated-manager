@@ -9,6 +9,8 @@
 
 namespace DedicatedManager\Services;
 
+use DedicatedApi\Structures\ScriptSettings;
+
 class MatchSettingsFileService extends DedicatedFileService
 {
 	function __construct()
@@ -124,7 +126,17 @@ class MatchSettingsFileService extends DedicatedFileService
 			$map = preg_replace('/^\xEF\xBB\xBF/', '', $map);
 			$maps[] = $map;
 		}
-		return array($gameInfos, $maps);
+		
+		$scriptSettings = array();
+		for($i = 0; $i < count($playlist->mode_script_settings); $i++)
+		{
+			$scriptSetting = new ScriptSettings();
+			$scriptSetting->name = $playlist->mode_script_settings[$i]->name;
+			$scriptSetting->default = $playlist->mode_script_settings[$i]->value;
+			$scriptSettings[$scriptSetting->name] = $scriptSetting;
+		}
+		
+		return array($gameInfos, $maps, $scriptSettings);
 	}
 
 	/**
@@ -132,7 +144,7 @@ class MatchSettingsFileService extends DedicatedFileService
 	 * @param GameInfos $gameInfos
 	 * @param string[] $maps
 	 */
-	function save($filename, GameInfos $gameInfos, array $maps)
+	function save($filename, GameInfos $gameInfos, array $maps, array $scriptSettings = array())
 	{
 		$this->directory = \DedicatedManager\Config::getInstance()->dedicatedPath.'UserData/Maps/MatchSettings/';
 
@@ -176,6 +188,17 @@ class MatchSettingsFileService extends DedicatedFileService
 		$filter->addChild('sort_index', 1000);
 		$filter->addChild('random_map_order', 0);
 		$filter->addChild('force_default_gamemode', 0);
+		
+		$modeScriptSettings = $playlist->addChild('mode_script_settings');
+		
+		foreach($scriptSettings as $scriptSetting)
+		{
+			/* @var $scriptSetting ScriptSettings */
+			$tmp = $modeScriptSettings->addChild('setting');
+			$tmp->addAttribute('name', $scriptSetting->name);
+			$tmp->addAttribute('type', $scriptSetting->type);
+			$tmp->addAttribute('value', $scriptSetting->default);
+		}
 
 		$playlist->addChild('startindex', 0);
 
@@ -199,28 +222,28 @@ class MatchSettingsFileService extends DedicatedFileService
 		$connection = \DedicatedApi\Connection::factory($host, $port, 5, 'SuperAdmin', $server->rpcPassword);
 		$gameInfo = $connection->getNextGameInfo();
 		$matchRules = array();
-
+		
 		switch($gameInfo->gameMode)
 		{
 			case GameInfos::GAMEMODE_SCRIPT:
 				$info = $connection->getModeScriptInfo();
 				foreach($info->paramDescs as $value)
 				{
-					$rule = new RuleDisplayable();
+						$rule = new RuleDisplayable();
 					$rule->name = $value->name;
 					$rule->value = $value->default;
 					$rule->label = ($value->desc ? : $value->name);
 					if($value->type == 'boolean')
-					{
+						{
 						$rule->value = $rule->value == 'True';
-						$rule->inputType = 'switch';
-						$rule->inputValues = array(
-							array('label' => _('No'), 'value' => 0),
-							array('label' => _('Yes'), 'value' => 1)
-						);
+							$rule->inputType = 'switch';
+							$rule->inputValues = array(
+								array('label' => _('No'), 'value' => 0),
+								array('label' => _('Yes'), 'value' => 1)
+							);
+						}
+						$matchRules[] = $rule;
 					}
-					$matchRules[] = $rule;
-				}
 				break;
 				
 			case GameInfos::GAMEMODE_ROUNDS:
@@ -424,6 +447,74 @@ class MatchSettingsFileService extends DedicatedFileService
 		chdir($currentDir);
 		return $scripts;
 	}
+	
+	function getScriptMatchRules($title, $scriptName = '')
+	{
+		$titleService = new TitleService();
+		$matchRules = array();
+		if($titleService->isCustomTitle($title))
+		{
+			return $titleService->getScriptSettings($title);
+		}
+
+		if(preg_match('/(storm){1}$/ixu', $title))
+		{
+			$game = 'ShootMania';
+		}
+		elseif(preg_match('/(canyon|valley){1}$/ixu', $title))
+		{
+			$game = 'TrackMania';
+		}
+		if(strstr($scriptName, '/') || strstr($scriptName, '\\'))
+		{
+			$scriptDirectory = \DedicatedManager\Config::getInstance()->dedicatedPath.'UserData/Scripts/';
+		}
+		else
+		{
+			$scriptDirectory = \DedicatedManager\Config::getInstance()->dedicatedPath.'UserData/Scripts/Modes/'.$game.'/';
+		}
+		$script = file_get_contents($scriptDirectory.$scriptName);
+
+		$matchRules = array();
+
+		$files = array();
+		if(preg_match('/^\#Extends\\s+"([^"]*).*$"/ixu', $script, $files))
+		{
+			$files = explode(',', $files[1]);
+			foreach($files as $file)
+			{
+				$matchRules = array_merge($this->getScriptMatchRules($title, $file), $matchRules);
+			}
+		}
+
+		$match = array();
+		if(preg_match_all('/\#Setting\s+(?<name>\S+)\s+(?<value>\S+)\s+(?:as\s*.{0,2}"(?<label>[^"]+)"|.*)/ixu', $script,
+				$match))
+		{
+			foreach($match['name'] as $key => $settingName)
+			{
+				$rule = new ScriptSettings();
+				$rule->name = $settingName;
+				$rule->desc = (array_key_exists($key, $match['label']) ? $match['label'][$key] : $settingName);
+				$rule->default = $match['value'][$key];
+				if($rule->default == 'True' || $rule->default == 'False')
+				{
+					$rule->default = ($match['value'][$key] == 'True');
+					$rule->type = 'boolean';
+				}
+				elseif(filter_var($rule->default, FILTER_VALIDATE_INT) && !strstr($rule->default,'.'))
+					$rule->type = 'integer';
+				elseif(filter_var($rule->default, FILTER_VALIDATE_FLOAT))
+					$rule->type = 'real';
+				else
+					$rule->type = 'string';
+				
+				$matchRules[$rule->name] = $rule;
+			}
+		}
+
+		return $matchRules;
+	}
 
 	/**
 	 * @param string $scriptName
@@ -446,49 +537,42 @@ class MatchSettingsFileService extends DedicatedFileService
 			return $titleService->getMapTypes($title);
 		}
 
-		$scriptDirectory = \DedicatedManager\Config::getInstance()->dedicatedPath.'UserData/Scripts/Modes/'.$game.'/';
+		if(strstr($scriptName,'/') || strstr($scriptName, '\\'))
+		{
+			$scriptDirectory = \DedicatedManager\Config::getInstance()->dedicatedPath.'UserData/Scripts/';
+		}
+		else
+		{
+			$scriptDirectory = \DedicatedManager\Config::getInstance()->dedicatedPath.'UserData/Scripts/Modes/'.$game.'/';
+		}
 		$script = file_get_contents($scriptDirectory.$scriptName);
 
-		$match = array();
+		$scripts = array();
 
-		if(!preg_match('/\#Const\\s+(?:CompatibleChallengeTypes|CompatibleMapTypes)\\s*"([^"]*)"/ixu', $script, $match))
+		$match = array();
+		$files = array();
+		if(preg_match('/\#Extends\\s+"([^"]*)"/ixu', $script, $files))
 		{
-			$files = array();
-			if(preg_match('/\#Extends\\s+"([^"]*)"/ixu', $script, $files))
+			$files = explode(',', $files[1]);
+			foreach($files as $file)
 			{
-				$files = explode(',', $files[1]);
-				$scripts = array();
-				foreach($files as $file)
-				{
-					$script = file_get_contents(\DedicatedManager\Config::getInstance()->dedicatedPath.'UserData/Scripts/'.$file);
-					if(preg_match('/\#Const\\s+(?:CompatibleChallengeTypes|CompatibleMapTypes)\\s*"([^"]*)"/ixu', $script, $match))
-					{
-						$tmp = explode(',', $match[1]);
-						$scripts = array_merge($tmp,
-							array_map(
-								function ($s) use ($game)
-								{
-									return $game.'\\'.trim($s);
-								}, $tmp));
-					}
-				}
-				return $scripts;
-			}
-			else
-			{
-				return array();
+				$scripts = array_merge($this->getScriptMapType($file, $title),$scripts);
 			}
 		}
+			
+		if(preg_match('/\#Const\\s+(?:CompatibleChallengeTypes|CompatibleMapTypes)\\s*"([^"]*)"/ixu', $script, $match))
+		{
+			$scriptMatch = array();
+			preg_match_all('/([^ ,;\t]+)/ixu', $match[1], $scriptMatch);
+			$scripts = $scriptMatch[1];
+			$scripts = array_merge($scripts,
+				array_map(
+					function ($s) use ($game)
+					{
+						return $game.'\\'.trim($s);
+					}, $scripts));
+		}
 
-		$scriptMatch = array();
-		preg_match_all('/([^ ,;\t]+)/ixu', $match[1], $scriptMatch);
-		$scripts = $scriptMatch[1];
-		$scripts = array_merge($scripts,
-			array_map(
-				function ($s) use ($game)
-				{
-					return $game.'\\'.trim($s);
-				}, $scripts));
 		return $scripts;
 	}
 }
