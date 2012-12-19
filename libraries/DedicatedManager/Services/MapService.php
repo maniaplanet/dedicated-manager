@@ -28,21 +28,26 @@ class MapService extends AbstractService
 	 */
 	function get($filename, $path)
 	{
+		if(mb_detect_encoding($filename, 'UTF-8', true) === false)
+			$utf8Filename = utf8_encode($filename);
+		else
+			$utf8Filename = $filename;
+		
 		if(!file_exists($this->mapDirectory.$path.$filename))
 		{
 			$this->db()->execute(
 					'DELETE FROM Maps WHERE path=%s AND filename=%s',
 					$this->db()->quote($path),
-					$this->db()->quote($filename)
+					$this->db()->quote($utf8Filename)
 				);
-			throw new \InvalidArgumentException($this->mapDirectory.$path.$filename.': file does not exist');
+			throw new \InvalidArgumentException($this->mapDirectory.$path.$utf8Filename.': file does not exist');
 		}
 		
 		$fileStats = stat($this->mapDirectory.$path.$filename);
 		$result = $this->db()->execute(
 				'SELECT * FROM Maps WHERE path=%s AND filename=%s AND size=%d AND mTime=FROM_UNIXTIME(%d)',
 				$this->db()->quote($path),
-				$this->db()->quote($filename),
+				$this->db()->quote($utf8Filename),
 				$fileStats['size'],
 				$fileStats['mtime']
 			);
@@ -64,7 +69,7 @@ class MapService extends AbstractService
 					'ON DUPLICATE KEY UPDATE '.\ManiaLib\Database\Tools::getOnDuplicateKeyUpdateValuesString($fields),
 					implode(',', $fields),
 					$this->db()->quote($map->path = $path),
-					$this->db()->quote($map->filename = $filename),
+					$this->db()->quote($map->filename = $utf8Filename),
 					$this->db()->quote($map->uid = $mapInfo->uid),
 					$this->db()->quote($map->name = $mapInfo->name),
 					$this->db()->quote($map->environment = $mapInfo->environment),
@@ -115,10 +120,6 @@ class MapService extends AbstractService
 		$files = scandir($workPath);
 		foreach($files as $filename)
 		{
-			if(mb_detect_encoding($filename, 'UTF-8', true) === false)
-				$utf8Filename = utf8_encode($filename);
-			else
-				$utf8Filename = $filename;
 			if(is_dir($workPath.'/'.$filename))
 			{
 				if($filename == '.' || $filename == '..')
@@ -140,7 +141,7 @@ class MapService extends AbstractService
 					$maps[] = $file;
 				}
 			}
-			else if(preg_match('/\.map\.gbx$/ui', $utf8Filename))
+			else if(preg_match('/\.map\.gbx$/ui', substr($filename, -8)))
 			{
 				try
 				{
@@ -149,7 +150,6 @@ class MapService extends AbstractService
 							&& (!$environment || ($environment && $environment == $file->environment))
 							&& (!$mapTypes || $mapTypes && in_array(strtolower($file->type), $mapTypes, true)) )
 					{
-						$file->filename = $utf8Filename;
 						$maps[] = $file;
 					}
 				}
