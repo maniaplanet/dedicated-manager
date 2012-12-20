@@ -128,22 +128,25 @@ class MatchSettingsFileService extends DedicatedFileService
 		}
 		
 		$scriptSettings = array();
-		foreach($playlist->mode_script_settings->setting as $settings)
+		if($playlist->mode_script_settings)
 		{
-			$scriptSetting = new ScriptSettings();
-			foreach($settings->attributes() as $key => $value)
+			foreach($playlist->mode_script_settings->setting as $settings)
 			{
-				switch($key)
+				$scriptSetting = new ScriptSettings();
+				foreach($settings->attributes() as $key => $value)
 				{
-					case 'name':$scriptSetting->name = (string)$value;
-						break;
-					case 'type':$scriptSetting->type = (string)$value;
-						break;
-					case 'value':$scriptSetting->default = (string)$value;
-						break;
+					switch($key)
+					{
+						case 'name':$scriptSetting->name = (string)$value;
+							break;
+						case 'type':$scriptSetting->type = (string)$value;
+							break;
+						case 'value':$scriptSetting->default = (string)$value;
+							break;
+					}
 				}
+				$scriptSettings[$scriptSetting->name] = $scriptSetting;
 			}
-			$scriptSettings[$scriptSetting->name] = $scriptSetting;
 		}
 		
 		return array($gameInfos, $maps, $scriptSettings);
