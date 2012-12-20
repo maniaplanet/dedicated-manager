@@ -200,7 +200,6 @@ class MatchSettingsFileService extends DedicatedFileService
 		$filter->addChild('force_default_gamemode', 0);
 		
 		$modeScriptSettings = $playlist->addChild('mode_script_settings');
-		\ManiaLib\Utils\Logger::info($scriptSettings);
 		foreach($scriptSettings as $scriptSetting)
 		{
 			/* @var $scriptSetting ScriptSettings */
