@@ -85,19 +85,20 @@ class CreateServer extends Create
 		$gameInfos->lapsTimeLimit = $gameInfos->lapsTimeLimit < 0 ? 1 :
 			(isset($rules['lapsTimeLimit']) ? $gameInfos->lapsTimeLimit * 1000 : $gameInfos->lapsTimeLimit);
 
-		if($gameInfos->scriptName)
+		$defaultRules = array();
+		if($gameInfos->gameMode == GameInfos::GAMEMODE_SCRIPT && $gameInfos->scriptName)
 		{
 			$service = new \DedicatedManager\Services\MatchSettingsFileService();
-			$rules = $service->getScriptMatchRules($system->title, $gameInfos->scriptName);
+			$defaultRules = $service->getScriptMatchRules($system->title, $gameInfos->scriptName);
 			
 			foreach($scriptRules[$gameInfos->scriptName] as $name => $value)
 			{
-				$rules[$name]->default = $value;
+				$$defaultRules[$name]->default = $value;
 			}
 		}
 		
 		$this->session->set('gameInfos', $gameInfos);
-		$this->session->set('scriptSettings', $rules);
+		$this->session->set('scriptSettings', $defaultRules);
 
 		$service = new \DedicatedManager\Services\MatchSettingsFileService();
 		if(($errors = $service->validate($gameInfos)))
@@ -178,7 +179,6 @@ class CreateServer extends Create
 		$gameInfos = $this->fetchAndAssertSettings(_('starting server'));
 		$maps = $this->fetchAndAssertMaps(_('starting server'));
 		$scriptRules = $this->session->get('scriptSettings', array());
-		
 		$this->session->set('configFile', $configFile);
 		$this->session->set('matchFile', $matchFile);
 

@@ -138,10 +138,12 @@ class Server extends AbstractController
 		if($delete)
 		{
 			$this->server->connection->removeMapList($maps);
+			$message = ngettext('Map has been successfully removed from map list','Map has been successfully removed from map list', count($maps));
 		}
 		elseif($nextList)
 		{
 			$this->server->connection->chooseNextMapList($maps);
+			$message = _('Map order has been changed successfully');
 		}
 		elseif($jumpList)
 		{
@@ -154,7 +156,9 @@ class Server extends AbstractController
 			
 			$key = key($mapList);
 			$this->server->connection->jumpToMapIndex($key);
+			$message = _('The server is jumping to the map');
 		}
+		$this->session->set('success', $message);
 		$this->request->redirectArgList('../maps', 'host', 'port');
 	}
 
