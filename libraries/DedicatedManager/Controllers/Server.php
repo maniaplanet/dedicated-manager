@@ -127,7 +127,7 @@ class Server extends AbstractController
 	 * @redirect
 	 * @norelay
 	 */
-	function doMaps(array $maps = array(), $nextList = null, $delete = null)
+	function doMaps(array $maps = array(), $nextList = null, $delete = null, $jumpList = null)
 	{
 		if(!$maps)
 		{
@@ -142,6 +142,18 @@ class Server extends AbstractController
 		elseif($nextList)
 		{
 			$this->server->connection->chooseNextMapList($maps);
+		}
+		elseif($jumpList)
+		{
+			$map = array_shift($maps);
+			$mapList = $this->server->connection->getMapList(-1, 0);
+			do
+			{
+				$current = current($mapList);
+			}while($current->fileName !== $map && next($mapList) !== false);
+			
+			$key = key($mapList);
+			$this->server->connection->jumpToMapIndex($key);
 		}
 		$this->request->redirectArgList('../maps', 'host', 'port');
 	}

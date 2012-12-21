@@ -23,7 +23,7 @@ $r = ManiaLib\Application\Request::getInstance();
 					</li>
 				<?php if(!$isRelay): ?>
 					<li>
-						<div class="ui-grid-b">
+						<div class="ui-grid-c">
 							<div class="ui-block-a">
 								<input data-theme="d" type="submit" name="delete" value="<?php echo _('Delete from map list') ?>" data-icon="delete"/>
 							</div>
@@ -31,6 +31,9 @@ $r = ManiaLib\Application\Request::getInstance();
 								<input data-theme="d" type="submit" name="nextList" value="<?php echo _('Set as next map') ?>" data-icon="check"/>
 							</div>
 							<div class="ui-block-c">
+								<input data-theme="d" type="submit" name="jumpList" value="<?php echo _('Jump to this map') ?>" data-icon="check"/>
+							</div>
+							<div class="ui-block-d">
 								<a href="<?php echo htmlentities($r->createLinkArgList('../add-maps', 'host', 'port'), ENT_QUOTES, 'UTF-8') ?>" data-role="button" data-icon="plus" data-theme="b" data-ajax="false"><?php echo _('Add new maps') ?></a>
 							</div>
 						</div>
