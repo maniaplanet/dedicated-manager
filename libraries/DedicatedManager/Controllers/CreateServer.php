@@ -93,7 +93,7 @@ class CreateServer extends Create
 			
 			foreach($scriptRules[$gameInfos->scriptName] as $name => $value)
 			{
-				$$defaultRules[$name]->default = $value;
+				$defaultRules[$name]->default = $value;
 			}
 		}
 		
