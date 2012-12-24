@@ -165,7 +165,7 @@ class TitleService
 		$setting->default = 16;
 		$setting->name = 'S_DeciderTurnLimit';
 		$setting->type = 'integer';
-		$setting->desc = 'Decider map tie-break stop';
+		$setting->desc = 'Decider map tie-break start';
 		$this->titleList['SMStormElite@nadeolabs']->scriptSettings['S_DeciderTurnLimit'] = $setting;
 		$this->titleList['SMStormEliteExperimental@nadeolabs']->scriptSettings['S_DeciderTurnLimit'] = $setting;
 		$this->titleList['SMStormHeroes@nadeolabs']->scriptSettings['S_DeciderTurnLimit'] = $setting;
