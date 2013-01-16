@@ -118,6 +118,8 @@ class MatchSettingsFileService extends DedicatedFileService
 		$gameInfos->cupNbWinners = (int) $playlist->gameinfos->cup_nbwinners;
 		$gameInfos->cupWarmUpDuration = (int) $playlist->gameinfos->cup_warmupduration;
 
+		$randomize = (bool) $playlist->filter->random_map_order;
+		
 		$maps = array();
 		for($i = 0; $i < count($playlist->map); $i++)
 		{
@@ -149,7 +151,7 @@ class MatchSettingsFileService extends DedicatedFileService
 			}
 		}
 		
-		return array($gameInfos, $maps, $scriptSettings);
+		return array($gameInfos, $maps, $scriptSettings, $randomize);
 	}
 
 	/**
@@ -157,7 +159,7 @@ class MatchSettingsFileService extends DedicatedFileService
 	 * @param GameInfos $gameInfos
 	 * @param string[] $maps
 	 */
-	function save($filename, GameInfos $gameInfos, array $maps, array $scriptSettings = array())
+	function save($filename, GameInfos $gameInfos, array $maps, array $scriptSettings = array(), $randomize = 0)
 	{
 		$this->directory = \DedicatedManager\Config::getInstance()->dedicatedPath.'UserData/Maps/MatchSettings/';
 
@@ -199,7 +201,7 @@ class MatchSettingsFileService extends DedicatedFileService
 		$filter->addChild('is_internet', 1);
 		$filter->addChild('is_solo', 0);
 		$filter->addChild('sort_index', 1000);
-		$filter->addChild('random_map_order', 0);
+		$filter->addChild('random_map_order', (int) $randomize);
 		$filter->addChild('force_default_gamemode', 0);
 		
 		$modeScriptSettings = $playlist->addChild('mode_script_settings');

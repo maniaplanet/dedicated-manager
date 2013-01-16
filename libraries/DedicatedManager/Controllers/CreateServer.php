@@ -28,11 +28,12 @@ class CreateServer extends Create
 
 		if($matchFile)
 		{
-			list($gameInfos, $maps, $scriptSettings) = $service->get($matchFile);
+			list($gameInfos, $maps, $scriptSettings, $randomize) = $service->get($matchFile);
 			$this->session->set('matchFile', $matchFile);
 			$this->session->set('gameInfos', $gameInfos);
 			$this->session->set('selected', $maps);
 			$this->session->set('scriptSettings', $scriptSettings);
+			$this->session->set('randomize', $randomize);
 		}
 		else
 		{
@@ -134,6 +135,7 @@ class CreateServer extends Create
 		$service = new \DedicatedManager\Services\MapService();
 		$this->response->files = $service->getList('', true, $isLaps, $type, $environment);
 		$this->response->selected = $this->session->get('selected', array());
+		$this->response->randomize = $this->session->get('randomize', false);
 
 		$header = \DedicatedManager\Helpers\Header::getInstance();
 		$header->rightText = _('Back to game settings');
@@ -141,12 +143,14 @@ class CreateServer extends Create
 		$header->rightLink = $this->request->createLinkArgList('../rules');
 	}
 
-	function setMaps($selected = '')
+	function setMaps($selected = '', $randomize = 0)
 	{
 		$this->fetchAndAssertConfig(_('selecting maps'));
 		$this->fetchAndAssertSettings(_('selecting maps'));
 
 		$this->session->set('selected', explode('|', $selected));
+		$this->session->set('randomize', $randomize);
+		\ManiaLib\Utils\Logger::info($randomize);
 
 		if(!$selected)
 		{
@@ -179,6 +183,7 @@ class CreateServer extends Create
 		$gameInfos = $this->fetchAndAssertSettings(_('starting server'));
 		$maps = $this->fetchAndAssertMaps(_('starting server'));
 		$scriptRules = $this->session->get('scriptSettings', array());
+		$randomize = $this->session->get('randomize', false);
 		$this->session->set('configFile', $configFile);
 		$this->session->set('matchFile', $matchFile);
 
@@ -202,7 +207,7 @@ class CreateServer extends Create
 
 				$error = _('An error appeared while writing the MatchSettings file.');
 				$service = new \DedicatedManager\Services\MatchSettingsFileService();
-				$service->save($matchFile, $gameInfos, $maps, $scriptRules);
+				$service->save($matchFile, $gameInfos, $maps, $scriptRules, $randomize);
 
 				$error = _('An error appeared while starting the server.');
 				$service = new \DedicatedManager\Services\ServerService();
@@ -257,6 +262,7 @@ class CreateServer extends Create
 		try
 		{
 			$maps = $this->session->getStrict('selected');
+			$this->session->getStrict('randomize');
 			return $maps;
 		}
 		catch(\Exception $e)
