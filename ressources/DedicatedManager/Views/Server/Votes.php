@@ -29,11 +29,32 @@ $r = ManiaLib\Application\Request::getInstance();
 						<input type="range" id="next" name="ratios[NextMap]" value="<?php echo $ratios['NextMap'] ?: $ratios['*']; ?>" min="-1" max="100" step="1" data-highlight="true"/>
 					</li>
 					<li data-role="fieldcontain">
+						<label for="jumpToMap">
+							<strong><?php echo _('Jump to map'); ?></strong><br/>
+							<i><?php echo _('Ratio in % to reach to jump to an other map'); ?></i>
+						</label>
+						<input type="range" id="jumpToMap" name="ratios[JumpToMapIndex]" value="<?php echo $ratios['JumpToMapIndex'] ? : $ratios['*']; ?>" min="-1" max="100" step="1" data-highlight="true"/>
+					</li>
+					<li data-role="fieldcontain">
+						<label for="defineNextMap">
+							<strong><?php echo _('Define next map'); ?></strong><br/>
+							<i><?php echo _('Ratio in % to reach to define a map as the next one'); ?></i>
+						</label>
+						<input type="range" id="defineNextMap" name="ratios[SetNextMapIndex]" value="<?php echo $ratios['SetNextMapIndex'] ? : $ratios['*']; ?>" min="-1" max="100" step="1" data-highlight="true"/>
+					</li>
+					<li data-role="fieldcontain">
 						<label for="autobalance">
 							<strong><?php echo _('Team balance'); ?></strong><br/>
 							<i><?php echo _('Ratio in % to reach to balance teams'); ?></i>
 						</label>
 						<input type="range" id="autobalance" name="ratios[AutoTeamBalance]" value="<?php echo $ratios['AutoTeamBalance'] ?: $ratios['*']; ?>" min="-1" max="100" step="1" data-highlight="true"/>
+					</li>
+					<li data-role="fieldcontain">
+						<label for="setScriptSettings">
+							<strong><?php echo _('Set script settings'); ?></strong><br/>
+							<i><?php echo _('Ratio in % to reach to change script settings'); ?></i>
+						</label>
+						<input type="range" id="setScriptSettings" name="ratios[SetModeScriptSettings]" value="<?php echo $ratios['SetModeScriptSettings'] ? : $ratios['*']; ?>" min="-1" max="100" step="1" data-highlight="true"/>
 					</li>
 				<?php endif; ?>
 					<li data-role="fieldcontain">
