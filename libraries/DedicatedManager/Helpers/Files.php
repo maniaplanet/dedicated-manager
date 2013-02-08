@@ -21,7 +21,7 @@ abstract class Files
 		$id = uniqid('maps-');
 		$str = sprintf(
 				'<input type="checkbox" id="%s" name="%s" value="%s"%s%s%s/>',
-				$id, $name, htmlentities($map->path.$map->filename, ENT_QUOTES | ENT_HTML5, 'utf-8'),
+				$id, $name, htmlentities($map->path.$map->filename, ENT_QUOTES, 'utf-8'),
 				$checked ? ' checked="checked"' : '', $disabled ? ' disabled="disabled"' : '', $readonly ? ' class="readonly-checkbox"' : ''
 			);
 		
@@ -46,7 +46,7 @@ abstract class Files
 		$id = uniqid('maps-');
 		$str = sprintf(
 				'<input type="checkbox" id="%s" name="%s" value="%s"%s%s%s/>',
-				$id, $name, htmlentities($map->fileName, ENT_QUOTES | ENT_HTML5, 'utf-8'),
+				$id, $name, htmlentities($map->fileName, ENT_QUOTES, 'utf-8'),
 				$checked ? ' checked="checked"' : '', $disabled ? ' disabled="disabled"' : '', $readonly ? ' class="readonly-checkbox"' : ''
 			);
 		
@@ -107,7 +107,7 @@ abstract class Files
 		if($hideSelected)
 			$value = '';
 		else
-			$value = implode('|', array_map(function ($s) { return htmlentities($s, ENT_QUOTES | ENT_HTML5, 'utf-8'); }, $selected));
+			$value = implode('|', array_map(function ($s) { return htmlentities($s, ENT_QUOTES, 'utf-8'); }, $selected));
 		return sprintf(
 				'<div data-role="tree-selector"><input type="hidden" data-role="selector-sorter" name="%s" value="%s"/>',
 				$name, $value
