@@ -92,10 +92,11 @@ class CreateServer extends Create
 			$service = new \DedicatedManager\Services\MatchSettingsFileService();
 			$defaultRules = $service->getScriptMatchRules($system->title, $gameInfos->scriptName);
 			
-			foreach($scriptRules[$gameInfos->scriptName] as $name => $value)
-			{
-				$defaultRules[$name]->default = $value;
-			}
+			if(isset($scriptRules[$gameInfos->scriptName]))
+				foreach($scriptRules[$gameInfos->scriptName] as $name => $value)
+				{
+					$defaultRules[$name]->default = $value;
+				}
 		}
 		
 		$this->session->set('gameInfos', $gameInfos);
@@ -150,7 +151,6 @@ class CreateServer extends Create
 
 		$this->session->set('selected', explode('|', $selected));
 		$this->session->set('randomize', $randomize);
-		\ManiaLib\Utils\Logger::info($randomize);
 
 		if(!$selected)
 		{

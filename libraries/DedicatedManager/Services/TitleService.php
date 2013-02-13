@@ -172,13 +172,13 @@ class TitleService
 		
 		$setting = new ScriptSettings();
 		$setting->default = 1;
-		$setting->name = 'S_UsePlayerClubLinks';
+		$setting->name = 'S_UsePlayerClublinks';
 		$setting->type = 'boolean';
 		$setting->desc = 'Use player clublinks';
-		$this->titleList['SMStormElite@nadeolabs']->scriptSettings['S_UsePlayerClubLinks'] = $setting;
-		$this->titleList['SMStormEliteExperimental@nadeolabs']->scriptSettings['S_UsePlayerClubLinks'] = $setting;
-		$this->titleList['SMStormHeroes@nadeolabs']->scriptSettings['S_UsePlayerClubLinks'] = $setting;
-		$this->titleList['SMStormJoust@nadeolabs']->scriptSettings['S_UsePlayerClubLinks'] = $setting;
+		$this->titleList['SMStormElite@nadeolabs']->scriptSettings['S_UsePlayerClublinks'] = $setting;
+		$this->titleList['SMStormEliteExperimental@nadeolabs']->scriptSettings['S_UsePlayerClublinks'] = $setting;
+		$this->titleList['SMStormHeroes@nadeolabs']->scriptSettings['S_UsePlayerClublinks'] = $setting;
+		$this->titleList['SMStormJoust@nadeolabs']->scriptSettings['S_UsePlayerClublinks'] = $setting;
 		
 		$setting = new ScriptSettings();
 		$setting->default = '';
@@ -231,6 +231,47 @@ class TitleService
 		$setting->desc = 'Number of map to pick during draft';
 		$this->titleList['SMStormElite@nadeolabs']->scriptSettings['S_DraftPickNb'] = $setting;
 		$this->titleList['SMStormEliteExperimental@nadeolabs']->scriptSettings['S_DraftPickNb'] = $setting;
+		
+		$setting = new ScriptSettings();
+		$setting->default = 0;
+		$setting->name = 'S_UseEliteB2';
+		$setting->type = 'boolean';
+		$setting->desc = 'Elite Beta 2 gameplay';
+		$this->titleList['SMStormElite@nadeolabs']->scriptSettings['S_UseEliteB2'] = $setting;
+		$this->titleList['SMStormEliteExperimental@nadeolabs']->scriptSettings['S_UseEliteB2'] = $setting;
+		
+		$setting = new ScriptSettings();
+		$setting->default = 0;
+		$setting->name = 'S_ForceWeaponSelection';
+		$setting->type = 'boolean';
+		$setting->desc = 'Force the use of the local setting for weapons selection';
+		$this->titleList['SMStormElite@nadeolabs']->scriptSettings['S_ForceWeaponSelection'] = $setting;
+		$this->titleList['SMStormEliteExperimental@nadeolabs']->scriptSettings['S_ForceWeaponSelection'] = $setting;
+		
+		$setting = new ScriptSettings();
+		$setting->default = 0;
+		$setting->name = 'S_UseWeaponSelection';
+		$setting->type = 'boolean';
+		$setting->desc = 'Allow defenders to select their weapons';
+		$this->titleList['SMStormElite@nadeolabs']->scriptSettings['S_UseWeaponSelection'] = $setting;
+		$this->titleList['SMStormEliteExperimental@nadeolabs']->scriptSettings['S_UseWeaponSelection'] = $setting;
+		
+		$setting = new ScriptSettings();
+		$setting->default = 1;
+		$setting->name = 'S_DisplayLaser';
+		$setting->type = 'boolean';
+		$setting->desc = 'Display the defenders with Laser through walls';
+		$this->titleList['SMStormElite@nadeolabs']->scriptSettings['S_DisplayLaser'] = $setting;
+		$this->titleList['SMStormEliteExperimental@nadeolabs']->scriptSettings['S_DisplayLaser'] = $setting;
+		
+		$setting = new ScriptSettings();
+		$setting->default = 0;
+		$setting->name = 'S_UseLobby';
+		$setting->type = 'boolean';
+		$setting->desc = 'Launch server in lobby mode';
+		$this->titleList['SMStormElite@nadeolabs']->scriptSettings['S_UseLobby'] = $setting;
+		$this->titleList['SMStormEliteExperimental@nadeolabs']->scriptSettings['S_UseLobby'] = $setting;
+		$this->titleList['SMStormJoust@nadeolabs']->scriptSettings['S_UseLobby'] = $setting;
 		
 		$setting = new ScriptSettings();
 		$setting->default = 10;
@@ -313,6 +354,22 @@ class TitleService
 		
 		$setting = new ScriptSettings();
 		$setting->default = 1;
+		$setting->name = 'S_AllowBeginners';
+		$setting->type = 'boolean';
+		$setting->desc = 'Is a Beginners Welcome server';
+		$this->titleList['SMStormRoyal@nadeolabs']->scriptSettings['S_AllowBeginners'] = $setting;
+		$this->titleList['SMStormRoyalExperimental@nadeolabs']->scriptSettings['S_AllowBeginners'] = $setting;
+		
+		$setting = new ScriptSettings();
+		$setting->default = 0;
+		$setting->name = 'S_AutoManageAFK';
+		$setting->type = 'boolean';
+		$setting->desc = 'Switch inactive players to spectators';
+		$this->titleList['SMStormRoyal@nadeolabs']->scriptSettings['S_AutoManageAFK'] = $setting;
+		$this->titleList['SMStormRoyalExperimental@nadeolabs']->scriptSettings['S_AutoManageAFK'] = $setting;
+		
+		$setting = new ScriptSettings();
+		$setting->default = 1;
 		$setting->name = 'S_AllowDoubleCapture';
 		$setting->type = 'boolean';
 		$setting->desc = 'Allow a second pole capture after the first activation';
@@ -354,6 +411,13 @@ class TitleService
 		$this->titleList['SMStormJoust@nadeolabs']->scriptSettings['S_RoundTimeLimit'] = $setting;
 		
 		$setting = new ScriptSettings();
+		$setting->default = 60;
+		$setting->name = 'S_PoleTimeLimit';
+		$setting->type = 'integer';
+		$setting->desc = 'Pole capture time limit';
+		$this->titleList['SMStormJoust@nadeolabs']->scriptSettings['S_PoleTimeLimit'] = $setting;
+		
+		$setting = new ScriptSettings();
 		$setting->default = 3;
 		$setting->name = 'S_MatchPointsToWin';
 		$setting->type = 'integer';
@@ -375,11 +439,18 @@ class TitleService
 		$this->titleList['SMStormJoust@nadeolabs']->scriptSettings['S_MatchPointsLimit'] = $setting;
 		
 		$setting = new ScriptSettings();
-		$setting->default = 0;
-		$setting->name = 'S_UseLobby';
+		$setting->default = 300000;
+		$setting->name = 'Duration';
+		$setting->type = 'integer';
+		$setting->desc = 'Time limit';
+		$this->titleList['Platform@nadeolive']->scriptSettings['Duration'] = $setting;
+		
+		$setting = new ScriptSettings();
+		$setting->default = 1;
+		$setting->name = 'ShowTop10';
 		$setting->type = 'boolean';
-		$setting->desc = 'Launch server in lobby mode';
-		$this->titleList['SMStormJoust@nadeolabs']->scriptSettings['S_UseLobby'] = $setting;
+		$setting->desc = 'Show Top 10';
+		$this->titleList['Platform@nadeolive']->scriptSettings['ShowTop10'] = $setting;
 	}
 
 	function getList()
