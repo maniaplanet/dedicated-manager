@@ -168,7 +168,7 @@ $r = ManiaLib\Application\Request::getInstance();
 							<strong><?php echo _('File prefix'); ?></strong><br/>
 							<i><?php echo _('Prefix to use for log filenames'); ?></i>
 						</label>
-						<?php echo DedicatedManager\Helpers\Input::text('logs[logsPrefixh]', 'configLogsPrefix', $config->logs->logsPrefix); ?>
+						<?php echo DedicatedManager\Helpers\Input::text('logs[logsPrefix]', 'configLogsPrefix', $config->logs->logsPrefix); ?>
 					</li>
 					<li data-role="fieldcontain">
 						<label for="configRuntimeLog">
