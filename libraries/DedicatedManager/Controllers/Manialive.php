@@ -61,14 +61,14 @@ class Manialive extends AbstractController
 
 	function setConfig($admins=array(), $config=array(), $database=array(), $threading=array(), $wsapi=array())
 	{
-		$config = $this->session->get('config', new \DedicatedManager\Services\ManialiveConfig());
-		$config->admins = array_filter($admins);
-		$config->setConfigFromArray($config);
-		$config->setDatabaseFromArray($database);
-		$config->setThreadingFromArray($threading);
-		$config->setWsApiFromArray($wsapi);
+		$configObject = $this->session->get('config', new \DedicatedManager\Services\ManialiveConfig());
+		$configObject->admins = array_filter($admins);
+		$configObject->setConfigFromArray($config);
+		$configObject->setDatabaseFromArray($database);
+		$configObject->setThreadingFromArray($threading);
+		$configObject->setWsApiFromArray($wsapi);
 		
-		$this->session->set('config', $config);
+		$this->session->set('config', $configObject);
 		$this->request->redirectArgList('../plugins');
 	}
 

@@ -100,7 +100,7 @@ class ManialiveFileService extends AbstractService
 	function save($filename, ManialiveConfig $config)
 	{
 		$f = fopen($this->directory.$filename.'.ini', 'w');
-		
+
 		if($config->config->logsPath)
 			fprintf($f, "config.logsPath = '%s'\n", $config->config->logsPath);
 		fprintf($f, "config.logsPrefix = '%s'\n", $config->config->logsPrefix);
