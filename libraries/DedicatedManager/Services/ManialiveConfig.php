@@ -11,8 +11,8 @@ namespace DedicatedManager\Services;
 
 class ManialiveConfig
 {
-	/** @var _LogsPart */
-	public $logs;
+	/** @var _ConfigPart */
+	public $config;
 	/** @var _DatabasePart */
 	public $database;
 	/** @var _ThreadingPart */
@@ -28,7 +28,7 @@ class ManialiveConfig
 	
 	function __construct()
 	{
-		$this->logs = new _LogsPart();
+		$this->config = new _ConfigPart();
 		$this->database = new _DatabasePart();
 		$this->threading = new _ThreadingPart();
 		$this->wsapi = new _WsApiPart();
@@ -37,9 +37,9 @@ class ManialiveConfig
 	/**
 	 * @param string[] $array
 	 */
-	function setLogsFromArray($array)
+	function setConfigFromArray($array)
 	{
-		$this->logs = _LogsPart::fromArray($array);
+		$this->config = _ConfigPart::fromArray($array);
 	}
 	
 	/**
@@ -67,7 +67,7 @@ class ManialiveConfig
 	}
 }
 
-class _LogsPart extends \DedicatedApi\Structures\AbstractStructure
+class _ConfigPart extends \DedicatedApi\Structures\AbstractStructure
 {
 	/** @var string */
 	public $logsPath = '';
@@ -77,6 +77,10 @@ class _LogsPart extends \DedicatedApi\Structures\AbstractStructure
 	public $runtimeLog = false;
 	/** @var bool */
 	public $globalErrorLog = false;
+	/** @var bool */
+	public $debug = false;
+	/** @var bool */
+	public $verbose = true;
 }
 
 class _DatabasePart extends \DedicatedApi\Structures\AbstractStructure

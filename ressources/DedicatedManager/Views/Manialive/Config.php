@@ -161,23 +161,23 @@ $r = ManiaLib\Application\Request::getInstance();
 							<strong><?php echo _('Path'); ?></strong><br/>
 							<i><?php echo _('Path to the logs folder (if empty, default is %manialivePath%/logs)') ?></i>
 						</label>
-						<?php echo DedicatedManager\Helpers\Input::text('logs[logsPath]', 'configLogsPath', $config->logs->logsPath); ?>
+						<?php echo DedicatedManager\Helpers\Input::text('config[logsPath]', 'configLogsPath', $config->config->logsPath); ?>
 					</li>
 					<li data-role="fieldcontain">
 						<label for="configLogsPrefix">
 							<strong><?php echo _('File prefix'); ?></strong><br/>
 							<i><?php echo _('Prefix to use for log filenames'); ?></i>
 						</label>
-						<?php echo DedicatedManager\Helpers\Input::text('logs[logsPrefix]', 'configLogsPrefix', $config->logs->logsPrefix); ?>
+						<?php echo DedicatedManager\Helpers\Input::text('config[logsPrefix]', 'configLogsPrefix', $config->config->logsPrefix); ?>
 					</li>
 					<li data-role="fieldcontain">
 						<label for="configRuntimeLog">
 							<strong><?php echo _('Runtime log') ?></strong><br/>
 							<i><?php echo _('When enabled, output will be written to a log file'); ?></i>
 						</label>
-						<select id="configRuntimeLog" name="logs[runtimeLog]" data-role="slider">
-							<option value="0" <?php echo !$config->logs->runtimeLog ? 'selected="selected"' : ''; ?>><?php echo _('No') ?></option>
-							<option value="1" <?php echo $config->logs->runtimeLog ? 'selected="selected"' : ''; ?>><?php echo _('Yes') ?></option>
+						<select id="configRuntimeLog" name="config[runtimeLog]" data-role="slider">
+							<option value="0" <?php echo !$config->config->runtimeLog ? 'selected="selected"' : ''; ?>><?php echo _('No') ?></option>
+							<option value="1" <?php echo $config->config->runtimeLog ? 'selected="selected"' : ''; ?>><?php echo _('Yes') ?></option>
 						</select>
 					</li>
 					<li data-role="fieldcontain">
@@ -185,9 +185,9 @@ $r = ManiaLib\Application\Request::getInstance();
 							<strong><?php echo _('Global error log'); ?></strong><br/>
 							<i><?php echo _('Gather errors from all instances to a single file'); ?></i>
 						</label>
-						<select id="configGlobalErrorLog" name="logs[globalErrorLog]" data-role="slider">
-							<option value="0" <?php echo !$config->logs->globalErrorLog ? 'selected="selected"' : ''; ?>><?php echo _('No'); ?></option>
-							<option value="1" <?php echo $config->logs->globalErrorLog ? 'selected="selected"' : ''; ?>><?php echo _('Yes'); ?></option>
+						<select id="configGlobalErrorLog" name="config[globalErrorLog]" data-role="slider">
+							<option value="0" <?php echo !$config->config->globalErrorLog ? 'selected="selected"' : ''; ?>><?php echo _('No'); ?></option>
+							<option value="1" <?php echo $config->config->globalErrorLog ? 'selected="selected"' : ''; ?>><?php echo _('Yes'); ?></option>
 						</select>
 					</li>
 				</ul>

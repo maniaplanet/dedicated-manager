@@ -84,7 +84,7 @@ class ManialiveFileService extends AbstractService
 				if(isset($config->{$property[1]}))
 					$config->{$property[1]} = $value;
 			}
-			else if(isset($config->{$property[0]}) && isset($config->{$property[0]}->{$property[1]}))
+			elseif(isset($config->{$property[0]}) && isset($config->{$property[0]}->{$property[1]}))
 				$config->{$property[0]}->{$property[1]} = $value;
 		}
 		
@@ -101,11 +101,11 @@ class ManialiveFileService extends AbstractService
 	{
 		$f = fopen($this->directory.$filename.'.ini', 'w');
 		
-		if($config->logs->logsPath)
-			fprintf($f, "config.logsPath = '%s'\n", $config->logs->logsPath);
-		fprintf($f, "config.logsPrefix = '%s'\n", $config->logs->logsPrefix);
-		fprintf($f, "config.runtimeLog = %s\n", $config->logs->runtimeLog ? 'On' : 'Off');
-		fprintf($f, "config.globalErrorLog = %s\n\n", $config->logs->globalErrorLog ? 'On' : 'Off');
+		if($config->config->logsPath)
+			fprintf($f, "config.logsPath = '%s'\n", $config->config->logsPath);
+		fprintf($f, "config.logsPrefix = '%s'\n", $config->config->logsPrefix);
+		fprintf($f, "config.runtimeLog = %s\n", $config->config->runtimeLog ? 'On' : 'Off');
+		fprintf($f, "config.globalErrorLog = %s\n\n", $config->config->globalErrorLog ? 'On' : 'Off');
 		
 		foreach($config->admins as $admin)
 			fprintf($f, "manialive.admins[] = '%s'\n", $admin);

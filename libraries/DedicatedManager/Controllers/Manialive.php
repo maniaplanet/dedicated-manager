@@ -59,11 +59,11 @@ class Manialive extends AbstractController
 		$this->response->config = $this->session->get('config', $config);
 	}
 
-	function setConfig($admins=array(), $logs=array(), $database=array(), $threading=array(), $wsapi=array())
+	function setConfig($admins=array(), $config=array(), $database=array(), $threading=array(), $wsapi=array())
 	{
 		$config = $this->session->get('config', new \DedicatedManager\Services\ManialiveConfig());
 		$config->admins = array_filter($admins);
-		$config->setLogsFromArray($logs);
+		$config->setConfigFromArray($config);
 		$config->setDatabaseFromArray($database);
 		$config->setThreadingFromArray($threading);
 		$config->setWsApiFromArray($wsapi);
