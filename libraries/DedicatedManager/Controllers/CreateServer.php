@@ -118,8 +118,8 @@ class CreateServer extends Create
 		list(,, $system) = $this->fetchAndAssertConfig(_('selecting maps'));
 		$gameInfos = $this->fetchAndAssertSettings(_('selecting maps'));
 
-		//TODO Find a way to clean this mess
-		$environment = in_array($system->title, array('TMCanyon', 'Platform@nadeolive')) ? 'Canyon' : 'Storm';
+		$service = new \DedicatedManager\Services\TitleService();
+		$environment = $service->getEnvironment($system->title);
 
 		if($gameInfos->gameMode == GameInfos::GAMEMODE_SCRIPT)
 		{

@@ -437,19 +437,12 @@ class MatchSettingsFileService extends DedicatedFileService
 	function getScriptList($title)
 	{
 		$titleService = new TitleService();
-		if(preg_match('/(storm){1}$/ixu', $title))
-		{
-			$game = 'ShootMania';
-		}
-		else if(preg_match('/(canyon|valley){1}$/ixu', $title))
-		{
-			$game = 'TrackMania';
-		}
-		else if($titleService->isCustomTitle($title))
+		if($titleService->isCustomTitle($title))
 		{
 			return array($titleService->getScript($title));
 		}
 
+		$game = $this->getGame($title);
 		$scriptDirectory = \DedicatedManager\Config::getInstance()->dedicatedPath.'UserData/Scripts/Modes/'.$game.'/';
 		if(!file_exists($scriptDirectory))
 		{
@@ -466,20 +459,12 @@ class MatchSettingsFileService extends DedicatedFileService
 	function getScriptMatchRules($title, $scriptName = '')
 	{
 		$titleService = new TitleService();
-		$matchRules = array();
 		if($titleService->isCustomTitle($title))
 		{
 			return $titleService->getScriptSettings($title);
 		}
 
-		if(preg_match('/(storm){1}$/ixu', $title))
-		{
-			$game = 'ShootMania';
-		}
-		elseif(preg_match('/(canyon|valley){1}$/ixu', $title))
-		{
-			$game = 'TrackMania';
-		}
+		$game = $this->getGame($title);
 		if(strstr($scriptName, '/') || strstr($scriptName, '\\'))
 		{
 			$scriptDirectory = \DedicatedManager\Config::getInstance()->dedicatedPath.'UserData/Scripts/';
@@ -539,19 +524,12 @@ class MatchSettingsFileService extends DedicatedFileService
 	function getScriptMapType($scriptName, $title)
 	{
 		$titleService = new TitleService();
-		if(preg_match('/(storm){1}$/ixu', $title))
-		{
-			$game = 'ShootMania';
-		}
-		elseif(preg_match('/(canyon|valley){1}$/ixu', $title))
-		{
-			$game = 'TrackMania';
-		}
-		elseif($titleService->isCustomTitle($title))
+		if($titleService->isCustomTitle($title))
 		{
 			return $titleService->getMapTypes($title);
 		}
 
+		$game = $this->getGame($title);
 		if(strstr($scriptName,'/') || strstr($scriptName, '\\'))
 		{
 			$scriptDirectory = \DedicatedManager\Config::getInstance()->dedicatedPath.'UserData/Scripts/';
@@ -560,13 +538,11 @@ class MatchSettingsFileService extends DedicatedFileService
 		{
 			$scriptDirectory = \DedicatedManager\Config::getInstance()->dedicatedPath.'UserData/Scripts/Modes/'.$game.'/';
 		}
-		$script = file_get_contents($scriptDirectory.$scriptName);
+		$scriptContent = file_get_contents($scriptDirectory.$scriptName);
 
 		$scripts = array();
-
-		$match = array();
 		$files = array();
-		if(preg_match('/\#Extends\\s+"([^"]*)"/ixu', $script, $files))
+		if(preg_match('/\#Extends\\s+"([^"]*)"/ixu', $scriptContent, $files))
 		{
 			$files = explode(',', $files[1]);
 			foreach($files as $file)
@@ -575,12 +551,13 @@ class MatchSettingsFileService extends DedicatedFileService
 			}
 		}
 			
-		if(preg_match('/\#Const\\s+(?:CompatibleChallengeTypes|CompatibleMapTypes)\\s*"([^"]*)"/ixu', $script, $match))
+		$matches = array();
+		if(preg_match('/\#Const\\s+(?:CompatibleChallengeTypes|CompatibleMapTypes)\\s*"([^"]*)"/ixu', $scriptContent, $matches))
 		{
-			$scriptMatch = array();
-			preg_match_all('/([^ ,;\t]+)/ixu', $match[1], $scriptMatch);
-			$scripts = $scriptMatch[1];
-			$scripts = array_merge($scripts,
+			$scriptMatches = array();
+			preg_match_all('/([^ ,;\t]+)/ixu', $matches[1], $scriptMatches);
+			$scripts = $scriptMatches[1];
+			$scripts = array_merge($scriptMatches[1],
 				array_map(
 					function ($s) use ($game)
 					{
@@ -589,6 +566,18 @@ class MatchSettingsFileService extends DedicatedFileService
 		}
 
 		return $scripts;
+	}
+	
+	private function getGame($title)
+	{
+		if(preg_match('/^SM(?:Storm)$/ixu', $title))
+		{
+			return 'ShootMania';
+		}
+		elseif(preg_match('/^TM(?:Canyon|Valley|Stadium)$/ixu', $title))
+		{
+			return 'TrackMania';
+		}
 	}
 }
 

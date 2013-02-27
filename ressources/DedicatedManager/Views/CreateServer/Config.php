@@ -46,6 +46,7 @@ $r = ManiaLib\Application\Request::getInstance();
 						<select id="title" required="required" name="system[title]" data-native-menu="false">
 							<optgroup label="<?php echo _('Official titles') ?>">
 								<option value="TMCanyon" <?php echo $system->title == 'TMCanyon' ? 'selected="selected"' : '' ?>>TrackMania Canyon</option>
+								<option value="TMStadium" <?php echo $system->title == 'TMStadium' ? 'selected="selected"' : '' ?>>TrackMania Stadium</option>
 								<option value="SMStorm" <?php echo $system->title == 'SMStorm' ? 'selected="selected"' : '' ?>>ShootMania Storm</option>
 							</optgroup>
 							<optgroup label="<?php echo _('Custom titles') ?>">

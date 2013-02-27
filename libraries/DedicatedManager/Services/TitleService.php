@@ -479,6 +479,13 @@ class TitleService
 	{
 		return array_key_exists($idString, $this->titleList);
 	}
+	
+	function getEnvironment($idString)
+	{
+		if($this->isCustomTitle($idString))
+			return $this->titleList[$idString]->environment;
+		return substr($idString, 2);
+	}
 
 	function getMapTypes($idString)
 	{
