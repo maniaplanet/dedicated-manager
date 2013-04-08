@@ -54,6 +54,16 @@ $r = ManiaLib\Application\Request::getInstance();
 						</div>
 					</li>
 					<li data-role="fieldcontain">
+						<label for="configToggleGUI">
+							<strong><?php echo _('Enable toggle GUI'); ?></strong><br/>
+							<i><?php echo _('Allow players to hide GUI by pressing F8'); ?></i>
+						</label>
+						<select id="configToggleGUI" name="config[enableToggleGUI]" data-role="slider">
+							<option value="0" <?php echo !$config->config->enableToggleGUI ? 'selected="selected"' : ''; ?>><?php echo _('No') ?></option>
+							<option value="1" <?php echo $config->config->enableToggleGUI ? 'selected="selected"' : ''; ?>><?php echo _('Yes') ?></option>
+						</select>
+					</li>
+					<li data-role="fieldcontain">
 						<label for="databaseEnable">
 							<strong><?php echo _('MySQL'); ?></strong><br/>
 							<i><?php echo _('MySQL is needed for threading and some plugins'); ?></i>
@@ -188,6 +198,16 @@ $r = ManiaLib\Application\Request::getInstance();
 						<select id="configGlobalErrorLog" name="config[globalErrorLog]" data-role="slider">
 							<option value="0" <?php echo !$config->config->globalErrorLog ? 'selected="selected"' : ''; ?>><?php echo _('No'); ?></option>
 							<option value="1" <?php echo $config->config->globalErrorLog ? 'selected="selected"' : ''; ?>><?php echo _('Yes'); ?></option>
+						</select>
+					</li>
+					<li data-role="fieldcontain">
+						<label for="configDebugLog">
+							<strong><?php echo _('Debug log'); ?></strong><br/>
+							<i><?php echo _('Enable debug output'); ?></i>
+						</label>
+						<select id="configDebugLog" name="config[debug]" data-role="slider">
+							<option value="0" <?php echo !$config->config->debug ? 'selected="selected"' : ''; ?>><?php echo _('No'); ?></option>
+							<option value="1" <?php echo $config->config->debug ? 'selected="selected"' : ''; ?>><?php echo _('Yes'); ?></option>
 						</select>
 					</li>
 				</ul>

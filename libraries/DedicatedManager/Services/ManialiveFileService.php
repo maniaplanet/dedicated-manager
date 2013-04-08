@@ -105,7 +105,9 @@ class ManialiveFileService extends AbstractService
 			fprintf($f, "config.logsPath = '%s'\n", $config->config->logsPath);
 		fprintf($f, "config.logsPrefix = '%s'\n", $config->config->logsPrefix);
 		fprintf($f, "config.runtimeLog = %s\n", $config->config->runtimeLog ? 'On' : 'Off');
-		fprintf($f, "config.globalErrorLog = %s\n\n", $config->config->globalErrorLog ? 'On' : 'Off');
+		fprintf($f, "config.globalErrorLog = %s\n", $config->config->globalErrorLog ? 'On' : 'Off');
+		fprintf($f, "config.debug = %s\n", $config->config->debug ? 'On' : 'Off');
+		fprintf($f, "config.enableToggleGUI = %s\n\n", $config->config->enableToggleGUI ? 'On' : 'Off');
 		
 		foreach($config->admins as $admin)
 			fprintf($f, "manialive.admins[] = '%s'\n", $admin);

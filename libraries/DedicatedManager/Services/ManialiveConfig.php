@@ -81,6 +81,8 @@ class _ConfigPart extends \DedicatedApi\Structures\AbstractStructure
 	public $debug = false;
 	/** @var bool */
 	public $verbose = true;
+        /** @var bool */
+        public $enableToggleGUI = false;
 }
 
 class _DatabasePart extends \DedicatedApi\Structures\AbstractStructure
