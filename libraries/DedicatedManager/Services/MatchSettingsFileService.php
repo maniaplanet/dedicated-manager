@@ -243,22 +243,26 @@ class MatchSettingsFileService extends DedicatedFileService
 				$info = $connection->getModeScriptInfo();
 				foreach($info->paramDescs as $value)
 				{
-						$rule = new RuleDisplayable();
+					if($value->desc == '<hidden>')
+					{
+						continue;
+					}
+					$rule = new RuleDisplayable();
 					$rule->name = $value->name;
 					$rule->value = $value->default;
 					$rule->label = $value->name;
 					$rule->documentation = $value->desc;
 					if($value->type == 'boolean')
-						{
+					{
 						$rule->value = $rule->value == 'True';
-							$rule->inputType = 'switch';
-							$rule->inputValues = array(
-								array('label' => _('No'), 'value' => 0),
-								array('label' => _('Yes'), 'value' => 1)
-							);
-						}
-						$matchRules[] = $rule;
+						$rule->inputType = 'switch';
+						$rule->inputValues = array(
+							array('label' => _('No'), 'value' => 0),
+							array('label' => _('Yes'), 'value' => 1)
+						);
 					}
+					$matchRules[] = $rule;
+				}
 				break;
 				
 			case GameInfos::GAMEMODE_ROUNDS:
