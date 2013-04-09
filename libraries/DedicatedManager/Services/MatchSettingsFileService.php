@@ -243,10 +243,6 @@ class MatchSettingsFileService extends DedicatedFileService
 				$info = $connection->getModeScriptInfo();
 				foreach($info->paramDescs as $value)
 				{
-					if($value->desc == '<hidden>')
-					{
-						continue;
-					}
 					$rule = new RuleDisplayable();
 					$rule->name = $value->name;
 					$rule->value = $value->default;
