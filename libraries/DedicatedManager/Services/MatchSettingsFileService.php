@@ -118,7 +118,7 @@ class MatchSettingsFileService extends DedicatedFileService
 		$gameInfos->cupNbWinners = (int) $playlist->gameinfos->cup_nbwinners;
 		$gameInfos->cupWarmUpDuration = (int) $playlist->gameinfos->cup_warmupduration;
 
-		$randomize = (bool) $playlist->filter->random_map_order;
+		$randomize = (int) $playlist->filter->random_map_order;
 		
 		$maps = array();
 		for($i = 0; $i < count($playlist->map); $i++)
