@@ -11,7 +11,7 @@ $r = ManiaLib\Application\Request::getInstance();
 	<?php echo DedicatedManager\Helpers\Box\Box::detect(); ?>
     <div data-role="content">
 		<form name="load_config_form" action="<?php echo $r->createLinkArgList('.') ?>" data-ajax="false" method="get" data-role="collapsible-group">
-			<fieldset data-role="collapsible" data-theme="e">
+			<fieldset data-role="collapsible" data-collapsed="false" data-theme="e">
 				<legend><?php echo _('Load a ManiaLive configuration file') ?></legend>
 				<ul data-role="listview">
 					<li>
@@ -32,7 +32,7 @@ $r = ManiaLib\Application\Request::getInstance();
 				</ul>
 			</fieldset>
 		</form>
-		
+
 		<form name="config" action="<?php echo $r->createLinkArgList('../set-config') ?>" method="get" data-ajax="false" data-role="collapsible-group">
 			<fieldset data-role="collapsible" data-collapsed="false" data-theme="b">
 				<legend><?php echo _('Basic Configuration'); ?></legend>
