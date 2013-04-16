@@ -2,7 +2,7 @@ $(document).bind('pageinit', function() {
 	$('select#isOnline').parent().find('.ui-slider-switch').css('width', '7em');
 	$('select#hideServer').parent().find('.ui-slider-switch').css('width', '7em');
 	$('select#nextLadderMode').parent().find('.ui-slider-switch').css('width', '7em');
-	
+
 	$('#isOnline').change(function() {
 		if($(this).val() == '1') {
 			$('#field-internet').trigger('expand');
@@ -11,7 +11,7 @@ $(document).bind('pageinit', function() {
 			$('#field-internet').trigger('collapse');
 		}
 	}).trigger('change');
-	
+
 	$('#nextLadderMode').change(function () {
 		if($(this).val() == '1') {
 			$('#ladderServerLimitMin').textinput('enable');
@@ -22,7 +22,7 @@ $(document).bind('pageinit', function() {
 			$('#ladderServerLimitMax').textinput('disable');
 		}
 	}).trigger('change');
-	
+
 	$('#useProxy').change(function () {
 		if($(this).val() == '1') {
 			$('#proxyLogin').textinput('enable');
@@ -33,7 +33,7 @@ $(document).bind('pageinit', function() {
 			$('#proxyPassword').textinput('disable');
 		}
 	}).trigger('change');
-	
+
 	$('#roundsUseNewRules').change(function() {
 		if($(this).val() == '1') {
 			$('#roundsPointsLimit').textinput('disable').parent().hide();
@@ -44,7 +44,7 @@ $(document).bind('pageinit', function() {
 			$('#roundsPointsLimit').textinput('enable').parent().show();
 		}
 	}).trigger('change');
-	
+
 	$('#teamUseNewRules').change(function() {
 		if($(this).val() == '1') {
 			$('#teamPointsLimit').textinput('disable').parent().hide();
@@ -80,13 +80,13 @@ $(document).bind('pageinit', function() {
 				break;
 		}
 	}).trigger('change');
-	
+
 	$('#scriptName').change(function() {
 		$('.setting').hide().find('input').textinput('disable').end().find('select').select('disable');
 		$('.setting.'+$('#scriptName option:selected').first().jqmData('script-id')).show().find('input').textinput('enable').end().find('select').select('enable');
 		$(this).closest('ul').listview('refresh');
 	}).trigger('change');
-	
+
 	$('#relayMethod').change(function() {
 		if($(this).val() == 'managed')
 		{
@@ -107,7 +107,7 @@ $(document).bind('pageinit', function() {
 			$('#fieldset-spectate-ipAndPort').show().find('input').textinput('enable');
 		}
 	}).trigger('change');
-	
+
 	$('#databaseEnable').change(function() {
 		if($(this).val() == '1') {
 			$('#field-database').trigger('expand');
@@ -116,7 +116,7 @@ $(document).bind('pageinit', function() {
 			$('#field-database').trigger('collapse');
 		}
 	}).trigger('change');
-	
+
 	$('#threadingEnabled').change(function() {
 		if($(this).val() == '1') {
 			$('#field-threading').trigger('expand');
@@ -125,8 +125,12 @@ $(document).bind('pageinit', function() {
 			$('#field-threading').trigger('collapse');
 		}
 	}).trigger('change');
-	
+
 	$('#add-admin-button').click(function() {
 		$('<input type="text" name="admins[]"/>').insertAfter($(this).prev()).textinput();
+	});
+
+	$('#configFile').change(function() {
+		$(this).parents("form").submit();
 	});
 });
