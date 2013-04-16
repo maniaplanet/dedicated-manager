@@ -1,1 +1,1 @@
-<?php echo (int) $running; ?>
+<?php echo $running; ?>

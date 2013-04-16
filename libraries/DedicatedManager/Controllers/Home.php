@@ -103,7 +103,7 @@ class Home extends AbstractController
 		}
 		catch(\Exception $e)
 		{
-			$this->response->running = false;
+			$this->response->running = 0;
 		}
 	}
 
