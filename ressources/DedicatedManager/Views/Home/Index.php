@@ -40,8 +40,10 @@ $(document).bind('pageinit', function() {
 		$.get('<?php echo $r->createLinkArgList('../status'); ?>',
 			{host: anchor.attr('data-host'), port: anchor.attr('data-port')},
 			function (answer) {
-				if(answer == '1')
+				if(answer != '0') {
 					anchor.removeClass('ui-disabled');
+					anchor.append('<small><em>(' + answer + ')</em></small>');
+				}
 			}
 		);
 	});

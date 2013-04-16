@@ -17,13 +17,13 @@ class Home extends AbstractController
 		$header = \DedicatedManager\Helpers\Header::getInstance();
 		$header->leftLink = null;
 	}
-	
+
 	function index()
 	{
 		$this->request->registerReferer();
 		$config = \DedicatedManager\Config::getInstance();
 		$currentDir = getcwd();
-		
+
 		$errors = array();
 		$writables[] = $config->dedicatedPath;
 		$writables[] = $config->dedicatedPath.'Logs/';
@@ -43,7 +43,7 @@ class Home extends AbstractController
 			$tmp = array_map(function ($f) use ($config) { return $config->dedicatedPath.'UserData/Maps/MatchSettings/'.$f; }, $tmp);
 			$writables = array_merge($writables, $tmp);
 		}
-		
+
 		if($config->manialivePath)
 		{
 			$writables[] = $config->manialivePath;
@@ -60,7 +60,7 @@ class Home extends AbstractController
 		chdir($currentDir);
 
 		$executables[] = stripos(PHP_OS, 'win') !== false ? $config->dedicatedPath.'ManiaPlanetServer.exe' : $config->dedicatedPath.'ManiaPlanetServer';
-		
+
 		$failed = array_filter(array_merge($writables, $executables), function ($f) { return !file_exists($f); });
 		if($failed)
 		{
@@ -90,7 +90,7 @@ class Home extends AbstractController
 		$service = new \DedicatedManager\Services\ServerService();
 		$this->response->servers = $this->isAdmin ? $service->getLives() : $service->getLivesForManager($this->session->login);
 	}
-	
+
 	function status($host, $port)
 	{
 		$service = new \DedicatedManager\Services\ServerService();
@@ -98,14 +98,15 @@ class Home extends AbstractController
 		{
 			$server = $service->get($host, $port);
 			$this->connection = \DedicatedApi\Connection::factory($server->rpcHost, $server->rpcPort, 5, 'SuperAdmin', $server->rpcPassword);
-			$this->response->running = true;
+			$info = $this->connection->getSystemInfo();
+			$this->response->running = $info->serverLogin;
 		}
 		catch(\Exception $e)
 		{
 			$this->response->running = false;
 		}
 	}
-	
+
 	function remove($host, $port)
 	{
 		$service = new \DedicatedManager\Services\ServerService();
