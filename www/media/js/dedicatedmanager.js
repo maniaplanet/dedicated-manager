@@ -130,7 +130,7 @@ $(document).bind('pageinit', function() {
 		$('<input type="text" name="admins[]"/>').insertAfter($(this).prev()).textinput();
 	});
 
-	$('#configFile').change(function() {
+	$('#configFile,#matchFile').change(function() {
 		$(this).parents("form").submit();
 	});
 });
