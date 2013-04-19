@@ -559,7 +559,7 @@ class TitleService
 		$setting = new ScriptSettings();
 		$setting->default = '';
 		$setting->name = 'S_ForceClublinkTeam1';
-		$setting->type = 'boolean';
+		$setting->type = 'string';
 		$setting->desc = 'Force Team 1 clublink';
 		$this->titleList['SMStormElite@nadeolabs']->scriptSettings[$setting->name] = $setting;
 		$this->titleList['SMStormEliteExperimental@nadeolabs']->scriptSettings[$setting->name] = $setting;
@@ -570,7 +570,7 @@ class TitleService
 		$setting = new ScriptSettings();
 		$setting->default = '';
 		$setting->name = 'S_ForceClublinkTeam2';
-		$setting->type = 'boolean';
+		$setting->type = 'string';
 		$setting->desc = 'Force Team 2 clublink';
 		$this->titleList['SMStormElite@nadeolabs']->scriptSettings[$setting->name] = $setting;
 		$this->titleList['SMStormEliteExperimental@nadeolabs']->scriptSettings[$setting->name] = $setting;
