@@ -241,11 +241,12 @@ class MatchSettingsFileService extends DedicatedFileService
 		{
 			case GameInfos::GAMEMODE_SCRIPT:
 				$info = $connection->getModeScriptInfo();
+				$settings = $connection->getModeScriptSettings();
 				foreach($info->paramDescs as $value)
 				{
 					$rule = new RuleDisplayable();
 					$rule->name = $value->name;
-					$rule->value = $value->default;
+					$rule->value = $settings[$value->name];
 					$rule->label = $value->name;
 					$rule->documentation = $value->desc;
 					if($value->type == 'boolean')
