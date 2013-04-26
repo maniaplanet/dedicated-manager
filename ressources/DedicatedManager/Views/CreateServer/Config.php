@@ -257,14 +257,14 @@ $r = ManiaLib\Application\Request::getInstance();
 							<strong><?php echo _('Ladder limit min'); ?></strong><br/>
 							<i><?php echo _('Enter the minimal number of ladder points required to connect to the server'); ?></i>
 						</label>
-						<input type="number" name="options[ladderServerLimitMin]" id="ladderServerLimitMin" value="<?php echo $options->ladderServerLimitMin ?>" min="0" max="80000" step="10000"/>
+						<input type="number" name="options[ladderServerLimitMin]" id="ladderServerLimitMin" value="<?php echo $options->ladderServerLimitMin ?>" min="0" max="80000" step="500"/>
 					</li>
 					<li data-role="fieldcontain">
 						<label for="ladderServerLimitMax">
 							<strong><?php echo _('Ladder limit max'); ?></strong><br/>
 							<i><?php echo _('Enter the maximum number of ladder points to win on the server'); ?></i>
 						</label>
-						<input type="number" name="options[ladderServerLimitMax]" id="ladderServerLimitMax" value="<?php echo $options->ladderServerLimitMax ?>" min="0" max="100000" step="10000"/>
+						<input type="number" name="options[ladderServerLimitMax]" id="ladderServerLimitMax" value="<?php echo $options->ladderServerLimitMax ?>" min="0" max="100000" step="500"/>
 					</li>
 				</ul>
 			</fieldset>
