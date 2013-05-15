@@ -233,6 +233,78 @@ class CreateServer extends Create
 		$this->session->set('success', _('Your server has been successfully started'));
 		$this->goHome();
 	}
+	
+	function quickStart($configFile = '', $matchFile = '', $isLan = false, $serverName = null, $login = null, $password = null)
+	{
+		$service = new \DedicatedManager\Services\ConfigFileService();
+		$configFileList = $service->getList();
+		if($configFile)
+		{
+			list($config, $account, ,) = $service->get($configFile);
+		}
+		else
+		{
+			$config = new \DedicatedManager\Services\ServerOptions();
+			$account = new \DedicatedManager\Services\Account();
+		}
+		$service = new \DedicatedManager\Services\MatchSettingsFileService();
+		$matchSettingsFileList = $service->getList();
+		$this->response->configFileList = $configFileList;
+		$this->response->matchSettingsFileList = $matchSettingsFileList;
+		$this->response->configFile = $configFile;
+		$this->response->matchFile = $matchFile;
+		$this->response->isLan = $isLan;
+		$this->response->serverName = ($config->name && !$serverName ? $config->name : $serverName);
+		$this->response->serverLogin = ($account->login && !$login ? $account->login : $login);
+		$this->response->serverPassword = ($account->password && !$password ? $account->password : $password);
+
+	}
+	
+	function doQuickStart($configFile, $matchFile, $serverName = '', $login = '', $password = '', $isLan = false)
+	{
+		$options = array();
+		if($serverName)
+		{
+			$options['servername'] = $serverName;
+		}
+		if($login)
+		{
+			$options['login'] = $login;
+		}
+		if($password)
+		{
+			$options['password'] = $password;
+		}
+		
+		$errors = array();
+		try
+		{
+			$configService = new \DedicatedManager\Services\ConfigFileService();
+			list(,,, $authLevel) = $configService->get($configFile);
+
+			$error = _('An error appeared while starting the server.');
+			$service = new \DedicatedManager\Services\ServerService();
+			$server = new \DedicatedManager\Services\Server();
+			$server->rpcHost = '127.0.0.1';
+			$server->rpcPort = $service->start($configFile, $matchFile, (bool) $isLan, $options);
+			$server->rpcPassword = $authLevel->superAdmin;
+			$service->register($server);
+		}
+		catch(\Exception $e)
+		{
+			\ManiaLib\Application\ErrorHandling::logException($e);
+			$errors[] = $error;
+		}
+		
+		if($errors)
+		{
+			$this->session->set('error', $errors);
+			$this->request->redirectArgList('../quickStart');
+		}
+
+		$this->session->set('success', _('Your server has been successfully started'));
+		$this->goHome();
+	}
 
 	function goHome()
 	{

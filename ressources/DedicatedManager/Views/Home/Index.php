@@ -8,6 +8,7 @@ $r = ManiaLib\Application\Request::getInstance();
 	<div data-role="content">
 	<?php if($isAdmin): ?>
 		<a href="<?php echo $r->createLinkArgList('/create-server') ?>" data-ajax="false" data-role="button" data-icon="plus"><?php echo _('Start a new server') ?></a>
+		<a href="<?php echo $r->createLinkArgList('/create-server/quick-start/') ?>" data-ajax="false" data-role="button" data-icon="plus"><?php echo _('Quick start a new server') ?></a>
 		<a href="<?php echo $r->createLinkArgList('/create-relay') ?>" data-ajax="false" data-role="button" data-icon="plus"><?php echo _('Start a new relay server') ?></a>
 		<a href="<?php echo $r->createLinkArgList('/add-server') ?>" data-ajax="false" data-role="button" data-icon="plus"><?php echo _('Add an already running server') ?></a>
 		<a href="<?php echo $r->createLinkArgList('/configs') ?>" data-ajax="false" data-role="button" data-icon="gear"><?php echo _('Manage your config files') ?></a>
