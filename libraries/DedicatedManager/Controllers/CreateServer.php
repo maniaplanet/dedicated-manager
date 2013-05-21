@@ -234,33 +234,39 @@ class CreateServer extends Create
 		$this->goHome();
 	}
 	
-	function quickStart($configFile = '', $matchFile = '', $isLan = false, $serverName = null, $login = null, $password = null)
+	function quickStart($configFile = '', $matchFile = '', $isLan = false, $serverName = null, $login = null, $password = null, $title = null)
 	{
 		$service = new \DedicatedManager\Services\ConfigFileService();
 		$configFileList = $service->getList();
 		if($configFile)
 		{
-			list($config, $account, ,) = $service->get($configFile);
+			list($config, $account, $system,) = $service->get($configFile);
 		}
 		else
 		{
 			$config = new \DedicatedManager\Services\ServerOptions();
 			$account = new \DedicatedManager\Services\Account();
+			$system = new \DedicatedManager\Services\SystemConfig();
 		}
 		$service = new \DedicatedManager\Services\MatchSettingsFileService();
 		$matchSettingsFileList = $service->getList();
+		$service = new \DedicatedManager\Services\TitleService();
+		$titles = $service->getList();
+		
 		$this->response->configFileList = $configFileList;
 		$this->response->matchSettingsFileList = $matchSettingsFileList;
+		$this->response->titles = $titles;
 		$this->response->configFile = $configFile;
 		$this->response->matchFile = $matchFile;
 		$this->response->isLan = $isLan;
 		$this->response->serverName = ($config->name && !$serverName ? $config->name : $serverName);
 		$this->response->serverLogin = ($account->login && !$login ? $account->login : $login);
 		$this->response->serverPassword = ($account->password && !$password ? $account->password : $password);
+		$this->response->title = ($system->title && !$title ? $system->title : $title);
 
 	}
 	
-	function doQuickStart($configFile, $matchFile, $serverName = '', $login = '', $password = '', $isLan = false)
+	function doQuickStart($configFile, $matchFile, $serverName = '', $login = '', $password = '', $isLan = false, $title = null)
 	{
 		$options = array();
 		if($serverName)
@@ -274,6 +280,10 @@ class CreateServer extends Create
 		if($password)
 		{
 			$options['password'] = $password;
+		}
+		if($title)
+		{
+			$options['title'] = $title;
 		}
 		
 		$errors = array();

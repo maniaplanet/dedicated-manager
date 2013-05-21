@@ -27,15 +27,33 @@ $r = ManiaLib\Application\Request::getInstance();
 						</select>
 					</li>
 					<li data-role="fieldcontain">
-						<label for="matchFile">
+						<label for="quickMatchFile">
 							<strong><?php echo _('Config file'); ?></strong><br/>
 							<i><?php echo _('Select the config file you want to use') ?></i>
 						</label>
-						<select id="matchFile" name="matchFile" size="5" data-native-menu="false">
+						<select id="quickMatchFile" name="matchFile" size="5" data-native-menu="false">
 						<option <?php echo in_array($matchFile, $matchSettingsFileList) ? '' : 'selected="selected"'; ?>><?php echo _('Select file') ?></option>
 						<?php foreach($matchSettingsFileList as $setting): ?>
 							<option value="<?php echo $setting ?>" <?php echo $setting == $matchFile ? 'selected="selected"': ''; ?>><?php echo $setting ?></option>
 						<?php endforeach; ?>
+						</select>
+					</li>
+					<li data-role="fieldcontain">
+						<label for="title">
+							<strong><?php echo _('Game title'); ?></strong><br/>
+							<i><?php echo _('Select the ManiaPlanet Title you want to use') ?></i>
+						</label>
+						<select id="title" required="required" name="title" data-native-menu="false">
+							<optgroup label="<?php echo _('Official titles') ?>">
+								<option value="TMCanyon" <?php echo $title == 'TMCanyon' ? 'selected="selected"' : '' ?>>TrackMania Canyon</option>
+								<option value="TMStadium" <?php echo $title == 'TMStadium' ? 'selected="selected"' : '' ?>>TrackMania Stadium</option>
+								<option value="SMStorm" <?php echo $title == 'SMStorm' ? 'selected="selected"' : '' ?>>ShootMania Storm</option>
+							</optgroup>
+							<optgroup label="<?php echo _('Custom titles') ?>">
+							<?php foreach($titles as $titleObject): ?>
+								<option value="<?php echo $titleObject->idString ?>" <?php echo $title == $titleObject->idString ? 'selected="selected"' : '' ?>><?php echo $titleObject->name ?></option>
+							<?php endforeach; ?>
+							</optgroup>
 						</select>
 					</li>
 
