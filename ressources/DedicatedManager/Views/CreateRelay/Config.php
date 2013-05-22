@@ -34,7 +34,7 @@ $r = ManiaLib\Application\Request::getInstance();
 			</fieldset>
 		</form>
 		
-		<form name="config" action="<?php echo $r->createLinkArgList('../set-config') ?>" method="get" data-ajax="false" data-role="collapsible-group">
+		<form name="config" action="<?php echo $r->createLinkArgList('../set-config') ?>" method="post" data-ajax="false" data-role="collapsible-group">
 			<fieldset data-role="collapsible" data-collapsed="false" data-theme="b">
 				<legend><?php echo _('Basic Server Configuration') ?></legend>
 				<ul data-role="listview">

@@ -61,8 +61,14 @@ abstract class Create extends AbstractController
 		$this->response->system = $this->session->get('system', $system);
 	}
 
-	function setConfig(array $options, array $account, array $system, array $authLevel, $isOnline = 0)
+	function setConfig()
 	{
+		$options = $this->request->getPostStrict('options');
+		$account = $this->request->getPostStrict('account');
+		$system = $this->request->getPostStrict('system');
+		$authLevel = $this->request->getPostStrict('authLevel');
+		$isOnline = $this->request->getPostStrict('isOnline');
+		
 		$options = \DedicatedManager\Services\ServerOptions::fromArray($options);
 		$options->callVoteRatio = $options->callVoteRatio < 0 ? -1 : $options->callVoteRatio / 100;
 		$options->nextCallVoteTimeOut = $options->nextCallVoteTimeOut * 1000;

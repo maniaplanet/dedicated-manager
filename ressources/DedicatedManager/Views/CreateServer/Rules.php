@@ -34,7 +34,7 @@ $r = ManiaLib\Application\Request::getInstance();
 			</fieldset>
 		</form>
 
-		<form action="<?php echo $r->createLinkArgList('../set-rules') ?>" method="get" data-ajax="false" data-role="collapsible-group">
+		<form action="<?php echo $r->createLinkArgList('../set-rules') ?>" method="post" data-ajax="false" data-role="collapsible-group">
 		<?php if($title == 'TMCanyon' || $title == 'TMStadium'): ?>
 			<fieldset data-role="collapsible" data-collapsed="false" data-theme="b">
 				<legend><?php echo _('Game mode selection') ?></legend>

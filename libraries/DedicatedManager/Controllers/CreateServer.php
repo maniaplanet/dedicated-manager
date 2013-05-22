@@ -13,9 +13,9 @@ use \DedicatedManager\Services\GameInfos;
 
 class CreateServer extends Create
 {
-	function setConfig(array $options, array $account, array $system, array $authLevel, $isOnline = 0)
+	function setConfig()
 	{
-		parent::setConfig($options, $account, $system, $authLevel, $isOnline);
+		parent::setConfig();
 
 		$this->request->redirectArgList('../rules');
 	}
@@ -72,8 +72,10 @@ class CreateServer extends Create
 		$header->rightLink = $this->request->createLinkArgList('../config');
 	}
 
-	function setRules($rules, array $scriptRules = array())
+	function setRules()
 	{
+		$rules = $this->request->getPostStrict('rules');
+		$scriptRules = $this->request->getPost('scriptRules', array());
 		list(,, $system) = $this->fetchAndAssertConfig(_('setting game options'));
 
 		$gameInfos = GameInfos::fromArray($rules);
@@ -144,8 +146,10 @@ class CreateServer extends Create
 		$header->rightLink = $this->request->createLinkArgList('../rules');
 	}
 
-	function setMaps($selected = '', $randomize = 0)
+	function setMaps()
 	{
+		$selected = $this->request->getPost('selected','');
+		$randomize = $this->request->getPost('randomize',0);
 		$this->fetchAndAssertConfig(_('selecting maps'));
 		$this->fetchAndAssertSettings(_('selecting maps'));
 
@@ -177,8 +181,10 @@ class CreateServer extends Create
 		$header->rightLink = $this->request->createLinkArgList('../maps');
 	}
 
-	function start($configFile, $matchFile)
+	function start()
 	{
+		$configFile = $this->request->getPostStrict('configFile');
+		$matchFile = $this->request->getPostStrict('matchFile');
 		list($options, $account, $system, $authLevel, $isLan) = $this->fetchAndAssertConfig(_('starting it'));
 		$gameInfos = $this->fetchAndAssertSettings(_('starting server'));
 		$maps = $this->fetchAndAssertMaps(_('starting server'));
@@ -266,8 +272,16 @@ class CreateServer extends Create
 
 	}
 	
-	function doQuickStart($configFile, $matchFile, $serverName = '', $login = '', $password = '', $isLan = false, $title = null)
+	function doQuickStart()
 	{
+		$configFile = $this->request->getPostStrict('configFile');
+		$matchFile = $this->request->getPostStrict('matchFile');
+		$serverName = $this->request->getPost('serverName', '');
+		$login = $this->request->getPost('login', '');
+		$password = $this->request->getPost('password', '');
+		$title = $this->request->getPost('title', null);
+		$isLan = $this->request->getPost('isLan', false);
+		
 		$options = array();
 		if($serverName)
 		{

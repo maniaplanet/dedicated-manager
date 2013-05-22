@@ -11,9 +11,9 @@ namespace DedicatedManager\Controllers;
 
 class CreateRelay extends Create
 {
-	function setConfig(array $options, array $account, array $system, array $authLevel, $isOnline = 0)
+	function setConfig()
 	{
-		parent::setConfig($options, $account, $system, $authLevel, $isOnline);
+		parent::setConfig();
 		$this->request->redirectArgList('../spectate');
 	}
 
@@ -37,8 +37,10 @@ class CreateRelay extends Create
 		$header->rightLink = $this->request->createLinkArgList('../config');
 	}
 
-	function start($configFile, $spectate)
+	function start()
 	{
+		$configFile = $this->request->getPostStrict('configFile');
+		$spectate = $this->request->getPostStrict('spectate');
 		list($options, $account, $system, $authLevel, $isLan) = $this->fetchAndAssertConfig(_('starting it'));
 		
 		$spectate = \DedicatedManager\Services\Spectate::fromArray($spectate);

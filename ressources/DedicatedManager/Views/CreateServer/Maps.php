@@ -12,7 +12,7 @@ $r = ManiaLib\Application\Request::getInstance();
     </div>
 	<?php echo DedicatedManager\Helpers\Box\Box::detect() ?>
     <div data-role="content">
-		<form action="<?php echo $r->createLinkArgList('../set-maps') ?>" data-ajax="false" method="get">
+		<form action="<?php echo $r->createLinkArgList('../set-maps') ?>" data-ajax="false" method="post">
 			<label for="randomize"><strong><?php echo _('Randomize map order') ?></strong></label>
 			<input type="checkbox" name="randomize" id="randomize" value="1" <?php echo $randomize ? 'checked="checked"' : '' ?>/>
 			<?php echo DedicatedManager\Helpers\Files::sortableTree($files, $selected, 'selected') ?>
