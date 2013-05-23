@@ -67,7 +67,7 @@ abstract class Create extends AbstractController
 		$account = $this->request->getPostStrict('account');
 		$system = $this->request->getPostStrict('system');
 		$authLevel = $this->request->getPostStrict('authLevel');
-		$isOnline = $this->request->getPostStrict('isOnline');
+		$isOnline = $this->request->getPost('isOnline',0);
 		
 		$options = \DedicatedManager\Services\ServerOptions::fromArray($options);
 		$options->callVoteRatio = $options->callVoteRatio < 0 ? -1 : $options->callVoteRatio / 100;
