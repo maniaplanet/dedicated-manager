@@ -28,8 +28,8 @@ $r = ManiaLib\Application\Request::getInstance();
 					</li>
 					<li data-role="fieldcontain">
 						<label for="quickMatchFile">
-							<strong><?php echo _('Config file'); ?></strong><br/>
-							<i><?php echo _('Select the config file you want to use') ?></i>
+							<strong><?php echo _('MatchSettings file'); ?></strong><br/>
+							<i><?php echo _('Select the MatchSettings file you want to use') ?></i>
 						</label>
 						<select id="quickMatchFile" name="matchFile" size="5" data-native-menu="false">
 						<option <?php echo in_array($matchFile, $matchSettingsFileList) ? '' : 'selected="selected"'; ?>><?php echo _('Select file') ?></option>
