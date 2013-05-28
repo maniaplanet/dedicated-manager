@@ -86,6 +86,28 @@ $r = ManiaLib\Application\Request::getInstance();
 						</label>
 						<input type="password" name="password" id="password" value="<?php echo htmlentities($serverPassword, ENT_QUOTES, 'utf-8') ?>"/>
 					</li>
+					<li data-role="fieldcontain">
+						<label for="startManialive">
+							<strong><?php echo _('Start Manialive') ?></strong><br/>
+							<i><?php echo _('If the box "yes" is selected manialive will be started with your server'); ?></i>
+						</label>
+						<select id="startManialive" name="startManialive" data-role="slider">
+							<option value="0" <?php echo !$startManialive ? 'selected="selected"' : '' ?>><?php echo _('No') ?></option>
+							<option value="1" <?php echo $startManialive ? 'selected="selected"' : '' ?>><?php echo _('Yes') ?></option>
+						</select>
+					</li>
+					<li data-role="fieldcontain">
+						<label for="manialiveConfig">
+							<strong><?php echo _('ManiaLive configuration file'); ?></strong><br/>
+							<i><?php echo _('Select the Manialive configuration file you want to use') ?></i>
+						</label>
+						<select id="manialiveConfig" name="manialiveConfig" size="5" data-native-menu="false">
+							<option <?php echo in_array($manialiveConfig, $manialiveFileList) ? '' : 'selected="selected"'; ?>><?php echo _('Select file') ?></option>
+						<?php foreach($manialiveFileList as $setting): ?>
+							<option value="<?php echo $setting ?>" <?php echo $setting == $manialiveConfig ? 'selected="selected"': ''; ?>><?php echo $setting ?></option>
+						<?php endforeach; ?>
+						</select>
+					</li>
 				</ul>
 			</fieldset>
 			<div class="ui-grid-a">

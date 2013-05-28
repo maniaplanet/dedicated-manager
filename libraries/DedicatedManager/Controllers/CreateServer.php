@@ -240,7 +240,7 @@ class CreateServer extends Create
 		$this->goHome();
 	}
 	
-	function quickStart($configFile = '', $matchFile = '', $isLan = false, $serverName = null, $login = null, $password = null, $title = null)
+	function quickStart($configFile = '', $matchFile = '', $isLan = false, $serverName = null, $login = null, $password = null, $title = null, $startManialive = false, $manialiveConfig = '')
 	{
 		$service = new \DedicatedManager\Services\ConfigFileService();
 		$configFileList = $service->getList();
@@ -258,17 +258,22 @@ class CreateServer extends Create
 		$matchSettingsFileList = $service->getList();
 		$service = new \DedicatedManager\Services\TitleService();
 		$titles = $service->getList();
+		$service = new \DedicatedManager\Services\ManialiveFileService();
+		$manialiveFileList = $service->getList();
 		
 		$this->response->configFileList = $configFileList;
 		$this->response->matchSettingsFileList = $matchSettingsFileList;
 		$this->response->titles = $titles;
 		$this->response->configFile = $configFile;
-		$this->response->matchFile = $matchFile;
-		$this->response->isLan = $isLan;
+		$this->response->matchFile = ($matchFile ? : $configFile);
+		$this->response->isLan = ($isLan || ($account->login && $account->password) ? true : false);
 		$this->response->serverName = ($config->name && !$serverName ? $config->name : $serverName);
 		$this->response->serverLogin = ($account->login && !$login ? $account->login : $login);
 		$this->response->serverPassword = ($account->password && !$password ? $account->password : $password);
 		$this->response->title = ($system->title && !$title ? $system->title : $title);
+		$this->response->startManialive = $startManialive;
+		$this->response->manialiveFileList = $manialiveFileList;
+		$this->response->manialiveConfig = ($manialiveConfig ? : $configFile);
 
 	}
 	
@@ -281,6 +286,8 @@ class CreateServer extends Create
 		$password = $this->request->getPost('password', '');
 		$title = $this->request->getPost('title', null);
 		$isLan = $this->request->getPost('isLan', false);
+		$startManialive = $this->request->getPost('startManialive', false);
+		$manialiveConfig = $this->request->getPost('manialiveConfig', '');
 		
 		$options = array();
 		if($serverName)
@@ -313,6 +320,17 @@ class CreateServer extends Create
 			$server->rpcPort = $service->start($configFile, $matchFile, (bool) $isLan, $options);
 			$server->rpcPassword = $authLevel->superAdmin;
 			$service->register($server);
+			
+			if($startManialive && $manialiveConfig)
+			{
+				usleep(200);
+				$service = new \DedicatedManager\Services\ManialiveService();
+				$service->start($manialiveConfig, array(
+						'address' => $server->rpcHost,
+						'rpcport' => $server->rpcPort,
+						'password' => $server->rpcPassword
+					));
+			}
 		}
 		catch(\Exception $e)
 		{

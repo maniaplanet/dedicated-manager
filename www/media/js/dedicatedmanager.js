@@ -133,7 +133,7 @@ $(document).bind('pageinit', function() {
 	$('#configFile,#matchFile').change(function() {
 		$(this).parents("form").submit();
 	});
-	$('#quickConfigFile,#quickMatchFile').change(function() {
+	$('#quickConfigFile').change(function() {
 		var vars = new Object(), hash;
 		var q = window.location.href.split('?')[1];
 		if (q !== undefined) {
@@ -144,14 +144,9 @@ $(document).bind('pageinit', function() {
 				vars[hash[0]] = hash[1];
 			}
 		}
-		if ($(this).prop('id') === 'quickConfigFile')
-		{
-			vars['configFile'] = $(this).val();
-		}
-		else
-		{
-			vars['matchFile'] = $(this).val();
-		}
-		window.location.assign(window.location.protocol+'//'+window.location.hostname+window.location.pathname+'?'+$.param(vars));
+		vars['configFile'] = $(this).val();
+		
+		window.location.replace(window.location.protocol+'//'+window.location.hostname+window.location.pathname+'?'+$.param(vars));
+		throw 'foo';
 	});
 });
