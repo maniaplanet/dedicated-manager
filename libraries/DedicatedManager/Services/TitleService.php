@@ -19,16 +19,6 @@ class TitleService
 	function __construct()
 	{
 		$title = new Title();
-		$title->idString = 'SMStormEliteExperimental@nadeolabs';
-		$title->game = 'ShootMania';
-		$title->name = 'ShootMania Storm Elite (experimental)';
-		$title->script = 'EliteExp.Script.txt';
-		$title->mapTypes = array('EliteArena', 'HeroesArena');
-		$title->filename = 'Elite (experimental).Title.Pack.Gbx';
-		$title->environment = 'Storm';
-		$this->titleList[$title->idString] = $title;
-		
-		$title = new Title();
 		$title->idString = 'SMStormElite@nadeolabs';
 		$title->game = 'ShootMania';
 		$title->name = 'ShootMania Storm Elite';
@@ -105,7 +95,6 @@ class TitleService
 		$setting->type = 'boolean';
 		$setting->desc = 'Enable script callbacks';
 		$this->titleList['SMStormElite@nadeolabs']->scriptSettings[$setting->name] = $setting;
-		$this->titleList['SMStormEliteExperimental@nadeolabs']->scriptSettings[$setting->name] = $setting;
 		$this->titleList['SMStormHeroes@nadeolabs']->scriptSettings[$setting->name] = $setting;
 		$this->titleList['SMStormJoust@nadeolabs']->scriptSettings[$setting->name] = $setting;
 		$this->titleList['SMStormCombo@nadeolabs']->scriptSettings[$setting->name] = $setting;
@@ -116,9 +105,8 @@ class TitleService
 		$setting->default = 0;
 		$setting->name = 'S_Mode';
 		$setting->type = 'integer';
-		$setting->desc = 'Mode 0: classic, 1: free, 2: king';
+		$setting->desc = 'Mode 0: classic, 1: free';
 		$this->titleList['SMStormElite@nadeolabs']->scriptSettings[$setting->name] = $setting;
-		$this->titleList['SMStormEliteExperimental@nadeolabs']->scriptSettings[$setting->name] = $setting;
 		$this->titleList['SMStormHeroes@nadeolabs']->scriptSettings[$setting->name] = $setting;
 		
 		$setting = new ScriptSettings();
@@ -127,7 +115,6 @@ class TitleService
 		$setting->type = 'integer';
 		$setting->desc = 'Attack time limit';
 		$this->titleList['SMStormElite@nadeolabs']->scriptSettings[$setting->name] = $setting;
-		$this->titleList['SMStormEliteExperimental@nadeolabs']->scriptSettings[$setting->name] = $setting;
 		$this->titleList['SMStormHeroes@nadeolabs']->scriptSettings[$setting->name] = $setting;
 		
 		$setting = new ScriptSettings();
@@ -136,7 +123,6 @@ class TitleService
 		$setting->type = 'integer';
 		$setting->desc = 'Capture time limit';
 		$this->titleList['SMStormElite@nadeolabs']->scriptSettings[$setting->name] = $setting;
-		$this->titleList['SMStormEliteExperimental@nadeolabs']->scriptSettings[$setting->name] = $setting;
 		$this->titleList['SMStormHeroes@nadeolabs']->scriptSettings[$setting->name] = $setting;
 		
 		$setting = new ScriptSettings();
@@ -145,7 +131,6 @@ class TitleService
 		$setting->type = 'real';
 		$setting->desc = 'Capture duration by pole';
 		$this->titleList['SMStormElite@nadeolabs']->scriptSettings[$setting->name] = $setting;
-		$this->titleList['SMStormEliteExperimental@nadeolabs']->scriptSettings[$setting->name] = $setting;
 		$this->titleList['SMStormHeroes@nadeolabs']->scriptSettings[$setting->name] = $setting;
 		
 		$setting = new ScriptSettings();
@@ -154,7 +139,6 @@ class TitleService
 		$setting->type = 'integer';
 		$setting->desc = 'Warmup duration (0: disabled)';
 		$this->titleList['SMStormElite@nadeolabs']->scriptSettings[$setting->name] = $setting;
-		$this->titleList['SMStormEliteExperimental@nadeolabs']->scriptSettings[$setting->name] = $setting;
 		$this->titleList['SMStormHeroes@nadeolabs']->scriptSettings[$setting->name] = $setting;
 		$this->titleList['SMStormCombo@nadeolabs']->scriptSettings[$setting->name] = $setting;
 		
@@ -164,16 +148,6 @@ class TitleService
 		$setting->type = 'integer';
 		$setting->desc = 'Number of maps to win a match';
 		$this->titleList['SMStormElite@nadeolabs']->scriptSettings[$setting->name] = $setting;
-		$this->titleList['SMStormEliteExperimental@nadeolabs']->scriptSettings[$setting->name] = $setting;
-		$this->titleList['SMStormHeroes@nadeolabs']->scriptSettings[$setting->name] = $setting;
-		
-		$setting = new ScriptSettings();
-		$setting->default = 3;
-		$setting->name = 'S_SubmatchWin';
-		$setting->type = 'integer';
-		$setting->desc = '(King) Number of matches to win';
-		$this->titleList['SMStormElite@nadeolabs']->scriptSettings[$setting->name] = $setting;
-		$this->titleList['SMStormEliteExperimental@nadeolabs']->scriptSettings[$setting->name] = $setting;
 		$this->titleList['SMStormHeroes@nadeolabs']->scriptSettings[$setting->name] = $setting;
 		
 		$setting = new ScriptSettings();
@@ -182,7 +156,6 @@ class TitleService
 		$setting->type = 'integer';
 		$setting->desc = 'Minimum points gap to win a map';
 		$this->titleList['SMStormElite@nadeolabs']->scriptSettings[$setting->name] = $setting;
-		$this->titleList['SMStormEliteExperimental@nadeolabs']->scriptSettings[$setting->name] = $setting;
 		$this->titleList['SMStormHeroes@nadeolabs']->scriptSettings[$setting->name] = $setting;
 		
 		$setting = new ScriptSettings();
@@ -191,7 +164,6 @@ class TitleService
 		$setting->type = 'integer';
 		$setting->desc = 'Default map tie-break start';
 		$this->titleList['SMStormElite@nadeolabs']->scriptSettings[$setting->name] = $setting;
-		$this->titleList['SMStormEliteExperimental@nadeolabs']->scriptSettings[$setting->name] = $setting;
 		$this->titleList['SMStormHeroes@nadeolabs']->scriptSettings[$setting->name] = $setting;
 		
 		$setting = new ScriptSettings();
@@ -200,7 +172,6 @@ class TitleService
 		$setting->type = 'integer';
 		$setting->desc = 'Decider map tie-break start';
 		$this->titleList['SMStormElite@nadeolabs']->scriptSettings[$setting->name] = $setting;
-		$this->titleList['SMStormEliteExperimental@nadeolabs']->scriptSettings[$setting->name] = $setting;
 		$this->titleList['SMStormHeroes@nadeolabs']->scriptSettings[$setting->name] = $setting;
 		
 		$setting = new ScriptSettings();
@@ -209,9 +180,10 @@ class TitleService
 		$setting->type = 'string';
 		$setting->desc = 'Neutral Emblem Url';
 		$this->titleList['SMStormElite@nadeolabs']->scriptSettings[$setting->name] = $setting;
-		$this->titleList['SMStormEliteExperimental@nadeolabs']->scriptSettings[$setting->name] = $setting;
 		$this->titleList['SMStormHeroes@nadeolabs']->scriptSettings[$setting->name] = $setting;
 		$this->titleList['SMStormJoust@nadeolabs']->scriptSettings[$setting->name] = $setting;
+		$this->titleList['SMStormRoyal@nadeolabs']->scriptSettings[$setting->name] = $setting;
+		$this->titleList['SMStormRoyalExperimental@nadeolabs']->scriptSettings[$setting->name] = $setting;
 		
 		$setting = new ScriptSettings();
 		$setting->default = 1;
@@ -219,7 +191,6 @@ class TitleService
 		$setting->type = 'real';
 		$setting->desc = 'Time between round multiplier';
 		$this->titleList['SMStormElite@nadeolabs']->scriptSettings[$setting->name] = $setting;
-		$this->titleList['SMStormEliteExperimental@nadeolabs']->scriptSettings[$setting->name] = $setting;
 		$this->titleList['SMStormHeroes@nadeolabs']->scriptSettings[$setting->name] = $setting;
 		
 		$setting = new ScriptSettings();
@@ -228,7 +199,6 @@ class TitleService
 		$setting->type = 'integer';
 		$setting->desc = 'Matchmaking match end duration (-1: infinite)';
 		$this->titleList['SMStormElite@nadeolabs']->scriptSettings[$setting->name] = $setting;
-		$this->titleList['SMStormEliteExperimental@nadeolabs']->scriptSettings[$setting->name] = $setting;
 		$this->titleList['SMStormHeroes@nadeolabs']->scriptSettings[$setting->name] = $setting;
 		$this->titleList['SMStormJoust@nadeolabs']->scriptSettings[$setting->name] = $setting;
 		$this->titleList['SMStormCombo@nadeolabs']->scriptSettings[$setting->name] = $setting;
@@ -239,7 +209,6 @@ class TitleService
 		$setting->type = 'integer';
 		$setting->desc = 'Map points limit';
 		$this->titleList['SMStormElite@nadeolabs']->scriptSettings[$setting->name] = $setting;
-		$this->titleList['SMStormEliteExperimental@nadeolabs']->scriptSettings[$setting->name] = $setting;
 		$this->titleList['SMStormHeroes@nadeolabs']->scriptSettings[$setting->name] = $setting;
 		
 		$setting = new ScriptSettings();
@@ -248,7 +217,6 @@ class TitleService
 		$setting->type = 'boolean';
 		$setting->desc = 'Use draft mode before match';
 		$this->titleList['SMStormElite@nadeolabs']->scriptSettings[$setting->name] = $setting;
-		$this->titleList['SMStormEliteExperimental@nadeolabs']->scriptSettings[$setting->name] = $setting;
 		
 		$setting = new ScriptSettings();
 		$setting->default = 4;
@@ -256,7 +224,6 @@ class TitleService
 		$setting->type = 'integer';
 		$setting->desc = 'Number of map to ban during draft (-1: ban all)';
 		$this->titleList['SMStormElite@nadeolabs']->scriptSettings[$setting->name] = $setting;
-		$this->titleList['SMStormEliteExperimental@nadeolabs']->scriptSettings[$setting->name] = $setting;
 		
 		$setting = new ScriptSettings();
 		$setting->default = 3;
@@ -264,7 +231,6 @@ class TitleService
 		$setting->type = 'integer';
 		$setting->desc = 'Number of map to pick during draft';
 		$this->titleList['SMStormElite@nadeolabs']->scriptSettings[$setting->name] = $setting;
-		$this->titleList['SMStormEliteExperimental@nadeolabs']->scriptSettings[$setting->name] = $setting;
 		
 		$setting = new ScriptSettings();
 		$setting->default = 0;
@@ -272,7 +238,6 @@ class TitleService
 		$setting->type = 'boolean';
 		$setting->desc = 'Elite Beta 2 gameplay';
 		$this->titleList['SMStormElite@nadeolabs']->scriptSettings[$setting->name] = $setting;
-		$this->titleList['SMStormEliteExperimental@nadeolabs']->scriptSettings[$setting->name] = $setting;
 		
 		$setting = new ScriptSettings();
 		$setting->default = 0;
@@ -280,7 +245,6 @@ class TitleService
 		$setting->type = 'boolean';
 		$setting->desc = 'Force the use of the local setting for weapons selection';
 		$this->titleList['SMStormElite@nadeolabs']->scriptSettings[$setting->name] = $setting;
-		$this->titleList['SMStormEliteExperimental@nadeolabs']->scriptSettings[$setting->name] = $setting;
 		
 		$setting = new ScriptSettings();
 		$setting->default = 0;
@@ -288,7 +252,6 @@ class TitleService
 		$setting->type = 'boolean';
 		$setting->desc = 'Allow defenders to select their weapons';
 		$this->titleList['SMStormElite@nadeolabs']->scriptSettings[$setting->name] = $setting;
-		$this->titleList['SMStormEliteExperimental@nadeolabs']->scriptSettings[$setting->name] = $setting;
 		
 		$setting = new ScriptSettings();
 		$setting->default = 1;
@@ -296,7 +259,6 @@ class TitleService
 		$setting->type = 'boolean';
 		$setting->desc = 'Display the defenders with Laser through walls';
 		$this->titleList['SMStormElite@nadeolabs']->scriptSettings[$setting->name] = $setting;
-		$this->titleList['SMStormEliteExperimental@nadeolabs']->scriptSettings[$setting->name] = $setting;
 		
 		
 		$setting = new ScriptSettings();
@@ -529,9 +491,7 @@ class TitleService
 		$setting->name = 'S_UseLobby';
 		$setting->type = 'boolean';
 		$setting->desc = 'Launch server in lobby mode';
-	
 		$this->titleList['SMStormElite@nadeolabs']->scriptSettings[$setting->name] = $setting;
-		$this->titleList['SMStormEliteExperimental@nadeolabs']->scriptSettings[$setting->name] = $setting;
 		$this->titleList['SMStormJoust@nadeolabs']->scriptSettings[$setting->name] = $setting;
 		$this->titleList['SMStormCombo@nadeolabs']->scriptSettings[$setting->name] = $setting;
                 
@@ -541,9 +501,22 @@ class TitleService
 		$setting->type = 'integer';
 		$setting->desc = 'Time limit in lobby mode (sec., 0: no limit)';
 		$this->titleList['SMStormElite@nadeolabs']->scriptSettings[$setting->name] = $setting;
-		$this->titleList['SMStormEliteExperimental@nadeolabs']->scriptSettings[$setting->name] = $setting;
 		$this->titleList['SMStormJoust@nadeolabs']->scriptSettings[$setting->name] = $setting;
 		$this->titleList['SMStormCombo@nadeolabs']->scriptSettings[$setting->name] = $setting;
+		
+		$setting = new ScriptSettings();
+		$setting->default = 10000;
+		$setting->name = 'S_LobbyMatchmakerTime';
+		$setting->type = 'integer';
+		$setting->desc = '';
+		$this->titleList['SMStormElite@nadeolabs']->scriptSettings[$setting->name] = $setting;
+		
+		$setting = new ScriptSettings();
+		$setting->default = false;
+		$setting->name = 'S_LobbyInstagib';
+		$setting->type = 'boolean';
+		$setting->desc = '';
+		$this->titleList['SMStormElite@nadeolabs']->scriptSettings[$setting->name] = $setting;
 			
 		$setting = new ScriptSettings();
 		$setting->default = false;
@@ -551,7 +524,6 @@ class TitleService
 		$setting->type = 'boolean';
 		$setting->desc = 'Use player clublinks';
 		$this->titleList['SMStormElite@nadeolabs']->scriptSettings[$setting->name] = $setting;
-		$this->titleList['SMStormEliteExperimental@nadeolabs']->scriptSettings[$setting->name] = $setting;
 		$this->titleList['SMStormHeroes@nadeolabs']->scriptSettings[$setting->name] = $setting;
 		$this->titleList['SMStormJoust@nadeolabs']->scriptSettings[$setting->name] = $setting;
 		$this->titleList['SMStormCombo@nadeolabs']->scriptSettings[$setting->name] = $setting;
@@ -562,7 +534,6 @@ class TitleService
 		$setting->type = 'string';
 		$setting->desc = 'Force Team 1 clublink';
 		$this->titleList['SMStormElite@nadeolabs']->scriptSettings[$setting->name] = $setting;
-		$this->titleList['SMStormEliteExperimental@nadeolabs']->scriptSettings[$setting->name] = $setting;
 		$this->titleList['SMStormHeroes@nadeolabs']->scriptSettings[$setting->name] = $setting;
 		$this->titleList['SMStormJoust@nadeolabs']->scriptSettings[$setting->name] = $setting;
 		$this->titleList['SMStormCombo@nadeolabs']->scriptSettings[$setting->name] = $setting;
@@ -573,10 +544,32 @@ class TitleService
 		$setting->type = 'string';
 		$setting->desc = 'Force Team 2 clublink';
 		$this->titleList['SMStormElite@nadeolabs']->scriptSettings[$setting->name] = $setting;
-		$this->titleList['SMStormEliteExperimental@nadeolabs']->scriptSettings[$setting->name] = $setting;
 		$this->titleList['SMStormHeroes@nadeolabs']->scriptSettings[$setting->name] = $setting;
 		$this->titleList['SMStormJoust@nadeolabs']->scriptSettings[$setting->name] = $setting;
 		$this->titleList['SMStormCombo@nadeolabs']->scriptSettings[$setting->name] = $setting;
+		
+		$setting = new ScriptSettings();
+		$setting->default = false;
+		$setting->name = 'S_Practice';
+		$setting->type = 'boolean';
+		$setting->desc = 'Play in practice mode';
+		$this->titleList['SMStormElite@nadeolabs']->scriptSettings[$setting->name] = $setting;
+		$this->titleList['SMStormHeroes@nadeolabs']->scriptSettings[$setting->name] = $setting;
+		
+		$setting = new ScriptSettings();
+		$setting->default = 3;
+		$setting->name = 'S_PracticeRoundLimit';
+		$setting->type = 'integer';
+		$setting->desc = 'Number of attack turns by player in practice mode';
+		$this->titleList['SMStormElite@nadeolabs']->scriptSettings[$setting->name] = $setting;
+		$this->titleList['SMStormHeroes@nadeolabs']->scriptSettings[$setting->name] = $setting;
+		
+		$setting = new ScriptSettings();
+		$setting->default = true;
+		$setting->name = 'S_DisplayRulesReminder';
+		$setting->type = 'boolean';
+		$setting->desc = 'Number of attack turns by player in practice mode';
+		$this->titleList['SMStormElite@nadeolabs']->scriptSettings[$setting->name] = $setting;
 	}
 
 	function getList()
