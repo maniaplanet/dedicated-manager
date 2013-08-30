@@ -220,8 +220,9 @@ class MatchSettingsFileService extends DedicatedFileService
 		{
 			$playlist->addChild('map')->addChild('file')->{0} = "\xEF\xBB\xBF".$map;
 		}
-
-		$playlist->asXML($this->directory.$filename.'.txt');
+		$filename = $this->directory.$filename.'.txt';
+		$playlist->asXML($filename);
+		return $filename;
 	}
 
 	/**

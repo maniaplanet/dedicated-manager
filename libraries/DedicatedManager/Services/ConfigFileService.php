@@ -258,7 +258,11 @@ class ConfigFileService extends DedicatedFileService
 		$systemConfig->addChild('proxy_login', (string) $system->proxyLogin);
 		$systemConfig->addChild('proxy_password', (string) $system->proxyPassword);
 
-		$dedicated->asXML($this->directory.$filename.'.txt');
+		$filename = $this->directory.$filename.'.txt';
+		
+		$dedicated->asXML($filename);
+		
+		return $filename;
 	}
 
 }
