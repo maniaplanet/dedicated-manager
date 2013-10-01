@@ -12,6 +12,9 @@
 			<li data-icon="gear" <?php echo $currentAction == 'rules' ? 'data-theme="e"' : '' ?>>
 				<a href="<?php echo htmlentities($r->createLinkArgList('../rules', 'host', 'port'), ENT_QUOTES, 'UTF-8') ?>" data-ajax="false"><?php echo _('Match rules') ?></a>
 			</li>
+			<li data-icon="gear" <?php echo $currentAction == 'commands' ? 'data-theme="e"' : '' ?>>
+				<a href="<?php echo htmlentities($r->createLinkArgList('../commands', 'host', 'port'), ENT_QUOTES, 'UTF-8') ?>" data-ajax="false"><?php echo _('Script commands') ?></a>
+			</li>
 		<?php endif; ?>
 			<li data-icon="gear" <?php echo $currentAction == 'config' ? 'data-theme="e"' : '' ?>>
 				<a href="<?php echo htmlentities($r->createLinkArgList('../config', 'host', 'port'), ENT_QUOTES, 'UTF-8') ?>" data-ajax="false"><?php echo _('Server configuration') ?></a>

@@ -335,6 +335,48 @@ class Server extends AbstractController
 		}
 		$this->request->redirectArgList('../rules', 'host', 'port');
 	}
+	
+	function commands()
+	{
+		$service = new \DedicatedManager\Services\ScriptService();
+		$matchCommands = $service->getActions($this->server->rpcHost, $this->server->rpcPort);
+		$this->response->matchCommands = $matchCommands;
+	}
+	
+	function setCommands($commands)
+	{
+		try
+		{
+			$service = new \DedicatedManager\Services\ScriptService();
+			$matchCommands = $service->getActions($this->server->rpcHost, $this->server->rpcPort);
+			foreach($commands as $key => $value)
+			{
+				switch ($matchCommands[$key]->type)
+				{
+					case 'int':
+						$commands[$key] = (int) $value;
+						break;
+					case 'double':
+						$commands[$key] = (double) $value;
+						break;
+					case 'boolean':
+						$commands[$key] = (bool) $value;
+						break;
+					case 'string':
+					default:
+						$commands[$key] = (string) $value;
+				}
+			}
+			$this->server->connection->sendModeScriptCommands($commands);
+			$this->session->set('success', _('Commands successfully passed'));
+		}
+		catch(\Exception $e)
+		{
+			\ManiaLib\Application\ErrorHandling::logException($e);
+			$this->session->set('error', _('An error occured while setting commands'));
+		}
+		$this->request->redirectArgList('../commands', 'host', 'port');
+	}
 
 	function config()
 	{
