@@ -40,14 +40,16 @@ class CreateServer extends Create
 			$gameInfos = new GameInfos();
 			$scriptSettings = array();
 		}
+		
+		$scriptService = new \DedicatedManager\Services\ScriptService();
 
-		$scripts = $service->getScriptList($system->title);
+		$scripts = $scriptService->getList($system->title);
 		$scriptIds = array();
 		$scriptsRules = array();
 		foreach($scripts as $script)
 		{
 			$scriptIds[$script] = uniqid();
-			$scriptsRules[$script] = $service->getScriptMatchRules($system->title, $script);
+			$scriptsRules[$script] = $scriptService->getFileMatchRules($system->title, $script);
 		}
 		
 		$gameInfos = $this->session->get('gameInfos', $gameInfos);
@@ -91,8 +93,8 @@ class CreateServer extends Create
 		$defaultRules = array();
 		if($gameInfos->gameMode == GameInfos::GAMEMODE_SCRIPT && $gameInfos->scriptName)
 		{
-			$service = new \DedicatedManager\Services\MatchSettingsFileService();
-			$defaultRules = $service->getScriptMatchRules($system->title, $gameInfos->scriptName);
+			$service = new \DedicatedManager\Services\ScriptService();
+			$defaultRules = $service->getFileMatchRules($system->title, $gameInfos->scriptName);
 			
 			if(isset($scriptRules[$gameInfos->scriptName]))
 				foreach($scriptRules[$gameInfos->scriptName] as $name => $value)
@@ -125,8 +127,8 @@ class CreateServer extends Create
 
 		if($gameInfos->gameMode == GameInfos::GAMEMODE_SCRIPT)
 		{
-			$service = new \DedicatedManager\Services\MatchSettingsFileService();
-			$type = $service->getScriptMapType($gameInfos->scriptName, $system->title);
+			$service = new \DedicatedManager\Services\ScriptService();
+			$type = $service->getFileMapType($gameInfos->scriptName, $system->title);
 		}
 		else
 		{

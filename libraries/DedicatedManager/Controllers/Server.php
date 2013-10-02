@@ -256,8 +256,8 @@ class Server extends AbstractController
 	 */
 	function rules()
 	{
-		$service = new \DedicatedManager\Services\MatchSettingsFileService();
-		$matchRules = $service->getCurrentMatchRules($this->server->rpcHost, $this->server->rpcPort);
+		$service = new \DedicatedManager\Services\ScriptService();
+		$matchRules = $service->getDedicatedMatchRules($this->server->connection);
 
 		$matchInfo = $this->server->connection->getNextGameInfo();
 		switch($matchInfo->gameMode)
@@ -339,8 +339,16 @@ class Server extends AbstractController
 	function commands()
 	{
 		$service = new \DedicatedManager\Services\ScriptService();
-		$matchCommands = $service->getActions($this->server->rpcHost, $this->server->rpcPort);
-		$this->response->matchCommands = $matchCommands;
+		if($this->server->connection->getCurrentGameInfo()->gameMode == GameInfos::GAMEMODE_SCRIPT)
+		{
+			$matchCommands = $service->getActions($this->server->connection);
+			$this->response->matchCommands = $matchCommands;
+		}
+		else
+		{
+			$this->session->set('error', _('The current server is not in script Mode'));
+			$this->request->redirectToReferer();
+		}
 	}
 	
 	function setCommands($commands)
@@ -348,7 +356,7 @@ class Server extends AbstractController
 		try
 		{
 			$service = new \DedicatedManager\Services\ScriptService();
-			$matchCommands = $service->getActions($this->server->rpcHost, $this->server->rpcPort);
+			$matchCommands = $service->getActions($this->server->connection);
 			foreach($commands as $key => $value)
 			{
 				switch ($matchCommands[$key]->type)
