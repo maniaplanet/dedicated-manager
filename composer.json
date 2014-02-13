@@ -19,5 +19,11 @@
         "php": ">=5.3",
         "maniaplanet/manialib": "dev-master"
     },
-    "minimum-stability": "dev"
+    "minimum-stability": "dev",
+	"autoload": {
+        "psr-4": {
+            "DedicatedManager\\": "DedicatedManager/",
+            "I18n\\": "I18n/",
+        }
+    }
 }
