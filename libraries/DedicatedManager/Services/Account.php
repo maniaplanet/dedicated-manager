@@ -9,7 +9,7 @@
 
 namespace DedicatedManager\Services;
 
-class Account extends \DedicatedApi\Structures\AbstractStructure
+class Account extends \Maniaplanet\DedicatedServer\Structures\AbstractStructure
 {
 	/** @var string */
 	public $login;

@@ -41,7 +41,7 @@ abstract class Files
 		return $str;
 	}
 	
-	static function rawMap(\DedicatedApi\Structures\Map $map, $name='maps[]', $checked=false, $withThumbnail=true, $disabled=false, $readonly=false)
+	static function rawMap(\Maniaplanet\DedicatedServer\Structures\Map $map, $name='maps[]', $checked=false, $withThumbnail=true, $disabled=false, $readonly=false)
 	{
 		$id = uniqid('maps-');
 		$str = sprintf(

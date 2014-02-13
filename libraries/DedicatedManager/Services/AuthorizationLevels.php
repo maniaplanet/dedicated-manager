@@ -9,7 +9,7 @@
 
 namespace DedicatedManager\Services;
 
-class AuthorizationLevels extends \DedicatedApi\Structures\AbstractStructure
+class AuthorizationLevels extends \Maniaplanet\DedicatedServer\Structures\AbstractStructure
 {
 	/** @var string */
 	public $superAdmin = 'SuperAdmin';

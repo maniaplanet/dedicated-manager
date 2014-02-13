@@ -9,7 +9,7 @@
  */
 namespace DedicatedManager\Services;
 
-class ServerOptions extends \DedicatedApi\Structures\ServerOptions
+class ServerOptions extends \Maniaplanet\DedicatedServer\Structures\ServerOptions
 {
 	/** @var int */
 	public $nextMaxPlayers = 16;
@@ -37,7 +37,7 @@ class ServerOptions extends \DedicatedApi\Structures\ServerOptions
 	public $clientInputsMaxLatency = 0;
 	/** @var bool */
 	public $disableHorns = false;
-	
+
 	function ensureCast()
 	{
 		$this->hideServer = (bool) $this->hideServer;

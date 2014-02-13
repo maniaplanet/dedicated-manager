@@ -9,7 +9,7 @@
 
 namespace DedicatedManager\Services;
 
-use DedicatedApi\Structures\ScriptSettings;
+use Maniaplanet\DedicatedServer\Structures\ScriptSettings;
 
 class MatchSettingsFileService extends DedicatedFileService
 {
@@ -18,7 +18,7 @@ class MatchSettingsFileService extends DedicatedFileService
 		$this->directory = \DedicatedManager\Config::getInstance()->dedicatedPath.'UserData/Maps/MatchSettings/';
 		$this->rootTag = '<playlist>';
 	}
-	
+
 	/**
 	 * @param GameInfos $gameInfos
 	 * @return string[]
@@ -70,15 +70,15 @@ class MatchSettingsFileService extends DedicatedFileService
 				$errors[] = sprintf(_('Wrong value for field "%s".'), $key);
 			}
 		}
-		
+
 		if($gameInfos->gameMode === GameInfos::GAMEMODE_SCRIPT && $gameInfos->scriptName == '')
 		{
 			$errors[] = _('You have to select a script to play in script mode.');
 		}
-		
+
 		return $errors;
 	}
-	
+
 	/**
 	 * @param string $filename
 	 * @return mixed[] 2 elements: GameInfos, string[]
@@ -119,7 +119,7 @@ class MatchSettingsFileService extends DedicatedFileService
 		$gameInfos->cupWarmUpDuration = (int) $playlist->gameinfos->cup_warmupduration;
 
 		$randomize = (int) $playlist->filter->random_map_order;
-		
+
 		$maps = array();
 		for($i = 0; $i < count($playlist->map); $i++)
 		{
@@ -128,7 +128,7 @@ class MatchSettingsFileService extends DedicatedFileService
 			$map = preg_replace('/^\xEF\xBB\xBF/', '', $map);
 			$maps[] = $map;
 		}
-		
+
 		$scriptSettings = array();
 		if($playlist->mode_script_settings)
 		{
@@ -150,7 +150,7 @@ class MatchSettingsFileService extends DedicatedFileService
 				$scriptSettings[$scriptSetting->name] = $scriptSetting;
 			}
 		}
-		
+
 		return array($gameInfos, $maps, $scriptSettings, $randomize);
 	}
 
@@ -203,7 +203,7 @@ class MatchSettingsFileService extends DedicatedFileService
 		$filter->addChild('sort_index', 1000);
 		$filter->addChild('random_map_order', (int) $randomize);
 		$filter->addChild('force_default_gamemode', 0);
-		
+
 		$modeScriptSettings = $playlist->addChild('mode_script_settings');
 		foreach($scriptSettings as $scriptSetting)
 		{

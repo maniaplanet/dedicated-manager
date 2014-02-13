@@ -48,7 +48,7 @@ class Title extends AbstractObject
 	public $filename;
 	
 	/**
-	 * @var \DedicatedApi\Structures\ScriptSettings[]
+	 * @var \Maniaplanet\DedicatedServer\Structures\ScriptSettings[]
 	 */
 	public $scriptSettings = array();
 

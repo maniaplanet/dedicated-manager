@@ -50,7 +50,7 @@ class CreateRelay extends Create
 				try
 				{
 					list($rpcHost, $rpcPort, $rpcPass) = explode(':', $spectate->managed, 3);
-					$connection = \DedicatedApi\Connection::factory($rpcHost, $rpcPort, 5, 'SuperAdmin', $rpcPass);
+					$connection = \Maniaplanet\DedicatedServer\Connection::factory($rpcHost, $rpcPort, 5, 'SuperAdmin', $rpcPass);
 					$info = $connection->getSystemInfo();
 					$gameServer = $info->publishedIp.':'.$info->port;
 					$password = $connection->getServerPasswordForSpectator();

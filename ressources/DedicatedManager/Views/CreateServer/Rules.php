@@ -1,6 +1,6 @@
 <?php
 require __DIR__.'/../Header.php';
-use \DedicatedApi\Structures\GameInfos;
+use Maniaplanet\DedicatedServer\Structures\GameInfos;
 $r = ManiaLib\Application\Request::getInstance();
 ?>
 <div data-role="page">

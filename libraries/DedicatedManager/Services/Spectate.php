@@ -9,7 +9,7 @@
 
 namespace DedicatedManager\Services;
 
-class Spectate extends \DedicatedApi\Structures\AbstractStructure
+class Spectate extends \Maniaplanet\DedicatedServer\Structures\AbstractStructure
 {
 	/** @var string */
 	public $method = 'managed';

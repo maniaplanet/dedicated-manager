@@ -9,10 +9,10 @@
 
 namespace DedicatedManager\Services;
 
-class GameInfos extends \DedicatedApi\Structures\GameInfos
+class GameInfos extends \Maniaplanet\DedicatedServer\Structures\GameInfos
 {
 	/** @var int */
-	public $gameMode = \DedicatedApi\Structures\GameInfos::GAMEMODE_SCRIPT;
+	public $gameMode = \Maniaplanet\DedicatedServer\Structures\GameInfos::GAMEMODE_SCRIPT;
 	/** @var string */
 	public $scriptName = '';
 	/** @var int */

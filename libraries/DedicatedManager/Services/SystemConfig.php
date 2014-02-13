@@ -9,7 +9,7 @@
 
 namespace DedicatedManager\Services;
 
-class SystemConfig extends \DedicatedApi\Structures\AbstractStructure
+class SystemConfig extends \Maniaplanet\DedicatedServer\Structures\AbstractStructure
 {
 	/** @var int */
 	public $connectionUploadrate = 2000;

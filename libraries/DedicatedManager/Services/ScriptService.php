@@ -9,38 +9,33 @@
  */
 namespace DedicatedManager\Services;
 
-use DedicatedApi\Structures\ScriptSettings;
+use Maniaplanet\DedicatedServer\Structures\ScriptSettings;
 
 class ScriptService
 {
 
-	function getActions(\DedicatedApi\Connection $connection) 
+	function getActions(\Maniaplanet\DedicatedServer\Connection $connection)
 	{
 		$infos = $connection->getModeScriptInfo();
 		$commandsArray = $infos->commandDescs;
 		$commands = array();
-		foreach($commandsArray as $elem)
+		foreach($commandsArray as $command)
 		{
-			$obj = new Command();
-			$obj->name = $elem['Name'];
-			$obj->description = $elem['Desc'];
-			$obj->type = $elem['Type'];
-			$obj->default = $elem['Default'];
-			$commands[$obj->name] = $obj;
-		}		
+			$commands[$command->name] = $command;
+		}
 		return $commands;
 	}
-	
+
 	/**
 	 * @param string $host
 	 * @param int $port
 	 * @return RuleDisplayable[]
 	 */
-	function getDedicatedMatchRules(\DedicatedApi\Connection $connection)
+	function getDedicatedMatchRules(\Maniaplanet\DedicatedServer\Connection $connection)
 	{
 		$gameInfo = $connection->getNextGameInfo();
 		$matchRules = array();
-		
+
 		switch($gameInfo->gameMode)
 		{
 			case GameInfos::GAMEMODE_SCRIPT:
@@ -65,7 +60,7 @@ class ScriptService
 					$matchRules[] = $rule;
 				}
 				break;
-				
+
 			case GameInfos::GAMEMODE_ROUNDS:
 				$rule = new RuleDisplayable();
 				$rule->name = 'roundsPointsLimit';
@@ -200,7 +195,7 @@ class ScriptService
 				$rule->documentation = _('0 will disable warm-up, otherwise it\'s the number of times the gold medal time.');
 				$matchRules[] = $rule;
 				break;
-			
+
 			case GameInfos::GAMEMODE_CUP:
 				$rule = new RuleDisplayable();
 				$rule->name = 'cupPointsLimit';
@@ -234,7 +229,7 @@ class ScriptService
 
 		return $matchRules;
 	}
-	
+
 	/**
 	 * @param string $title
 	 * @return string[]
@@ -260,7 +255,7 @@ class ScriptService
 		chdir($currentDir);
 		return $scripts;
 	}
-	
+
 	function getFileMatchRules($title, $scriptName = '')
 	{
 		$titleService = new TitleService();
@@ -313,7 +308,7 @@ class ScriptService
 					$rule->type = 'real';
 				else
 					$rule->type = 'string';
-				
+
 				$matchRules[$rule->name] = $rule;
 			}
 		}
@@ -355,7 +350,7 @@ class ScriptService
 				$scripts = array_merge($this->getFileMapType($file, $title),$scripts);
 			}
 		}
-			
+
 		$matches = array();
 		if(preg_match('/\#Const\\s+(?:CompatibleChallengeTypes|CompatibleMapTypes)\\s*"([^"]*)"/ixu', $scriptContent, $matches))
 		{
@@ -372,7 +367,7 @@ class ScriptService
 
 		return $scripts;
 	}
-	
+
 	private function getGame($title)
 	{
 		if(preg_match('/^SM(?:Storm)$/ixu', $title))

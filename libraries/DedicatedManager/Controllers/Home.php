@@ -97,7 +97,7 @@ class Home extends AbstractController
 		try
 		{
 			$server = $service->get($host, $port);
-			$this->connection = \DedicatedApi\Connection::factory($server->rpcHost, $server->rpcPort, 5, 'SuperAdmin', $server->rpcPassword);
+			$this->connection = \Maniaplanet\DedicatedServer\Connection::factory($server->rpcHost, $server->rpcPort, 5, 'SuperAdmin', $server->rpcPassword);
 			$info = $this->connection->getSystemInfo();
 			$this->response->running = $info->serverLogin;
 		}

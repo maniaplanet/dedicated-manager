@@ -9,7 +9,7 @@
 
 namespace DedicatedManager\Controllers;
 
-use DedicatedApi\Structures\GameInfos;
+use Maniaplanet\DedicatedServer\Structures\GameInfos;
 
 class Server extends AbstractController
 {
@@ -153,7 +153,7 @@ class Server extends AbstractController
 			{
 				$current = current($mapList);
 			}while($current->fileName !== $map && next($mapList) !== false);
-			
+
 			$key = key($mapList);
 			$this->server->connection->jumpToMapIndex($key);
 			$message = _('The server is jumping to the map');
@@ -252,7 +252,7 @@ class Server extends AbstractController
 	}
 
 	/**
-	 * @norelay 
+	 * @norelay
 	 */
 	function rules()
 	{
@@ -335,7 +335,7 @@ class Server extends AbstractController
 		}
 		$this->request->redirectArgList('../rules', 'host', 'port');
 	}
-	
+
 	function commands()
 	{
 		$service = new \DedicatedManager\Services\ScriptService();
@@ -350,7 +350,7 @@ class Server extends AbstractController
 			$this->request->redirectToReferer();
 		}
 	}
-	
+
 	function setCommands($commands)
 	{
 		try
@@ -845,7 +845,7 @@ class Server extends AbstractController
 		$this->response->players = $this->players;
 //		$this->response->chat = $this->connection->getChatLines();
 	}
-	
+
 	/**
 	 * @redirect
 	 */
@@ -874,11 +874,11 @@ class Server extends AbstractController
 	}
 
 	/**
-	 * @norelay 
+	 * @norelay
 	 */
 	function teams()
 	{
-		
+
 	}
 
 	/**
@@ -946,7 +946,7 @@ class Server extends AbstractController
 		}
 		$this->request->redirectArgList('../managers', 'host', 'port');
 	}
-	
+
 	function controllers()
 	{
 		$this->server->connection->enableCallbacks(true);
@@ -965,7 +965,7 @@ class Server extends AbstractController
 		}
 		$this->response->controllers = array_unique($controllers);
 	}
-	
+
 	/**
 	 * @redirect
 	 */
@@ -976,7 +976,7 @@ class Server extends AbstractController
 			$this->session->set('error', _('You have to select at least one controller'));
 			$this->request->redirectArgList('../controllers', 'host', 'port');
 		}
-		
+
 		foreach($controllers as $controller)
 		{
 			$this->server->connection->dedicatedEcho('DedicatedManager '.DEDICATED_MANAGER_VERSION, '?stop:'.$controller);

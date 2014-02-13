@@ -67,7 +67,7 @@ class ManialiveConfig
 	}
 }
 
-class _ConfigPart extends \DedicatedApi\Structures\AbstractStructure
+class _ConfigPart extends \Maniaplanet\DedicatedServer\Structures\AbstractStructure
 {
 	/** @var string */
 	public $logsPath = '';
@@ -85,7 +85,7 @@ class _ConfigPart extends \DedicatedApi\Structures\AbstractStructure
         public $enableToggleGUI = false;
 }
 
-class _DatabasePart extends \DedicatedApi\Structures\AbstractStructure
+class _DatabasePart extends \Maniaplanet\DedicatedServer\Structures\AbstractStructure
 {
 	/** @var bool */
 	public $enable = true;
@@ -101,7 +101,7 @@ class _DatabasePart extends \DedicatedApi\Structures\AbstractStructure
 	public $database = 'ManiaLive';
 }
 
-class _ThreadingPart extends \DedicatedApi\Structures\AbstractStructure
+class _ThreadingPart extends \Maniaplanet\DedicatedServer\Structures\AbstractStructure
 {
 	/** @var bool */
 	public $enabled = false;
@@ -111,7 +111,7 @@ class _ThreadingPart extends \DedicatedApi\Structures\AbstractStructure
 	public $maxTries = 3;
 }
 
-class _WsApiPart extends \DedicatedApi\Structures\AbstractStructure
+class _WsApiPart extends \Maniaplanet\DedicatedServer\Structures\AbstractStructure
 {
 	/** @var string */
 	public $username = '';

@@ -34,17 +34,17 @@ class Server extends AbstractObject
 	/** @var bool */
 	public $isRelay;
 	
-	/** @var \DedicatedApi\Connection */
+	/** @var \Maniaplanet\DedicatedServer\Connection */
 	public $connection;
 	
 	function openConnection()
 	{
-		$this->connection = \DedicatedApi\Connection::factory($this->rpcHost, $this->rpcPort, 5, 'SuperAdmin', $this->rpcPassword);
+		$this->connection = \Maniaplanet\DedicatedServer\Connection::factory($this->rpcHost, $this->rpcPort, 5, 'SuperAdmin', $this->rpcPassword);
 	}
 	
 	function closeConnection()
 	{
-		\DedicatedApi\Connection::delete($this->rpcHost, $this->rpcPort);
+		\Maniaplanet\DedicatedServer\Connection::delete($this->rpcHost, $this->rpcPort);
 	}
 	
 	function fetchDetails()
