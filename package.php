@@ -17,13 +17,13 @@ function recursiveBuildPackage($localPath, $archivePath, ZipArchive $zipArchive)
 			$newArchivePath = $archivePath.$file.'/';
 			$newLocalPath = $localPath.$file.'/';
 			$zipArchive->addEmptyDir($newArchivePath);
-			printf("create folder %s\n",$newLocalPath);
+			printf("create folder %s\n\tas %s\n",$newLocalPath, $newArchivePath);
 			recursiveBuildPackage($newLocalPath, $newArchivePath, $zipArchive);
 		}
 		else
 		{
-			printf("add %s%s\n",$localPath,$file);
-			$zipArchive->addFile($file, $archivePath.$file);
+			printf("add %s\n\tas %s\n",$localPath.$file,$archivePath.$file);
+			$zipArchive->addFile($localPath.$file, $archivePath.$file);
 		}
 	}
 }
