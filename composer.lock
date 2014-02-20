@@ -3,20 +3,20 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "c268160ef0bd3c7f98e5239ea5e56f18",
+    "hash": "8a90864c3ccada20fccccda72124626a",
     "packages": [
         {
             "name": "maniaplanet/dedicated-server-api",
-            "version": "dev-master",
+            "version": "4.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/maniaplanet/dedicated-server-api.git",
-                "reference": "73f857cef30f8b177141f75dd44af5c10bb7c491"
+                "reference": "6b2cf9be51c5d1169d7a589d90d85b047af4ce9e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/maniaplanet/dedicated-server-api/zipball/73f857cef30f8b177141f75dd44af5c10bb7c491",
-                "reference": "73f857cef30f8b177141f75dd44af5c10bb7c491",
+                "url": "https://api.github.com/repos/maniaplanet/dedicated-server-api/zipball/6b2cf9be51c5d1169d7a589d90d85b047af4ce9e",
+                "reference": "6b2cf9be51c5d1169d7a589d90d85b047af4ce9e",
                 "shasum": ""
             },
             "require": {
@@ -34,8 +34,8 @@
             ],
             "authors": [
                 {
-                    "name": "NadeoLive",
-                    "email": "livedev@nadeo.com",
+                    "name": "Reaby",
+                    "email": "petri.jarvisalo@gmail.com",
                     "homepage": "http://www.nadeo.com/"
                 }
             ],
@@ -46,20 +46,20 @@
                 "ShootMania",
                 "TrackMania"
             ],
-            "time": "2014-02-04 08:05:28"
+            "time": "2014-01-20 08:30:27"
         },
         {
             "name": "maniaplanet/manialib",
-            "version": "dev-master",
+            "version": "3.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/maniaplanet/manialib.git",
-                "reference": "de13b05a2ac2dbc13e67e08603339d6897b1b330"
+                "reference": "f6793944f9ad4b348bae491efc4d69ff815f0bd2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/maniaplanet/manialib/zipball/de13b05a2ac2dbc13e67e08603339d6897b1b330",
-                "reference": "de13b05a2ac2dbc13e67e08603339d6897b1b330",
+                "url": "https://api.github.com/repos/maniaplanet/manialib/zipball/f6793944f9ad4b348bae491efc4d69ff815f0bd2",
+                "reference": "f6793944f9ad4b348bae491efc4d69ff815f0bd2",
                 "shasum": ""
             },
             "require": {
@@ -77,8 +77,8 @@
             ],
             "authors": [
                 {
-                    "name": "NadeoLive",
-                    "email": "livedev@nadeo.com",
+                    "name": "Nadeo",
+                    "email": "contact@nadeo.com",
                     "homepage": "http://www.nadeo.com/"
                 }
             ],
@@ -89,7 +89,7 @@
                 "ShootMania",
                 "TrackMania"
             ],
-            "time": "2014-02-10 13:33:52"
+            "time": "2014-01-14 15:28:42"
         }
     ],
     "packages-dev": [
@@ -98,11 +98,10 @@
     "aliases": [
 
     ],
-    "minimum-stability": "dev",
-    "stability-flags": {
-        "maniaplanet/manialib": 20,
-        "maniaplanet/dedicated-server-api": 20
-    },
+    "minimum-stability": "stable",
+    "stability-flags": [
+
+    ],
     "platform": {
         "php": ">=5.3"
     },

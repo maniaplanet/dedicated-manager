@@ -17,10 +17,9 @@
     },
     "require": {
         "php": ">=5.3",
-        "maniaplanet/manialib": "dev-master",
-		"maniaplanet/dedicated-server-api": "dev-master"
+        "maniaplanet/manialib": "~3.1",
+		"maniaplanet/dedicated-server-api": "~4.0"
     },
-    "minimum-stability": "dev",
 	"autoload": {
         "psr-4": {
             "DedicatedManager\\": "DedicatedManager/",
