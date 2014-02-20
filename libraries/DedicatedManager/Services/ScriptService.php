@@ -278,7 +278,7 @@ class ScriptService
 		$matchRules = array();
 
 		$files = array();
-		if(preg_match('/^\#Extends\\s+"([^"]*).*$"/ixu', $script, $files))
+		if(preg_match('/^\#Extends\\s+"([^"]*)"/ixum', $script, $files))
 		{
 			$files = explode(',', $files[1]);
 			foreach($files as $file)
