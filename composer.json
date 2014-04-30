@@ -18,7 +18,8 @@
     "require": {
         "php": ">=5.3",
         "maniaplanet/manialib": "~3.1",
-		"maniaplanet/dedicated-server-api": "~4.0"
+		"maniaplanet/dedicated-server-api": "~4.0",
+		"maniaplanet/maniaplanet-ws-sdk": "~5.0"
     },
 	"autoload": {
         "psr-4": {

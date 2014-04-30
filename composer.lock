@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "8a90864c3ccada20fccccda72124626a",
+    "hash": "7f077085e4c24ef1a3c77bc3ae63ae24",
     "packages": [
         {
             "name": "maniaplanet/dedicated-server-api",
@@ -90,6 +90,55 @@
                 "TrackMania"
             ],
             "time": "2014-01-14 15:28:42"
+        },
+        {
+            "name": "maniaplanet/maniaplanet-ws-sdk",
+            "version": "5.0.5",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/maniaplanet/maniaplanet-ws-sdk.git",
+                "reference": "1dabad376caad788c28c05ffa29a173a0f073a17"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/maniaplanet/maniaplanet-ws-sdk/zipball/1dabad376caad788c28c05ffa29a173a0f073a17",
+                "reference": "1dabad376caad788c28c05ffa29a173a0f073a17",
+                "shasum": ""
+            },
+            "require": {
+                "ext-curl": "*",
+                "ext-json": "*",
+                "php": ">=5.3"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Maniaplanet\\": "libraries/Maniaplanet"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "LGPL-3.0"
+            ],
+            "authors": [
+                {
+                    "name": "Nadeo",
+                    "email": "contact@nadeo.com",
+                    "homepage": "http://www.nadeo.com/"
+                }
+            ],
+            "description": "SDK for the ManiaPlanet Web Services API.",
+            "homepage": "https://github.com/maniaplanet/maniaplanet-ws-sdk",
+            "keywords": [
+                "ManiaPlanet",
+                "ShootMania",
+                "TrackMania",
+                "curl",
+                "oauth2",
+                "rest",
+                "web services"
+            ],
+            "time": "2014-04-02 07:09:32"
         }
     ],
     "packages-dev": [
