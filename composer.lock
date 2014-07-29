@@ -1,7 +1,8 @@
 {
     "_readme": [
         "This file locks the dependencies of your project to a known state",
-        "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
+        "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "This file is @generated automatically"
     ],
     "hash": "7f077085e4c24ef1a3c77bc3ae63ae24",
     "packages": [
@@ -50,16 +51,16 @@
         },
         {
             "name": "maniaplanet/manialib",
-            "version": "3.1.1",
+            "version": "3.1.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/maniaplanet/manialib.git",
-                "reference": "f6793944f9ad4b348bae491efc4d69ff815f0bd2"
+                "reference": "8961ebbf3be9a94d648b60513ac654b22023a23b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/maniaplanet/manialib/zipball/f6793944f9ad4b348bae491efc4d69ff815f0bd2",
-                "reference": "f6793944f9ad4b348bae491efc4d69ff815f0bd2",
+                "url": "https://api.github.com/repos/maniaplanet/manialib/zipball/8961ebbf3be9a94d648b60513ac654b22023a23b",
+                "reference": "8961ebbf3be9a94d648b60513ac654b22023a23b",
                 "shasum": ""
             },
             "require": {
@@ -82,14 +83,15 @@
                     "homepage": "http://www.nadeo.com/"
                 }
             ],
-            "description": "Library to query ManiaPlanet webservices (shootmania and trackmania 2)",
+            "description": "ManiaLib is a lightweight PHP framework for Manialink and Web developement.",
             "homepage": "https://github.com/maniaplanet/manialib",
             "keywords": [
+                "ManiaLib",
                 "ManiaPlanet",
                 "ShootMania",
                 "TrackMania"
             ],
-            "time": "2014-01-14 15:28:42"
+            "time": "2014-05-19 12:40:49"
         },
         {
             "name": "maniaplanet/maniaplanet-ws-sdk",
@@ -141,20 +143,13 @@
             "time": "2014-04-02 07:09:32"
         }
     ],
-    "packages-dev": [
-
-    ],
-    "aliases": [
-
-    ],
+    "packages-dev": [],
+    "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": [
-
-    ],
+    "stability-flags": [],
+    "prefer-stable": false,
     "platform": {
         "php": ">=5.3"
     },
-    "platform-dev": [
-
-    ]
+    "platform-dev": []
 }
