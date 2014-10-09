@@ -18,7 +18,7 @@ $c = \DedicatedManager\Config::getInstance();
 						<fieldset data-role="controlgroup">
 						<?php if(count($controllers)): ?>
 							<?php foreach($controllers as $controller): ?>
-								<?php $id = uniqid('controller-'); ?>
+								<?php $id = uniqid('controller-', true); ?>
 								<label for="<?php echo $id; ?>"><?php echo $controller; ?></label>
 								<input type="checkbox" name="controllers[]" id="<?php echo $id; ?>" value="<?php echo $controller; ?>"/>
 							<?php endforeach; ?>

@@ -17,7 +17,7 @@ $r = ManiaLib\Application\Request::getInstance();
 					<li data-role="fieldcontain">
 						<fieldset data-role="controlgroup">
 						<?php foreach($plugins as $plugin): ?>
-							<?php $id = uniqid('plugin-'); ?>
+							<?php $id = uniqid('plugin-', true); ?>
 							<input type="checkbox" id="<?php echo $id; ?>" name="plugins[]" value="<?php echo $plugin; ?>"
 								<?php echo in_array($plugin, $config->plugins) ? 'checked="checked"' : ''; ?>/>
 							<label for="<?php echo $id; ?>"><?php echo $plugin; ?></label>

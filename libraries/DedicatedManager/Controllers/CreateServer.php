@@ -48,7 +48,7 @@ class CreateServer extends Create
 		$scriptsRules = array();
 		foreach($scripts as $script)
 		{
-			$scriptIds[$script] = uniqid();
+			$scriptIds[$script] = uniqid('', true);
 			$scriptsRules[$script] = $scriptService->getFileMatchRules($system->title, $script);
 		}
 		

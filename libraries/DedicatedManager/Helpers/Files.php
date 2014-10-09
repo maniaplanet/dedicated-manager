@@ -18,7 +18,7 @@ abstract class Files
 {
 	static function map(Map $map, $name='maps[]', $checked=false, $withThumbnail=true, $disabled=false, $readonly=false)
 	{
-		$id = uniqid('maps-');
+		$id = uniqid('maps-', true);
 		$str = sprintf(
 				'<input type="checkbox" id="%s" name="%s" value="%s"%s%s%s/>',
 				$id, $name, htmlentities($map->path.$map->filename, ENT_QUOTES, 'utf-8'),
@@ -43,7 +43,7 @@ abstract class Files
 	
 	static function rawMap(\Maniaplanet\DedicatedServer\Structures\Map $map, $name='maps[]', $checked=false, $withThumbnail=true, $disabled=false, $readonly=false)
 	{
-		$id = uniqid('maps-');
+		$id = uniqid('maps-', true);
 		$str = sprintf(
 				'<input type="checkbox" id="%s" name="%s" value="%s"%s%s%s/>',
 				$id, $name, htmlentities($map->fileName, ENT_QUOTES, 'utf-8'),

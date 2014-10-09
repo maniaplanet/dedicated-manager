@@ -12,7 +12,7 @@ $hasManiaLive = (bool) \DedicatedManager\Config::getInstance()->manialivePath;
 				<h3><?php echo _('Config files') ?></h3>
 				<fieldset data-role="controlgroup">
 				<?php foreach($configFiles as $configFile): ?>
-					<?php $id = uniqid('config-'); ?>
+					<?php $id = uniqid('config-', true); ?>
 					<input type="checkbox" id="<?php echo $id; ?>" name="configFiles[]" value="<?php echo $configFile; ?>"/>
 					<label for="<?php echo $id; ?>"><?php echo $configFile; ?></label>
 				<?php endforeach; ?>
@@ -22,7 +22,7 @@ $hasManiaLive = (bool) \DedicatedManager\Config::getInstance()->manialivePath;
 				<h3><?php echo _('Match settings files') ?></h3>
 				<fieldset data-role="controlgroup">
 				<?php foreach($matchFiles as $matchFile): ?>
-					<?php $id = uniqid('match-'); ?>
+					<?php $id = uniqid('match-', true); ?>
 					<input type="checkbox" id="<?php echo $id; ?>" name="matchFiles[]" value="<?php echo $matchFile; ?>"/>
 					<label for="<?php echo $id; ?>"><?php echo $matchFile; ?></label>
 				<?php endforeach; ?>
@@ -33,7 +33,7 @@ $hasManiaLive = (bool) \DedicatedManager\Config::getInstance()->manialivePath;
 				<h3><?php echo _('ManiaLive configuration files') ?></h3>
 				<fieldset data-role="controlgroup">
 				<?php foreach($manialiveFiles as $manialiveFile): ?>
-					<?php $id = uniqid('manialive-'); ?>
+					<?php $id = uniqid('manialive-', true); ?>
 					<input type="checkbox" id="<?php echo $id; ?>" name="manialiveFiles[]" value="<?php echo $manialiveFile; ?>"/>
 					<label for="<?php echo $id; ?>"><?php echo $manialiveFile; ?></label>
 				<?php endforeach; ?>
