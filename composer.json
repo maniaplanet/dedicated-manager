@@ -19,7 +19,8 @@
         "php": ">=5.3",
         "maniaplanet/manialib": "~3.1",
 		"maniaplanet/dedicated-server-api": "~4.0",
-		"maniaplanet/maniaplanet-ws-sdk": "~5.0"
+		"maniaplanet/maniaplanet-ws-sdk": "~5.0",
+        "symfony/console": "~2.5"
     },
 	"autoload": {
         "psr-4": {
