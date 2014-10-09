@@ -1,2 +1,4 @@
 nbproject
 vendor
+/logs/*.log
+/config/app.ini
