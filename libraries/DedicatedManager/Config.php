@@ -18,6 +18,7 @@ class Config extends \ManiaLib\Utils\Singleton
 	public $manialivePath = '';
 	public $maniaConnect = true;
 	public $admins = array();
+    public $pingServerList = true;
 }
 
 ?>

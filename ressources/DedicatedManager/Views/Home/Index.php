@@ -1,6 +1,7 @@
 <?php
 require __DIR__.'/../Header.php';
 $r = ManiaLib\Application\Request::getInstance();
+$pingServerList = \DedicatedManager\Config::getInstance()->pingServerList;
 ?>
 <div data-role="page">
 	<?php echo DedicatedManager\Helpers\Header::save() ?>
@@ -34,6 +35,7 @@ $r = ManiaLib\Application\Request::getInstance();
 	<?php endif; ?>
 	</div>
 </div>
+<?php if($pingServerList): ?>
 <script type="text/javascript">
 $(document).bind('pageinit', function() {
 	$('a.server').each(function() {
@@ -51,4 +53,5 @@ $(document).bind('pageinit', function() {
 	});
 });
 </script>
+<?php endif;?>
 <?php require __DIR__.'/../Footer.php' ?>
