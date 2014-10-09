@@ -19,7 +19,8 @@ $r = ManiaLib\Application\Request::getInstance();
 				<li data-role="fieldcontain">
 					<label for="rpcPort">
 						<strong><?php echo _('XML-RPC port') ?></strong><br/>
-						<i><?php echo _('The xml-rpc port displayed in the console at launch') ?></i>
+						<i><?php echo _('The xml-rpc port displayed in the console at launch.') ?></i>
+						<i><?php echo _('You can add several servers by separating port with a comma or by defining a port range.') ?></i>
 					</label>
 					<input type="text" name="rpcPort" id="rpcPort" value="5000"/>
 				</li>
