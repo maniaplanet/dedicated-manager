@@ -22,7 +22,7 @@ $r = ManiaLib\Application\Request::getInstance();
 			$r->set('port', $server->rpcPort); ?>
 			<li>
 				<a href="<?php echo htmlentities($r->createLinkArgList('/server', 'host', 'port'), ENT_QUOTES, 'UTF-8') ?>" data-ajax="false"
-				   data-host="<?php echo $server->rpcHost; ?>" data-port="<?php echo $server->rpcPort; ?>" class="server ui-disabled">
+				   data-host="<?php echo $server->rpcHost; ?>" data-port="<?php echo $server->rpcPort; ?>" class="server">
 					<?php echo ManiaLib\Utils\StyleParser::toHtml(\ManiaLib\Utils\Formatting::stripLinks($server->name)) ?: '&nbsp;'; ?>
 				</a>
 			<?php if($isAdmin): ?>
@@ -42,9 +42,10 @@ $(document).bind('pageinit', function() {
 			{host: anchor.attr('data-host'), port: anchor.attr('data-port')},
 			function (answer) {
 				if(answer != '0') {
-					anchor.removeClass('ui-disabled');
 					anchor.append('<small><em>(' + answer + ')</em></small>');
-				}
+				} else {
+                    anchor.addClass('ui-disabled');
+                }
 			}
 		);
 	});
