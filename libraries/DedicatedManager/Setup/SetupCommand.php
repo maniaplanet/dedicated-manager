@@ -94,7 +94,7 @@ class SetupCommand extends Command
                 }
                 throw new \RuntimeException('Invalid player login');
             });
-        $moreAdminQuestion = new ConfirmationQuestion('Add another admin (y or n)? (default: n) ', false);
+        $moreAdminQuestion = new ConfirmationQuestion('Add another admin [y|N])? ', false);
 
         $output->writeln('<info>Application configuration</info>');
 
@@ -116,11 +116,11 @@ class SetupCommand extends Command
         $config         = DatabaseConfig::getInstance();
 
         $output->writeln('<info>Database configuration</info>');
-        $hostQuestion = new Question('Please enter the database host (default: 127.0.0.1): ',
+        $hostQuestion = new Question('Please enter the database host [127.0.0.1]: ',
             '127.0.0.1');
-        $portQuestion = new Question('Please enter the database port (default: 3306): ', 3306);
-        $userQuestion = new Question('Please enter the database username (default: root): ', 'root');
-        $passQuestion = new Question('Please enter the database password (default: empty): ', '');
+        $portQuestion = new Question('Please enter the database port [3306]: ', 3306);
+        $userQuestion = new Question('Please enter the database username [root]: ', 'root');
+        $passQuestion = new Question('Please enter the database password []: ', '');
         $passQuestion
             ->setHidden(true)
             ->setHiddenFallback(true);
@@ -148,7 +148,7 @@ class SetupCommand extends Command
 
         $output->writeln('<success>Successfully connected to database</success>');
 
-        $dbnameQuestion = new Question('Please enter the database name (default: Manager): ',
+        $dbnameQuestion = new Question('Please enter the database name [Manager]): ',
             'Manager');
         $dbnameQuestion
             ->setMaxAttempts($maxAttempt)
