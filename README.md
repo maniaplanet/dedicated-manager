@@ -5,21 +5,36 @@ This tools allows you to start, configure and manage easily your dedicated serve
 
 Installation
 ------------
-* Download the archive here: https://github.com/maniaplanet/dedicated-manager/releases . It contains the DedicatedManager itself, and a SQL script to create the database.
+* Download the archive here: https://github.com/maniaplanet/dedicated-manager/releases . It contains all you need to setup the dedicated manager
 * Unzip it wherever you want on your server
-* Use your SQL Manager (phpMyAdmin, HeidiSQL, etc.) to import Manager.sql, this will create the database and its tables
-* Create a MySQL user and grant SELECT, INSERT, UPDATE, DELETE to Manager database
+* Connect to your server in command line
+* Run `$ php setup.php` this script will helped you to configure the dedicated manager
 * Create the alias manager on your web server. This alias must linked to the www folder in DedicatedManager
-* Give write access to thumbnails folder in www/media/images/thumbnails
-* Create your app.ini file
-* Edit the DedicatedManager's config file (DedicatedManager/config/app.ini) and give the correct values to the following parameters:
-```
-application.URL
-database.user
-database.password
-DedicatedManager\Config.dedicatedPath
-DedicatedManager\Config.manialivePath
-```
+  * Create the following file:  `/etc/apache2/sites-available/manager.conf`
+  * Copy/paste the following apache configuration in this file:
+    * for Apache 2.4
+    ```
+    Alias /manager /path/to/the/dedicated/manager
+    <Directory /path/to/the/dedicated/manager>
+      Options Indexes FollowSymLinks MultiViews
+      AllowOverride All
+      Require all granted
+    </Directory>
+    ```
+    * for Apache 2.2
+    ```
+    Alias /manager /path/to/the/dedicated/manager
+    <Directory /path/to/the/dedicated/manager>
+      Options Indexes FollowSymLinks MultiViews
+      AllowOverride All
+      Order allow,deny
+      Allow from all
+    </Directory>
+    ```
+  * Enable the alias configuration `$ sudo a2ensite manager`
+  * Restart Apache `$ sudo service apache2 restart`
+* Use `$ chmod o+w www/media/images/thumbnails` to grant write access to apache in the thumbnail folder
+* The dedicated manager is now configured go to http://YourDomain/manager to access it
 
 Developers
 -----------
