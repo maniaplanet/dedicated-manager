@@ -16,7 +16,7 @@ Installation
     ```
     Alias /manager /path/to/the/dedicated/manager
     <Directory /path/to/the/dedicated/manager>
-      Options Indexes FollowSymLinks MultiViews
+      Options -Indexes +FollowSymLinks
       AllowOverride All
       Require all granted
     </Directory>
@@ -25,7 +25,7 @@ Installation
     ```
     Alias /manager /path/to/the/dedicated/manager
     <Directory /path/to/the/dedicated/manager>
-      Options Indexes FollowSymLinks MultiViews
+      Options -Indexes +FollowSymLinks
       AllowOverride All
       Order allow,deny
       Allow from all
