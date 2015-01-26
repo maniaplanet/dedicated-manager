@@ -138,7 +138,7 @@ class Server extends AbstractController
 		if($delete)
 		{
 			$this->server->connection->removeMapList($maps);
-			$message = ngettext('Map has been successfully removed from map list','Map has been successfully removed from map list', count($maps));
+			$message = _('Map has been successfully removed from map list','Map has been successfully removed from map list', count($maps));
 		}
 		elseif($nextList)
 		{
